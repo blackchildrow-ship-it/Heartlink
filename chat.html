@@ -1,2 +1,163 @@
-bncvxdcxtjyfrkuil,.
-hgfkxrf jkr6ty
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HeartLink Chat</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+  }
+  header {
+    background-color: #ffb6c1;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: auto;
+  }
+  .message {
+    max-width: 70%;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  .bot {
+    background: white;
+    align-self: flex-start;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .user {
+    background: #ff7fa8;
+    color: white;
+    align-self: flex-end;
+  }
+  .input-area {
+    display: flex;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
+  }
+  .input-area input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 15px;
+    outline: none;
+    font-family: inherit;
+  }
+  .input-area button {
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <button class="btn" onclick="goBack()">← Back</button>
+  <h2 id="chatUser">Chat</h2>
+  <div></div>
+</header>
+
+<div class="chat-container" id="chatContainer">
+  <div class="message bot">Hi! 😊 I’m happy to chat with you.</div>
+</div>
+
+<div class="input-area">
+  <input type="text" id="messageInput" placeholder="Type a message..." />
+  <button class="btn" id="sendBtn">Send</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const chatUser = params.get('user') || 'Someone';
+document.getElementById('chatUser').textContent = chatUser;
+
+// JWT mock
+const token = localStorage.getItem('token') || 'mockToken';
+
+// Elements
+const chatContainer = document.getElementById('chatContainer');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+
+// Simulated fetch (mock backend call)
+async function sendMessageToBackend(msg) {
+  try {
+    // In real use, replace with:
+    // await fetch('/api/send', { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}
+
+function addMessage(text, sender) {
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `message ${sender}`;
+  msgDiv.textContent = text;
+  chatContainer.appendChild(msgDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function randomBotReply() {
+  const replies = [
+    "That's sweet of you 💕",
+    "Haha really? Tell me more!",
+    "I totally agree 😄",
+    "You seem fun to talk to!",
+    "Interesting! I didn’t know that."
+  ];
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+sendBtn.addEventListener('click', async () => {
+  const text = messageInput.value.trim();
+  if (!text) return;
+  addMessage(text, 'user');
+  messageInput.value = '';
+  sendBtn.disabled = true;
+
+  await sendMessageToBackend(text);
+  setTimeout(() => {
+    addMessage(randomBotReply(), 'bot');
+    sendBtn.disabled = false;
+  }, 1000);
+});
+
+messageInput.addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendBtn.click();
+});
+
+function goBack() {
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>
