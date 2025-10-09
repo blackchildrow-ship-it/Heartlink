@@ -3,17 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard — HeartLink</title>
+  <title>Dashboard — HeartLink (Mock)</title>
   <style>
     :root{
-      --accent:#ff4d88;
-      --accent-2:#ff7aa6;
-      --muted:#6b6b6b;
-      --bg:#fff7fb;
-      --card:#ffffff;
-      --success:#1bb36b;
-      --danger:#ff3b7a;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --accent:#ff4d88; --accent-2:#ff7aa6; --muted:#6b6b6b; --bg:#fff7fb; --card:#ffffff; --success:#1bb36b; --danger:#ff3b7a;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:#1b1330;min-height:100vh;display:flex;flex-direction:column}
@@ -27,7 +21,6 @@
 
     main{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px;padding:22px;align-items:start}
     .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.06);transition:all .18s}
-    .card:hover{transform:translateY(-4px)}
     .profile-summary{display:flex;gap:14px;align-items:center}
     .profile-summary img{width:84px;height:84px;border-radius:12px;object-fit:cover;border:3px solid var(--accent)}
     .profile-actions{display:flex;gap:8px;margin-top:12px}
@@ -35,36 +28,31 @@
     .btn.ghost{background:transparent;color:#333;border:1px solid #eee}
     .muted{color:var(--muted)}
 
-    /* collapsible card header */
-    .card-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-    .card-body{margin-top:12px}
-    .collapsed .card-body{display:none}
-
-    /* Matches grid */
+    /* matches */
     .matches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .match-card{padding:10px;border-radius:10px;border:1px solid #f2dbe6;background:linear-gradient(180deg,#fff,#fffefc);cursor:pointer;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:180px}
-    .match-card img{width:100%;height:120px;object-fit:cover;border-radius:8px}
+    .match-card{padding:10px;border-radius:10px;border:1px solid #f2dbe6;background:linear-gradient(180deg,#fff,#fffefc);cursor:pointer;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:190px}
+    .match-card img{width:100%;height:110px;object-fit:cover;border-radius:8px}
     .match-actions{display:flex;gap:8px;width:100%}
     .small-btn{background:#fff;border:1px solid #eee;padding:8px 10px;border-radius:8px;cursor:pointer}
     .small-btn.primary{background:var(--accent);color:white;border:0}
     .small-btn.heart{background:linear-gradient(90deg,#fff0f6,#ffebf3);border:1px solid #ffd3e6}
 
-    /* spinner */
     .spinner{border:3px solid rgba(0,0,0,0.08);border-top-color:var(--accent);border-radius:50%;width:16px;height:16px;animation:spin 1s linear infinite;display:inline-block}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Chat */
-    .chat-item{display:flex;gap:10px;align-items:center;padding:8px;border-bottom:1px solid #f2f2f2}
-    .chat-item img{width:48px;height:48px;border-radius:10px;object-fit:cover}
-
-    /* Toasts */
     .toast-wrap{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;z-index:999}
     .toast{background:white;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;gap:10px;align-items:center;min-width:200px}
     .toast.success{border-left:4px solid var(--success)}
     .toast.error{border-left:4px solid var(--danger)}
 
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center}
+    .modal.open{display:flex}
+    .modal-card{background:white;padding:20px;border-radius:12px;width:92%;max-width:760px}
+
     /* responsive */
-    @media(max-width:1000px){main{grid-template-columns:1fr;}}
+    @media(max-width:1000px){main{grid-template-columns:1fr}} 
+
   </style>
 </head>
 <body>
@@ -85,14 +73,11 @@
   </header>
 
   <main>
-    <!-- Left column: Profile & Likes -->
+    <!-- left -->
     <section>
       <div class="card" id="profileCard">
-        <div class="card-header" data-collapse>
-          <strong>Your Profile</strong>
-          <div><button class="small-btn" id="editProfile">Edit</button></div>
-        </div>
-        <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Your Profile</strong><button class="small-btn" id="editProfile">Edit</button></div>
+        <div style="margin-top:12px" id="profileBody">
           <div class="profile-summary">
             <img id="pfImg" src="https://via.placeholder.com/84" alt="profile" />
             <div>
@@ -107,135 +92,156 @@
         </div>
       </div>
 
-      <div class="card" id="likesCard" style="margin-top:14px">
-        <div class="card-header" data-collapse>
-          <strong>Likes</strong>
-          <div class="muted">Received / Sent</div>
-        </div>
-        <div class="card-body">
-          <p class="muted">You have <strong id="likesReceived">0</strong> likes received and <strong id="likesSent">0</strong> sent.</p>
-        </div>
+      <div class="card" style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Likes</strong><div class="muted">Received / Sent</div></div>
+        <div style="margin-top:12px"><p class="muted">You have <strong id="likesReceived">0</strong> likes received and <strong id="likesSent">0</strong> sent.</p></div>
       </div>
     </section>
 
-    <!-- Center column: Matches & Chats area (dynamic) -->
+    <!-- center -->
     <section id="centerCol">
       <div class="card" id="matchesSection">
-        <div class="card-header"><strong>Match Suggestions</strong><div>
-          <label class="muted">Show:</label>
-          <select id="matchFilter" style="margin-left:8px;padding:6px;border-radius:8px;border:1px solid #eee">
-            <option value="opposite">Opposite</option>
-            <option value="both">Both</option>
-          </select>
-        </div></div>
-        <div class="card-body">
-          <div class="matches-grid" id="matchesGrid">
-            <!-- matches inserted here -->
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Match Suggestions</strong>
+          <div><label class="muted">Show:</label>
+            <select id="matchFilter" style="margin-left:8px;padding:6px;border-radius:8px;border:1px solid #eee">
+              <option value="opposite">Opposite</option>
+              <option value="both">Both</option>
+            </select>
           </div>
         </div>
+        <div style="margin-top:12px"><div class="matches-grid" id="matchesGrid"></div></div>
       </div>
 
       <div class="card" id="chatsSection" style="margin-top:14px;display:none">
-        <div class="card-header"><strong>Chats</strong><div></div></div>
-        <div class="card-body" id="chatsList">
-          <!-- chats inserted here -->
-        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Chats</strong></div>
+        <div style="margin-top:12px" id="chatsList"></div>
       </div>
     </section>
 
-    <!-- Right column: Notifications & Daily Tip -->
+    <!-- right -->
     <section>
-      <div class="card" id="notifCard">
-        <div class="card-header" data-collapse>
-          <strong>Notifications</strong>
-          <div id="clearNotifsWrap"><button class="small-btn" id="clearNotifs">Clear</button></div>
-        </div>
-        <div class="card-body" id="notifList">
-          <div class="muted">Loading notifications…</div>
-        </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Notifications</strong><button class="small-btn" id="clearNotifs">Clear</button></div>
+        <div style="margin-top:12px" id="notifList"><div class="muted">Loading notifications…</div></div>
       </div>
 
-      <div class="card" style="margin-top:14px" id="tipCard">
-        <div class="card-header" data-collapse>
-          <strong>Daily Compatibility Tip</strong>
-        </div>
-        <div class="card-body"><p id="dailyTip">Be specific in your compliments — it makes them feel noticed.</p></div>
+      <div class="card" style="margin-top:14px">
+        <strong>Daily Compatibility Tip</strong>
+        <div style="margin-top:12px"><p id="dailyTip">Be specific in your compliments — it makes them feel noticed.</p></div>
       </div>
     </section>
   </main>
 
-  <footer style="padding:14px;text-align:center;color:var(--muted);background:var(--card);border-top:1px solid #eee">© 2025 HeartLink</footer>
+  <footer style="padding:14px;text-align:center;color:var(--muted);background:var(--card);border-top:1px solid #eee">© 2025 HeartLink (Mock)</footer>
 
-  <!-- Profile / Match modal -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" style="max-width:600px">
-      <div id="modalContent">Loading…</div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-        <button class="small-btn" id="modalClose">Close</button>
-        <button class="btn" id="modalLike"><span id="modalLikeLabel">Like</span></button>
-        <button class="btn" id="modalChat">Chat</button>
-      </div>
+  <!-- profile modal -->
+  <div class="modal" id="modal"><div class="modal-card" id="modalCard"><div id="modalContent">Loading…</div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="small-btn" id="modalClose">Close</button><button class="btn" id="modalLike">Like</button><button class="btn" id="modalChat">Chat</button></div></div></div>
+
+  <!-- edit modal -->
+  <div class="modal" id="editModal"><div class="modal-card"><h3>Edit Profile</h3>
+    <div style="display:grid;gap:8px">
+      <div><label>Name</label><input id="modalName" type="text" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd"></div>
+      <div><label>Age</label><input id="modalAge" type="number" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd"></div>
+      <div><label>Location</label><input id="modalLocation" type="text" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd"></div>
+      <div><label>Gender</label><div style="display:flex;gap:8px;margin-top:6px"><label><input name="editGender" type="radio" value="male"> Male</label><label><input name="editGender" type="radio" value="female"> Female</label><label><input name="editGender" type="radio" value="non-binary"> Non-binary</label></div></div>
+      <div><label>Image URL</label><input id="modalImg" type="text" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd"></div>
     </div>
-  </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="small-btn" id="modalCancel">Cancel</button><button class="btn" id="modalSave">Save</button></div>
+  </div></div>
 
-  <!-- Edit profile modal -->
-  <div class="modal" id="editModal" aria-hidden="true">
-    <div class="modal-card">
-      <h3>Edit Profile</h3>
-      <div class="field"><label>Name</label><input id="modalName" type="text"></div>
-      <div class="field"><label>Age</label><input id="modalAge" type="number"></div>
-      <div class="field"><label>Location</label><input id="modalLocation" type="text"></div>
-      <div class="field"><label>Image URL</label><input id="modalImg" type="text"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-        <button class="small-btn" id="modalCancel">Cancel</button>
-        <button class="btn" id="modalSave">Save</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toasts -->
-  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
 
   <script>
-    /* --------------------
-       Config & fetch wrapper
-       -------------------- */
-    const API_BASE = '/api';
-    function getToken(){ return localStorage.getItem('token'); }
-    async function apiFetch(path, options={}){
-      const token = getToken();
-      const headers = options.headers || {};
-      if(!headers['Content-Type'] && !(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
-      if(token) headers['Authorization'] = 'Bearer ' + token;
-      try{
-        const res = await fetch(API_BASE + path, {...options, headers});
-        if(res.status === 401){ localStorage.removeItem('token'); window.location.href = 'index.html'; throw new Error('Unauthorized'); }
-        const text = await res.text();
-        try{ return JSON.parse(text); } catch(e){ return text; }
-      }catch(err){ showToast('Network error: ' + (err.message||''), 'error'); throw err; }
-    }
+    // This dashboard runs with an internal mock API so every button works locally.
+    const useMock = true; // always use mock for this standalone file
 
-    /* --------------------
-       Toast system
-       -------------------- */
+    // Simple toast utility
     const toastWrap = document.getElementById('toastWrap');
-    function showToast(message, type='success', ttl=3500){
-      const t = document.createElement('div');
-      t.className = 'toast ' + (type==='error'?'error':'success');
-      t.innerHTML = `<div style=\"width:18px;height:18px;border-radius:6px;background:${type==='error'? 'var(--danger)':'var(--success)'}\"></div><div style=\"flex:1;\">${message}</div><div style=\"margin-left:8px;opacity:0.8;cursor:pointer\">✕</div>`;
+    function showToast(msg, type='success', ttl=3000){
+      const t = document.createElement('div'); t.className = 'toast ' + (type==='error'?'error':'success');
+      t.innerHTML = `<div style="width:12px;height:12px;border-radius:6px;background:${type==='error'? 'var(--danger)':'var(--success)'}"></div><div style="flex:1">${msg}</div><div style="cursor:pointer;opacity:0.8">✕</div>`;
       t.querySelector('div:last-child').addEventListener('click', ()=> t.remove());
       toastWrap.appendChild(t);
-      setTimeout(()=>{ t.style.transition='transform .25s,opacity .25s'; t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(()=>t.remove(),300); }, ttl);
+      setTimeout(()=>{ if(t.parentNode) t.remove(); }, ttl);
     }
 
-    /* --------------------
-       State & UI refs
-       -------------------- */
-    let currentUser = null;
-    let matches = [];
-    let chats = [];
-    let notifications = [];
+    // Mock backend state
+    const mockApi = (function(){
+      const maleNames = ['Liam','Noah','Oliver','Elijah','James','Lucas','Mason','Ethan','Logan','Alexander','Ben','Chris','David','Alex','Jordan','Sam','Ryan','Nick','Ethan2','Tyler','Mark','Paul','Ian','Scott','Kyle'];
+      const femaleNames = ['Olivia','Emma','Ava','Sophia','Isabella','Mia','Charlotte','Amelia','Harper','Evelyn','Abby','Zoe','Lily','Grace','Hannah','Sofia','Chloe','Ella','Scarlett','Nora','Leah','Claire','Anna','Kate','Jill'];
+      let user = { id:'u1', name:'Alex Morgan', age:29, gender:'male', location:'New York, NY', image:'https://via.placeholder.com/120', subscription:'free' };
+      let likes = { received:3, sent:0 };
+      let notifications = [];
+      let chats = [ { id:'c1', name:'Jamie', lastMessage:'Hey! How was your weekend?', image:'https://via.placeholder.com/48' }, { id:'c2', name:'Casey', lastMessage:'See you at the event!', image:'https://via.placeholder.com/48' } ];
+      // generate 25 male + 25 female
+      const matches = [];
+      for(let i=0;i<25;i++){ matches.push({ id:'M'+(i+1), name: maleNames[i%maleNames.length] + ' ' + (Math.floor(Math.random()*90)+10), age: 22 + (i%8), gender:'male', location:'Near you', image:'https://via.placeholder.com/320x240?text=M'+(i+1), bio:'Loves hiking, coffee, and long walks.' }); }
+      for(let i=0;i<25;i++){ matches.push({ id:'F'+(i+1), name: femaleNames[i%femaleNames.length] + ' ' + (Math.floor(Math.random()*90)+10), age: 23 + (i%8), gender:'female', location:'Near you', image:'https://via.placeholder.com/320x240?text=F'+(i+1), bio:'Enjoys painting, music, and travel.' }); }
 
+      // helper to simulate latency
+      function wait(ms=400){ return new Promise(r=>setTimeout(r, ms + Math.random()*300)); }
+
+      // generate incoming notifications every 12-20s
+      setInterval(()=>{
+        const samples = ['❤️ New like received','💬 New message from a match','🎉 Upcoming event near you'];
+        const text = samples[Math.floor(Math.random()*samples.length)];
+        notifications.unshift({ id: 'n'+Date.now(), text, time: new Date().toISOString() });
+      }, 12000 + Math.random()*8000);
+
+      return {
+        handle: async function(path, options={}){
+          await wait();
+          const method = (options.method||'GET').toUpperCase();
+          if(path.startsWith('/user')){ return user; }
+          if(path.startsWith('/matches')){
+            const url = new URL('http://dummy'+path);
+            const gender = url.searchParams.get('gender');
+            if(gender) return matches.filter(m=>m.gender === gender);
+            return matches.slice();
+          }
+          if(path === '/like' && method === 'POST'){
+            const body = JSON.parse(options.body||'{}');
+            const target = matches.find(m => m.id === body.targetId);
+            if(!target) throw new Error('Target not found');
+            if(target.liked) return { success: true };
+            target.liked = true; likes.sent += 1; return { success:true };
+          }
+          if(path === '/likes') return { received: likes.received, sent: likes.sent };
+          if(path === '/chats') return chats.slice();
+          if(path.startsWith('/chat/') && method === 'POST'){
+            const id = path.split('/')[2]; const body = JSON.parse(options.body||'{}');
+            // append to chats (simple)
+            const found = matches.find(m=>m.id===id) || chats.find(c=>c.id===id);
+            const name = found ? found.name : ('User '+id);
+            chats.unshift({ id: id, name, lastMessage: body.message, image: found?found.image:'https://via.placeholder.com/48' });
+            return { success:true };
+          }
+          if(path === '/notifications' && method === 'GET'){ return notifications.slice(); }
+          if(path === '/notifications/clear' && method === 'POST'){ notifications = []; return { success:true }; }
+          if(path === '/upgrade' && method === 'POST'){ user.subscription = 'premium'; return { success:true, newStatus: 'premium' }; }
+          if(path === '/profile' && method === 'PUT'){ const body = JSON.parse(options.body||'{}'); user = {...user, ...body}; return { success:true }; }
+          if(path === '/logout' && method === 'POST'){ return { success:true }; }
+          return {};
+        }
+      };
+    })();
+
+    // apiFetch that falls back to mock
+    async function apiFetch(path, options={}){
+      if(useMock){ return mockApi.handle(path, options); }
+      // production would be: try real fetch
+      try{
+        const token = localStorage.getItem('token');
+        const headers = options.headers || {};
+        if(!headers['Content-Type'] && !(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+        if(token) headers['Authorization'] = 'Bearer ' + token;
+        const res = await fetch('/api'+path, {...options, headers});
+        if(res.status === 401){ localStorage.removeItem('token'); window.location.href='index.html'; throw new Error('Unauthorized'); }
+        const txt = await res.text(); try{ return JSON.parse(txt); }catch(e){ return txt; }
+      }catch(err){ showToast('Network error — running in mock mode', 'error'); return mockApi.handle(path, options); }
+    }
+
+    // UI refs
     const pfName = document.getElementById('pfName');
     const pfMeta = document.getElementById('pfMeta');
     const pfImg = document.getElementById('pfImg');
@@ -245,280 +251,91 @@
     const notifList = document.getElementById('notifList');
     const likesReceivedEl = document.getElementById('likesReceived');
     const likesSentEl = document.getElementById('likesSent');
-    const dailyTipEl = document.getElementById('dailyTip');
     const matchesCountEl = document.getElementById('matches-count');
 
-    // Nav
-    const navHome = document.getElementById('nav-home');
-    const navMatches = document.getElementById('nav-matches');
-    const navChats = document.getElementById('nav-chats');
-    const navSettings = document.getElementById('nav-settings');
-    const navLogout = document.getElementById('nav-logout');
-
-    // Modal refs
-    const modal = document.getElementById('modal');
-    const modalContent = document.getElementById('modalContent');
-    const modalClose = document.getElementById('modalClose');
-    const modalLike = document.getElementById('modalLike');
-    const modalLikeLabel = document.getElementById('modalLikeLabel');
-    const modalChat = document.getElementById('modalChat');
-
+    // modals
+    const modal = document.getElementById('modal'); const modalContent = document.getElementById('modalContent');
+    const modalClose = document.getElementById('modalClose'); const modalLike = document.getElementById('modalLike'); const modalChat = document.getElementById('modalChat');
     const editModal = document.getElementById('editModal');
-    const editProfileBtn = document.getElementById('editProfile');
-    const modalName = document.getElementById('modalName');
-    const modalAge = document.getElementById('modalAge');
-    const modalLocation = document.getElementById('modalLocation');
-    const modalImg = document.getElementById('modalImg');
-    const modalCancel = document.getElementById('modalCancel');
-    const modalSave = document.getElementById('modalSave');
+    const modalName = document.getElementById('modalName'); const modalAge = document.getElementById('modalAge'); const modalLocation = document.getElementById('modalLocation'); const modalImg = document.getElementById('modalImg');
+    const modalCancel = document.getElementById('modalCancel'); const modalSave = document.getElementById('modalSave');
 
-    // Buttons
-    const upgradeBtn = document.getElementById('upgrade');
+    let currentUser = null; let currentMatches = []; let currentModalProfile = null;
 
-    /* --------------------
-       Initialization
-       -------------------- */
     async function init(){
+      // mock token
+      if(!localStorage.getItem('token')){ localStorage.setItem('token','mock-token'); showToast('Running in Mock Mode','success',2500); }
       try{
-        currentUser = await apiFetch('/user');
-        renderProfile(currentUser);
+        currentUser = await apiFetch('/user'); renderProfile(currentUser);
         await Promise.all([loadMatches(), loadChats(), loadNotifications(), loadLikes()]);
-        // start polling notifications
-        setInterval(loadNotifications, 10000);
-      }catch(err){ console.error(err); }
+        setInterval(loadNotifications,10000);
+      }catch(e){ console.error(e); showToast('Initialization error','error'); }
     }
 
-    function renderProfile(user){
-      if(!user) return;
-      pfName.innerHTML = '<strong>' + (user.name || '—') + '</strong>';
-      pfMeta.textContent = (user.age? user.age + ' • ':'') + (user.location || '—');
-      pfImg.src = user.image || 'https://via.placeholder.com/84';
-      // subscription indicator
-      if(user.subscription && user.subscription.toLowerCase() === 'premium'){
-        upgradeBtn.textContent = 'Premium'; upgradeBtn.disabled = true; upgradeBtn.classList.add('ghost');
-      } else { upgradeBtn.textContent = 'Upgrade'; upgradeBtn.disabled = false; }
+    function renderProfile(user){ if(!user) return; pfName.innerHTML = '<strong>'+escapeHtml(user.name)+'</strong>'; pfMeta.textContent = (user.age? user.age+' • ':'') + (user.location||'—'); pfImg.src = user.image || 'https://via.placeholder.com/84'; if(user.subscription==='premium'){ document.getElementById('upgrade').textContent='Premium'; document.getElementById('upgrade').disabled=true; } }
+
+    async function loadMatches(){ try{ const filter = document.getElementById('matchFilter').value; let q = '';
+        if(filter==='opposite'){ const g = (currentUser && currentUser.gender||'').toLowerCase(); if(g==='male') q='?gender=female'; else if(g==='female') q='?gender=male'; else q=''; }
+        const list = await apiFetch('/matches'+q); currentMatches = Array.isArray(list)?list:[]; renderMatches(currentMatches);
+      }catch(e){ console.error(e); showToast('Failed to load matches','error'); }
     }
 
-    /* --------------------
-       Matches: load & render
-       -------------------- */
-    async function loadMatches(){
-      try{
-        const filter = document.getElementById('matchFilter').value;
-        let genderQuery = '';
-        if(filter === 'opposite'){
-          const g = (currentUser && currentUser.gender || '').toLowerCase();
-          if(g === 'male') genderQuery = '?gender=female';
-          else if(g === 'female') genderQuery = '?gender=male';
-          else genderQuery = ''; // NB/other -> all
-        }
-        const list = await apiFetch('/matches' + genderQuery);
-        matches = Array.isArray(list) ? list : [];
-        renderMatches(matches);
-      }catch(err){ console.error('loadMatches', err); showToast('Failed to load matches','error'); }
-    }
-
-    function renderMatches(list){
-      matchesGrid.innerHTML = '';
-      matchesCountEl.textContent = '(' + list.length + ')';
-      if(!list.length){ matchesGrid.innerHTML = '<div class="muted">No matches found.</div>'; return; }
-      list.forEach(profile =>{
+    function renderMatches(list){ matchesGrid.innerHTML=''; matchesCountEl.textContent='('+list.length+')'; if(!list.length){ matchesGrid.innerHTML='<div class="muted">No matches found.</div>'; return; }
+      list.forEach(p=>{
         const card = document.createElement('div'); card.className='match-card';
-        const img = document.createElement('img'); img.src = profile.image || 'https://via.placeholder.com/320x240';
-        const name = document.createElement('div'); name.innerHTML = '<strong>'+escapeHtml(profile.name)+'</strong><div class="muted">'+(profile.age? profile.age+' • ':'')+ (escapeHtml(profile.location||'')) +'</div>';
-
+        const img = document.createElement('img'); img.src = p.image; img.alt = p.name;
+        const title = document.createElement('div'); title.innerHTML = '<strong>'+escapeHtml(p.name)+'</strong><div class="muted">'+(p.age?p.age+' • ':'')+escapeHtml(p.location||'')+'</div>';
         const actions = document.createElement('div'); actions.className='match-actions';
-        const viewBtn = document.createElement('button'); viewBtn.className='small-btn'; viewBtn.textContent='View';
-        viewBtn.onclick = ()=> openProfileModal(profile);
-
-        const likeBtn = document.createElement('button'); likeBtn.className='small-btn heart'; likeBtn.textContent='Like';
-        if(profile.liked) { likeBtn.textContent = 'Liked'; likeBtn.disabled = true; }
-        likeBtn.onclick = async (e)=>{ e.stopPropagation(); await handleLike(profile, likeBtn); };
-
-        const chatBtn = document.createElement('button'); chatBtn.className='small-btn'; chatBtn.textContent='Chat';
-        chatBtn.onclick = (e)=>{ e.stopPropagation(); openChatWith(profile.id, profile.name); };
-
+        const viewBtn = document.createElement('button'); viewBtn.className='small-btn'; viewBtn.textContent='View'; viewBtn.onclick = ()=>openProfileModal(p);
+        const likeBtn = document.createElement('button'); likeBtn.className='small-btn heart'; likeBtn.textContent = p.liked? 'Liked':'Like'; if(p.liked) likeBtn.disabled=true; likeBtn.onclick = async (e)=>{ e.stopPropagation(); await likeProfile(p, likeBtn); };
+        const chatBtn = document.createElement('button'); chatBtn.className='small-btn'; chatBtn.textContent='Chat'; chatBtn.onclick = ()=> openChatWith(p.id, p.name);
         actions.append(viewBtn, likeBtn, chatBtn);
-        card.append(img, name, actions);
+        card.append(img, title, actions);
         matchesGrid.appendChild(card);
-      });
-    }
+      }); }
 
-    async function handleLike(profile, btn){
-      if(btn.disabled) return;
-      const original = btn.innerHTML;
-      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Liking';
-      try{
-        await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId: profile.id }) });
-        btn.innerHTML = 'Liked';
-        profile.liked = true;
-        likesSentEl.textContent = (parseInt(likesSentEl.textContent)||0) + 1;
-        showToast('❤️ Liked ' + (profile.name||'') ,'success');
-      }catch(err){ btn.disabled = false; btn.innerHTML = original; showToast('Failed to like','error'); }
-    }
+    async function likeProfile(profile, btn){ if(btn.disabled) return; const old = btn.innerHTML; btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Liking'; try{ await apiFetch('/like',{ method:'POST', body: JSON.stringify({ targetId: profile.id }) }); profile.liked=true; btn.innerHTML='Liked'; likesSentEl.textContent = (parseInt(likesSentEl.textContent)||0)+1; showToast('❤️ Liked '+profile.name,'success'); }catch(e){ btn.disabled=false; btn.innerHTML=old; showToast('Failed to like','error'); } }
 
-    /* --------------------
-       View profile modal
-       -------------------- */
-    let currentModalProfile = null;
-    function openProfileModal(profile){
-      currentModalProfile = profile;
-      modalContent.innerHTML = `<div style=\"display:flex;gap:12px\"><img src=\"${profile.image||'https://via.placeholder.com/120'}\" style=\"width:120px;height:120px;object-fit:cover;border-radius:10px\"><div style=\"flex:1\"><h3>${escapeHtml(profile.name)}</h3><div class=\"muted\">${profile.age?profile.age+' • ':''}${escapeHtml(profile.location||'')}</div><p class=\"muted\">${escapeHtml(profile.bio||'')}</p></div></div>`;
-      // like button label
-      modalLikeLabel.textContent = profile.liked ? 'Liked' : 'Like';
-      modalLike.disabled = !!profile.liked;
-      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-    }
+    function openProfileModal(profile){ currentModalProfile = profile; modalContent.innerHTML = `<div style="display:flex;gap:12px"><img src="${profile.image}" style="width:140px;height:140px;object-fit:cover;border-radius:10px"><div style="flex:1"><h3>${escapeHtml(profile.name)}</h3><div class="muted">${profile.age?profile.age+' • ':''}${escapeHtml(profile.location||'')}</div><p class="muted">${escapeHtml(profile.bio||'')}</p></div></div>`; modal.classList.add('open'); }
+    modalClose.addEventListener('click', ()=>{ modal.classList.remove('open'); currentModalProfile=null; });
+    document.getElementById('modalLike').addEventListener('click', async ()=>{ if(!currentModalProfile) return; const btn = document.querySelector('.match-card .small-btn.heart'); await likeProfile(currentModalProfile, btn); modal.classList.remove('open'); });
+    document.getElementById('modalChat').addEventListener('click', ()=>{ if(!currentModalProfile) return; modal.classList.remove('open'); openChatWith(currentModalProfile.id, currentModalProfile.name); });
 
-    modalClose.addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+    async function loadChats(){ try{ const list = await apiFetch('/chats'); renderChats(list); }catch(e){ showToast('Failed to load chats','error'); } }
+    function renderChats(list){ chatsList.innerHTML=''; if(!list.length){ chatsList.innerHTML='<div class="muted">No chats yet.</div>'; return; } list.forEach(c=>{ const item=document.createElement('div'); item.className='chat-item'; item.innerHTML = `<img src="${c.image}"><div><strong>${escapeHtml(c.name)}</strong><div class=\"muted\">${escapeHtml(c.lastMessage||'')}</div></div><div style="margin-left:auto"><button class=\"small-btn\">Open</button></div>`; chatsList.appendChild(item); }); }
 
-    modalLike.addEventListener('click', async ()=>{
-      if(!currentModalProfile) return;
-      modalLike.disabled = true; modalLike.innerHTML = '<span class="spinner"></span> Liking';
-      try{
-        await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId: currentModalProfile.id }) });
-        modalLike.innerHTML = 'Liked';
-        showToast('❤️ Liked ' + (currentModalProfile.name||''),'success');
-        // reflect in list
-        currentModalProfile.liked = true; loadMatches();
-      }catch(err){ modalLike.disabled = false; modalLike.innerHTML = 'Like'; showToast('Could not like','error'); }
-    });
+    function openChatWith(id,name){ const msg = prompt('Message to '+name+':'); if(!msg) return; showToast('Sending...','success',1200); apiFetch('/chat/'+encodeURIComponent(id), { method:'POST', body: JSON.stringify({ message: msg }) }).then(()=>{ showToast('Message sent to '+name,'success'); loadChats(); }).catch(()=>showToast('Failed to send message','error')); }
 
-    modalChat.addEventListener('click', ()=>{
-      if(!currentModalProfile) return;
-      modal.classList.remove('open');
-      openChatWith(currentModalProfile.id, currentModalProfile.name);
-    });
+    async function loadNotifications(){ try{ const list = await apiFetch('/notifications'); notifList.innerHTML=''; if(!list.length){ notifList.innerHTML='<div class="muted">No new notifications — yet.</div>'; notifBadge.textContent='0'; return; } notifBadge.textContent = list.length; list.forEach(n=>{ const el=document.createElement('div'); el.className='muted'; el.textContent=n.text; notifList.appendChild(el); }); }catch(e){ console.error(e); } }
+    document.getElementById('clearNotifs').addEventListener('click', async ()=>{ try{ await apiFetch('/notifications/clear',{ method:'POST' }); loadNotifications(); showToast('Notifications cleared','success'); }catch(e){ showToast('Failed to clear','error'); } });
 
-    /* --------------------
-       Chat flows
-       -------------------- */
-    async function loadChats(){
-      try{
-        const list = await apiFetch('/chats');
-        chats = Array.isArray(list) ? list : [];
-        renderChats(chats);
-      }catch(err){ console.error(err); showToast('Failed to load chats','error'); }
-    }
-    function renderChats(list){
-      chatsList.innerHTML = '';
-      if(!list.length){ chatsList.innerHTML = '<div class="muted">No chats yet.</div>'; return; }
-      list.forEach(c=>{
-        const item = document.createElement('div'); item.className='chat-item';
-        const img = document.createElement('img'); img.src = c.image || 'https://via.placeholder.com/48';
-        const body = document.createElement('div'); body.innerHTML = `<strong>${escapeHtml(c.name)}</strong><div class=\"muted\">${escapeHtml(c.lastMessage||'')}</div>`;
-        const openBtn = document.createElement('button'); openBtn.className='small-btn'; openBtn.textContent='Open';
-        openBtn.onclick = ()=> openChatWith(c.id, c.name);
-        item.append(img, body, openBtn);
-        chatsList.appendChild(item);
-      });
-    }
+    async function loadLikes(){ try{ const res = await apiFetch('/likes'); likesReceivedEl.textContent = res.received||0; likesSentEl.textContent = res.sent||0; }catch(e){ console.error(e); } }
 
-    function openChatWith(id, name){
-      const message = prompt('Message to ' + name + ':');
-      if(!message) return;
-      // optimistic UI: show toast and send
-      const tempToastId = showToast('Sending message...', 'success', 2000);
-      apiFetch('/chat/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify({ message }) })
-        .then(()=>{ showToast('Message sent to ' + name,'success'); loadChats(); })
-        .catch(()=> showToast('Failed to send message','error'));
-    }
+    document.getElementById('upgrade').addEventListener('click', async ()=>{ const btn = document.getElementById('upgrade'); if(btn.disabled) return; if(!confirm('Upgrade to Premium?')) return; btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spinner"></span> Upgrading'; try{ const res = await apiFetch('/upgrade',{ method:'POST', body: JSON.stringify({ plan:'premium' }) }); if(res && res.newStatus){ showToast('Upgraded to '+res.newStatus,'success'); currentUser.subscription=res.newStatus; renderProfile(currentUser); } }catch(e){ showToast('Upgrade failed','error'); } finally{ btn.disabled=false; btn.innerHTML=old; } });
 
-    /* --------------------
-       Notifications
-       -------------------- */
-    async function loadNotifications(){
-      try{
-        const list = await apiFetch('/notifications');
-        notifications = Array.isArray(list) ? list : [];
-        renderNotifications(notifications);
-      }catch(err){ console.error(err); }
-    }
-    function renderNotifications(list){
-      notifList.innerHTML = '';
-      if(!list.length){ notifList.innerHTML = '<div class="muted">No new notifications — yet.</div>'; notifBadge.textContent = '0'; return; }
-      notifBadge.textContent = list.length;
-      list.forEach(n=>{
-        const el = document.createElement('div'); el.className='muted'; el.textContent = n.text; notifList.appendChild(el);
-      });
-    }
-    document.getElementById('clearNotifs').addEventListener('click', async ()=>{
-      try{ await apiFetch('/notifications/clear', { method: 'POST' }); notifications=[]; renderNotifications([]); showToast('Notifications cleared','success'); }
-      catch(e){ showToast('Failed to clear notifications','error'); }
-    });
+    // edit modal
+    document.getElementById('editProfile').addEventListener('click', ()=>{ if(!currentUser) return; editModal.classList.add('open'); modalName.value = currentUser.name||''; modalAge.value = currentUser.age||''; modalLocation.value = currentUser.location||''; modalImg.value = currentUser.image||''; const radios = document.getElementsByName('editGender'); for(const r of radios) if(r.value===currentUser.gender) r.checked=true; });
+    modalCancel.addEventListener('click', ()=> editModal.classList.remove('open'));
+    modalSave.addEventListener('click', async ()=>{ modalSave.disabled=true; modalSave.innerHTML='<span class="spinner"></span> Saving'; const gender = Array.from(document.getElementsByName('editGender')).find(r=>r.checked)?.value || currentUser.gender; const payload = { name: modalName.value, age: modalAge.value, location: modalLocation.value, image: modalImg.value, gender }; try{ await apiFetch('/profile',{ method:'PUT', body: JSON.stringify(payload) }); currentUser = {...currentUser,...payload}; renderProfile(currentUser); editModal.classList.remove('open'); showToast('Profile updated','success'); await loadMatches(); }catch(e){ showToast('Failed to save','error'); } finally{ modalSave.disabled=false; modalSave.innerHTML='Save'; } });
 
-    /* --------------------
-       Likes / counts
-       -------------------- */
-    async function loadLikes(){
-      try{
-        const res = await apiFetch('/likes');
-        likesReceivedEl.textContent = res.received || 0; likesSentEl.textContent = res.sent || 0;
-      }catch(err){ console.error('likes', err); }
-    }
+    // nav handler & logout
+    document.getElementById('nav-home').addEventListener('click', e=>{ e.preventDefault(); setActive('home'); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; });
+    document.getElementById('nav-matches').addEventListener('click', e=>{ e.preventDefault(); setActive('matches'); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; loadMatches(); });
+    document.getElementById('nav-chats').addEventListener('click', e=>{ e.preventDefault(); setActive('chats'); document.getElementById('matchesSection').style.display='none'; document.getElementById('chatsSection').style.display='block'; loadChats(); });
+    document.getElementById('nav-settings').addEventListener('click', e=>{ e.preventDefault(); showToast('Settings coming soon','success'); });
+    document.getElementById('nav-logout').addEventListener('click', e=>{ e.preventDefault(); apiFetch('/logout',{ method:'POST' }).finally(()=>{ localStorage.removeItem('token'); showToast('Logged out','success'); setTimeout(()=>location.href='index.html',600); }); });
 
-    /* --------------------
-       Upgrade
-       -------------------- */
-    upgradeBtn.addEventListener('click', async ()=>{
-      if(upgradeBtn.disabled) return;
-      if(!confirm('Upgrade to Premium for enhanced features?')) return;
-      upgradeBtn.disabled = true; const old = upgradeBtn.textContent; upgradeBtn.innerHTML = '<span class="spinner"></span> Upgrading';
-      try{
-        const res = await apiFetch('/upgrade', { method: 'POST', body: JSON.stringify({ plan: 'premium' }) });
-        if(res && res.newStatus){ showToast('Upgraded to ' + res.newStatus,'success'); currentUser.subscription = res.newStatus; renderProfile(currentUser); }
-        else{ showToast('Upgrade completed','success'); }
-      }catch(err){ showToast('Upgrade failed','error'); }
-      finally{ upgradeBtn.disabled = false; upgradeBtn.innerHTML = old; }
-    });
+    function setActive(which){ document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active')); if(which==='home') document.getElementById('nav-home').classList.add('active'); if(which==='matches') document.getElementById('nav-matches').classList.add('active'); if(which==='chats') document.getElementById('nav-chats').classList.add('active'); }
 
-    /* --------------------
-       Edit profile modal save
-       -------------------- */
-    editProfileBtn.addEventListener('click', ()=>{
-      if(!currentUser) return;
-      editModal.classList.add('open'); editModal.setAttribute('aria-hidden','false');
-      modalName.value = currentUser.name || '';
-      modalAge.value = currentUser.age || '';
-      modalLocation.value = currentUser.location || '';
-      modalImg.value = currentUser.image || '';
-    });
-    modalCancel.addEventListener('click', ()=>{ editModal.classList.remove('open'); editModal.setAttribute('aria-hidden','true'); });
-    modalSave.addEventListener('click', async ()=>{
-      modalSave.disabled = true; modalSave.innerHTML = '<span class="spinner"></span> Saving';
-      const payload = { name: modalName.value, age: modalAge.value, location: modalLocation.value, image: modalImg.value };
-      try{
-        await apiFetch('/profile', { method: 'PUT', body: JSON.stringify(payload) });
-        currentUser = {...currentUser, ...payload}; renderProfile(currentUser);
-        editModal.classList.remove('open'); editModal.setAttribute('aria-hidden','true');
-        showToast('Profile updated','success');
-      }catch(err){ showToast('Failed to save profile','error'); }
-      finally{ modalSave.disabled = false; modalSave.innerHTML = 'Save'; }
-    });
-
-    /* --------------------
-       Utilities & helpers
-       -------------------- */
     function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]); }
 
-    // nav handlers
-    function setActive(link){ document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active')); link.classList.add('active'); }
-    navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navHome); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; });
-    navMatches.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navMatches); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; loadMatches(); });
-    navChats.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navChats); document.getElementById('matchesSection').style.display='none'; document.getElementById('chatsSection').style.display='block'; loadChats(); });
-    navSettings.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navSettings); showToast('Settings coming soon','success'); });
-    navLogout.addEventListener('click', (e)=>{ e.preventDefault(); // optional server logout
-      apiFetch('/logout', { method: 'POST' }).catch(()=>{}).finally(()=>{ localStorage.removeItem('token'); window.location.href = 'index.html'; });
-    });
+    // click outside to close modals
+    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); }));
 
-    // collapsible
-    document.querySelectorAll('[data-collapse]').forEach(hdr=> hdr.addEventListener('click', ()=> hdr.parentElement.classList.toggle('collapsed')));
-    document.querySelectorAll('.modal').forEach(m=> m.addEventListener('click', e=>{ if(e.target===m){ m.classList.remove('open'); m.setAttribute('aria-hidden','true'); } }));
-
-    // match filter
+    // filter change
     document.getElementById('matchFilter').addEventListener('change', loadMatches);
 
-    // start
+    // init
     init();
   </script>
 </body>
