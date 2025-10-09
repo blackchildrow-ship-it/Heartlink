@@ -5,23 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard — HeartLink</title>
   <style>
-    :root{--accent:#ff4d88;--muted:#6b6b6b;--bg:#fff7fb;font-family:Inter,system-ui,Arial}
+    :root{
+      --accent:#ff4d88;
+      --accent-2:#ff7aa6;
+      --muted:#6b6b6b;
+      --bg:#fff7fb;
+      --card:#ffffff;
+      --success:#1bb36b;
+      --danger:#ff3b7a;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:#1b1330;min-height:100vh;display:flex;flex-direction:column}
-    header{background:white;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.04);position:sticky;top:0;z-index:20}
+    header{background:var(--card);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.04);position:sticky;top:0;z-index:50}
     .brand{display:flex;align-items:center;gap:10px}
     .brand .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff9ab8);display:grid;place-items:center;color:white;font-weight:700}
     nav{display:flex;gap:12px;align-items:center}
-    nav a{padding:8px 12px;border-radius:10px;text-decoration:none;color:#333;font-weight:600}
-    nav a.active{background:linear-gradient(90deg,var(--accent),#ff7aa6);color:white}
-    .notif-badge{background:#ff3b7a;color:white;padding:4px 8px;border-radius:999px;font-weight:700;margin-left:6px}
+    nav a{padding:8px 12px;border-radius:10px;text-decoration:none;color:#333;font-weight:600;transition:all .18s}
+    nav a.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;transform:translateY(-1px)}
+    .notif-badge{background:var(--danger);color:white;padding:4px 8px;border-radius:999px;font-weight:700;margin-left:6px}
 
-    main{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px;padding:22px}
-    .card{background:white;border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+    main{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px;padding:22px;align-items:start}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,0.06);transition:all .18s}
+    .card:hover{transform:translateY(-4px)}
     .profile-summary{display:flex;gap:14px;align-items:center}
     .profile-summary img{width:84px;height:84px;border-radius:12px;object-fit:cover;border:3px solid var(--accent)}
     .profile-actions{display:flex;gap:8px;margin-top:12px}
-    .btn{background:var(--accent);color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;color:#333;border:1px solid #eee}
     .muted{color:var(--muted)}
 
     /* collapsible card header */
@@ -30,24 +41,30 @@
     .collapsed .card-body{display:none}
 
     /* Matches grid */
-    .matches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .match-card{padding:10px;border-radius:10px;border:1px solid #eee;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px}
-    .match-card img{width:100%;height:110px;object-fit:cover;border-radius:8px}
+    .matches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .match-card{padding:10px;border-radius:10px;border:1px solid #f2dbe6;background:linear-gradient(180deg,#fff,#fffefc);cursor:pointer;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:180px}
+    .match-card img{width:100%;height:120px;object-fit:cover;border-radius:8px}
     .match-actions{display:flex;gap:8px;width:100%}
-    .small-btn{background:#f4f4f4;color:#333;border:0;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .small-btn{background:#fff;border:1px solid #eee;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .small-btn.primary{background:var(--accent);color:white;border:0}
+    .small-btn.heart{background:linear-gradient(90deg,#fff0f6,#ffebf3);border:1px solid #ffd3e6}
 
-    /* Chats */
+    /* spinner */
+    .spinner{border:3px solid rgba(0,0,0,0.08);border-top-color:var(--accent);border-radius:50%;width:16px;height:16px;animation:spin 1s linear infinite;display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Chat */
     .chat-item{display:flex;gap:10px;align-items:center;padding:8px;border-bottom:1px solid #f2f2f2}
     .chat-item img{width:48px;height:48px;border-radius:10px;object-fit:cover}
 
-    /* Responsive */
-    @media(max-width:980px){main{grid-template-columns:1fr;}}
+    /* Toasts */
+    .toast-wrap{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;z-index:999}
+    .toast{background:white;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;gap:10px;align-items:center;min-width:200px}
+    .toast.success{border-left:4px solid var(--success)}
+    .toast.error{border-left:4px solid var(--danger)}
 
-    /* Modal */
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center}
-    .modal.open{display:flex}
-    .modal-card{background:white;padding:20px;border-radius:12px;width:90%;max-width:520px}
-    .field{display:flex;flex-direction:column;margin-bottom:10px}
+    /* responsive */
+    @media(max-width:1000px){main{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
@@ -59,7 +76,7 @@
 
     <nav id="mainNav">
       <a href="#" id="nav-home" class="active">Home</a>
-      <a href="#" id="nav-matches">Matches <span id="matches-count" class="muted" style="font-weight:600;margin-left:6px">(50)</span></a>
+      <a href="#" id="nav-matches">Matches <span id="matches-count" class="muted" style="font-weight:600;margin-left:6px">(0)</span></a>
       <a href="#" id="nav-chats">Chats</a>
       <a href="#" id="nav-settings">Settings</a>
       <a href="#" id="nav-logout">Logout</a>
@@ -82,7 +99,7 @@
               <div id="pfName"><strong>Loading...</strong></div>
               <div id="pfMeta" class="muted">—</div>
               <div class="profile-actions">
-                <button class="btn" id="viewProfile">View</button>
+                <button class="btn ghost" id="viewProfile">View</button>
                 <button class="small-btn" id="upgrade">Upgrade</button>
               </div>
             </div>
@@ -142,32 +159,33 @@
         <div class="card-header" data-collapse>
           <strong>Daily Compatibility Tip</strong>
         </div>
-        <div class="card-body"><p id="dailyTip">Loading tip…</p></div>
+        <div class="card-body"><p id="dailyTip">Be specific in your compliments — it makes them feel noticed.</p></div>
       </div>
     </section>
   </main>
 
-  <footer style="padding:14px;text-align:center;color:var(--muted);background:white;border-top:1px solid #eee">© 2025 HeartLink</footer>
+  <footer style="padding:14px;text-align:center;color:var(--muted);background:var(--card);border-top:1px solid #eee">© 2025 HeartLink</footer>
 
   <!-- Profile / Match modal -->
-  <div class="modal" id="modal">
-    <div class="modal-card" role="dialog" aria-modal="true">
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" style="max-width:600px">
       <div id="modalContent">Loading…</div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button class="small-btn" id="modalClose">Close</button>
-        <button class="btn" id="modalLike">Like</button>
+        <button class="btn" id="modalLike"><span id="modalLikeLabel">Like</span></button>
         <button class="btn" id="modalChat">Chat</button>
       </div>
     </div>
   </div>
 
   <!-- Edit profile modal -->
-  <div class="modal" id="editModal">
+  <div class="modal" id="editModal" aria-hidden="true">
     <div class="modal-card">
       <h3>Edit Profile</h3>
       <div class="field"><label>Name</label><input id="modalName" type="text"></div>
-      <div class="field"><label>Meta (age • location)</label><input id="modalMeta" type="text"></div>
-      <div class="field"><label>Profile image URL</label><input id="modalImg" type="text"></div>
+      <div class="field"><label>Age</label><input id="modalAge" type="number"></div>
+      <div class="field"><label>Location</label><input id="modalLocation" type="text"></div>
+      <div class="field"><label>Image URL</label><input id="modalImg" type="text"></div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
         <button class="small-btn" id="modalCancel">Cancel</button>
         <button class="btn" id="modalSave">Save</button>
@@ -175,33 +193,49 @@
     </div>
   </div>
 
+  <!-- Toasts -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
   <script>
-    // Production-ready fetch wrapper (assumes JSON responses)
+    /* --------------------
+       Config & fetch wrapper
+       -------------------- */
     const API_BASE = '/api';
-    function apiFetch(path, options = {}){
-      const token = localStorage.getItem('token');
+    function getToken(){ return localStorage.getItem('token'); }
+    async function apiFetch(path, options={}){
+      const token = getToken();
       const headers = options.headers || {};
-      headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+      if(!headers['Content-Type'] && !(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
       if(token) headers['Authorization'] = 'Bearer ' + token;
-      return fetch(API_BASE + path, {...options, headers})
-        .then(async res => {
-          if(res.status === 401){
-            // unauthorized — clear token and redirect to login
-            localStorage.removeItem('token');
-            window.location.href = 'index.html';
-            throw new Error('Unauthorized');
-          }
-          const text = await res.text();
-          try{ return JSON.parse(text); } catch(e){ return text; }
-        });
+      try{
+        const res = await fetch(API_BASE + path, {...options, headers});
+        if(res.status === 401){ localStorage.removeItem('token'); window.location.href = 'index.html'; throw new Error('Unauthorized'); }
+        const text = await res.text();
+        try{ return JSON.parse(text); } catch(e){ return text; }
+      }catch(err){ showToast('Network error: ' + (err.message||''), 'error'); throw err; }
     }
 
-    // State
-    let currentUser = null;
-    let currentModalProfile = null;
-    let notifInterval = null;
+    /* --------------------
+       Toast system
+       -------------------- */
+    const toastWrap = document.getElementById('toastWrap');
+    function showToast(message, type='success', ttl=3500){
+      const t = document.createElement('div');
+      t.className = 'toast ' + (type==='error'?'error':'success');
+      t.innerHTML = `<div style=\"width:18px;height:18px;border-radius:6px;background:${type==='error'? 'var(--danger)':'var(--success)'}\"></div><div style=\"flex:1;\">${message}</div><div style=\"margin-left:8px;opacity:0.8;cursor:pointer\">✕</div>`;
+      t.querySelector('div:last-child').addEventListener('click', ()=> t.remove());
+      toastWrap.appendChild(t);
+      setTimeout(()=>{ t.style.transition='transform .25s,opacity .25s'; t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(()=>t.remove(),300); }, ttl);
+    }
 
-    // Elements
+    /* --------------------
+       State & UI refs
+       -------------------- */
+    let currentUser = null;
+    let matches = [];
+    let chats = [];
+    let notifications = [];
+
     const pfName = document.getElementById('pfName');
     const pfMeta = document.getElementById('pfMeta');
     const pfImg = document.getElementById('pfImg');
@@ -212,240 +246,280 @@
     const likesReceivedEl = document.getElementById('likesReceived');
     const likesSentEl = document.getElementById('likesSent');
     const dailyTipEl = document.getElementById('dailyTip');
+    const matchesCountEl = document.getElementById('matches-count');
 
-    // Nav elements
+    // Nav
     const navHome = document.getElementById('nav-home');
     const navMatches = document.getElementById('nav-matches');
     const navChats = document.getElementById('nav-chats');
     const navSettings = document.getElementById('nav-settings');
     const navLogout = document.getElementById('nav-logout');
 
-    // Modal elements
+    // Modal refs
     const modal = document.getElementById('modal');
     const modalContent = document.getElementById('modalContent');
     const modalClose = document.getElementById('modalClose');
     const modalLike = document.getElementById('modalLike');
+    const modalLikeLabel = document.getElementById('modalLikeLabel');
     const modalChat = document.getElementById('modalChat');
 
     const editModal = document.getElementById('editModal');
     const editProfileBtn = document.getElementById('editProfile');
     const modalName = document.getElementById('modalName');
-    const modalMeta = document.getElementById('modalMeta');
+    const modalAge = document.getElementById('modalAge');
+    const modalLocation = document.getElementById('modalLocation');
     const modalImg = document.getElementById('modalImg');
     const modalCancel = document.getElementById('modalCancel');
     const modalSave = document.getElementById('modalSave');
 
-    // initialize app
+    // Buttons
+    const upgradeBtn = document.getElementById('upgrade');
+
+    /* --------------------
+       Initialization
+       -------------------- */
     async function init(){
       try{
-        const user = await apiFetch('/user');
-        currentUser = user;
-        renderProfile(user);
-        // load related data
-        await Promise.all([loadMatches(), loadChats(), loadNotifications(), loadDailyTip(), loadLikes()]);
-        // start polling notifications every 10s
-        notifInterval = setInterval(loadNotifications, 10000);
-      }catch(err){
-        console.error('init error', err);
-      }
+        currentUser = await apiFetch('/user');
+        renderProfile(currentUser);
+        await Promise.all([loadMatches(), loadChats(), loadNotifications(), loadLikes()]);
+        // start polling notifications
+        setInterval(loadNotifications, 10000);
+      }catch(err){ console.error(err); }
     }
 
     function renderProfile(user){
+      if(!user) return;
       pfName.innerHTML = '<strong>' + (user.name || '—') + '</strong>';
       pfMeta.textContent = (user.age? user.age + ' • ':'') + (user.location || '—');
       pfImg.src = user.image || 'https://via.placeholder.com/84';
+      // subscription indicator
+      if(user.subscription && user.subscription.toLowerCase() === 'premium'){
+        upgradeBtn.textContent = 'Premium'; upgradeBtn.disabled = true; upgradeBtn.classList.add('ghost');
+      } else { upgradeBtn.textContent = 'Upgrade'; upgradeBtn.disabled = false; }
     }
 
-    // Load matches with gender filtering logic + UI filter selection
+    /* --------------------
+       Matches: load & render
+       -------------------- */
     async function loadMatches(){
-      if(!currentUser) return;
-      const filter = document.getElementById('matchFilter').value; // 'opposite' or 'both'
-      let genderParam = '';
-      if(filter === 'both'){
-        genderParam = '';
-      } else {
-        // opposite of user's gender
-        const g = (currentUser.gender || '').toLowerCase();
-        if(g === 'male') genderParam = 'female';
-        else if(g === 'female') genderParam = 'male';
-        else genderParam = ''; // non-binary/other -> treat as both
-      }
-      const query = genderParam ? '?gender=' + encodeURIComponent(genderParam) : '';
       try{
-        const matches = await apiFetch('/matches' + query);
-        renderMatches(matches || []);
-      }catch(err){
-        console.error('loadMatches', err);
-      }
+        const filter = document.getElementById('matchFilter').value;
+        let genderQuery = '';
+        if(filter === 'opposite'){
+          const g = (currentUser && currentUser.gender || '').toLowerCase();
+          if(g === 'male') genderQuery = '?gender=female';
+          else if(g === 'female') genderQuery = '?gender=male';
+          else genderQuery = ''; // NB/other -> all
+        }
+        const list = await apiFetch('/matches' + genderQuery);
+        matches = Array.isArray(list) ? list : [];
+        renderMatches(matches);
+      }catch(err){ console.error('loadMatches', err); showToast('Failed to load matches','error'); }
     }
 
     function renderMatches(list){
       matchesGrid.innerHTML = '';
+      matchesCountEl.textContent = '(' + list.length + ')';
       if(!list.length){ matchesGrid.innerHTML = '<div class="muted">No matches found.</div>'; return; }
-      list.forEach(p =>{
-        const card = document.createElement('div');
-        card.className = 'match-card';
-        const img = document.createElement('img'); img.src = p.image || 'https://via.placeholder.com/250';
-        const name = document.createElement('div'); name.innerHTML = '<strong>'+p.name+'</strong><div class="muted">'+(p.age? p.age+' • ':'') + (p.location||'')+'</div>';
+      list.forEach(profile =>{
+        const card = document.createElement('div'); card.className='match-card';
+        const img = document.createElement('img'); img.src = profile.image || 'https://via.placeholder.com/320x240';
+        const name = document.createElement('div'); name.innerHTML = '<strong>'+escapeHtml(profile.name)+'</strong><div class="muted">'+(profile.age? profile.age+' • ':'')+ (escapeHtml(profile.location||'')) +'</div>';
+
         const actions = document.createElement('div'); actions.className='match-actions';
         const viewBtn = document.createElement('button'); viewBtn.className='small-btn'; viewBtn.textContent='View';
-        viewBtn.onclick = ()=> openProfileModal(p);
-        const likeBtn = document.createElement('button'); likeBtn.className='small-btn'; likeBtn.textContent='Like';
-        likeBtn.onclick = async (e)=>{ e.stopPropagation(); await likeProfile(p.id); };
+        viewBtn.onclick = ()=> openProfileModal(profile);
+
+        const likeBtn = document.createElement('button'); likeBtn.className='small-btn heart'; likeBtn.textContent='Like';
+        if(profile.liked) { likeBtn.textContent = 'Liked'; likeBtn.disabled = true; }
+        likeBtn.onclick = async (e)=>{ e.stopPropagation(); await handleLike(profile, likeBtn); };
+
         const chatBtn = document.createElement('button'); chatBtn.className='small-btn'; chatBtn.textContent='Chat';
-        chatBtn.onclick = ()=> openChatWith(p.id, p.name);
+        chatBtn.onclick = (e)=>{ e.stopPropagation(); openChatWith(profile.id, profile.name); };
+
         actions.append(viewBtn, likeBtn, chatBtn);
         card.append(img, name, actions);
         matchesGrid.appendChild(card);
       });
     }
 
-    // Like a profile
-    async function likeProfile(targetId){
+    async function handleLike(profile, btn){
+      if(btn.disabled) return;
+      const original = btn.innerHTML;
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Liking';
       try{
-        await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId }) });
-        // increment sent likes locally
+        await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId: profile.id }) });
+        btn.innerHTML = 'Liked';
+        profile.liked = true;
         likesSentEl.textContent = (parseInt(likesSentEl.textContent)||0) + 1;
-        alert('Liked!');
-      }catch(err){ console.error('like error', err); alert('Could not like right now.'); }
+        showToast('❤️ Liked ' + (profile.name||'') ,'success');
+      }catch(err){ btn.disabled = false; btn.innerHTML = original; showToast('Failed to like','error'); }
     }
 
-    // Chats
-    async function loadChats(){
-      try{
-        const chats = await apiFetch('/chats');
-        renderChats(chats || []);
-      }catch(err){ console.error('loadChats', err); }
-    }
-    function renderChats(list){
-      chatsList.innerHTML='';
-      if(!list.length){ chatsList.innerHTML='<div class="muted">No chats yet.</div>'; return; }
-      list.forEach(c=>{
-        const item = document.createElement('div'); item.className='chat-item';
-        item.innerHTML = `<img src="${c.image||'https://via.placeholder.com/48'}"><div><strong>${c.name}</strong><div class=\"muted\">${c.lastMessage||''}</div></div>`;
-        const openBtn = document.createElement('button'); openBtn.className='small-btn'; openBtn.textContent='Open';
-        openBtn.onclick = ()=> openChatWith(c.id, c.name);
-        item.appendChild(openBtn);
-        chatsList.appendChild(item);
-      });
-    }
-
-    function openChatWith(id, name){
-      // simple chat composer modal
-      const message = prompt('Message to ' + name + ':');
-      if(message){
-        apiFetch('/chat/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify({ message }) })
-          .then(()=>{ alert('Message sent'); loadChats(); })
-          .catch(()=>alert('Failed to send message'));
-      }
-    }
-
-    // Notifications
-    async function loadNotifications(){
-      try{
-        const notifs = await apiFetch('/notifications');
-        renderNotifications(notifs || []);
-      }catch(err){ console.error('loadNotifications', err); }
-    }
-    function renderNotifications(list){
-      notifList.innerHTML='';
-      if(!list.length){ notifList.innerHTML='<div class="muted">No new notifications — yet.</div>'; notifBadge.textContent='0'; return; }
-      notifBadge.textContent = list.length;
-      list.forEach(n =>{
-        const el = document.createElement('div'); el.className='muted'; el.textContent = n.text; notifList.appendChild(el);
-      });
-    }
-
-    document.getElementById('clearNotifs').addEventListener('click', async ()=>{
-      try{
-        await apiFetch('/notifications/clear', { method: 'POST' });
-        notifList.innerHTML='<div class="muted">No new notifications — yet.</div>';
-        notifBadge.textContent='0';
-      }catch(err){ console.error('clear notifs', err); }
-    });
-
-    // editable profile modal
-    editProfileBtn.addEventListener('click', ()=>{
-      editModal.classList.add('open');
-      modalName.value = currentUser.name || '';
-      modalMeta.value = (currentUser.age? currentUser.age + ' • ':'') + (currentUser.location||'');
-      modalImg.value = currentUser.image || '';
-    });
-    modalCancel.addEventListener('click', ()=> editModal.classList.remove('open'));
-    modalSave.addEventListener('click', async ()=>{
-      const payload = { name: modalName.value, meta: modalMeta.value, image: modalImg.value };
-      try{
-        await apiFetch('/profile', { method: 'PUT', body: JSON.stringify(payload) });
-        // update UI
-        currentUser.name = payload.name;
-        currentUser.location = payload.meta;
-        currentUser.image = payload.image;
-        renderProfile(currentUser);
-        editModal.classList.remove('open');
-        alert('Profile updated');
-      }catch(err){ console.error('save profile', err); alert('Failed to update profile'); }
-    });
-
-    // Profile / match modal open
+    /* --------------------
+       View profile modal
+       -------------------- */
+    let currentModalProfile = null;
     function openProfileModal(profile){
       currentModalProfile = profile;
-      modalContent.innerHTML = `<div style="display:flex;gap:12px"><img src=\"${profile.image||'https://via.placeholder.com/120'}\" style=\"width:120px;height:120px;object-fit:cover;border-radius:12px\"><div><h3>${profile.name}</h3><div class=\"muted\">${profile.age?profile.age+' • ':''}${profile.location||''}</div><p class=\"muted\">${profile.bio||''}</p></div></div>`;
-      modal.classList.add('open');
+      modalContent.innerHTML = `<div style=\"display:flex;gap:12px\"><img src=\"${profile.image||'https://via.placeholder.com/120'}\" style=\"width:120px;height:120px;object-fit:cover;border-radius:10px\"><div style=\"flex:1\"><h3>${escapeHtml(profile.name)}</h3><div class=\"muted\">${profile.age?profile.age+' • ':''}${escapeHtml(profile.location||'')}</div><p class=\"muted\">${escapeHtml(profile.bio||'')}</p></div></div>`;
+      // like button label
+      modalLikeLabel.textContent = profile.liked ? 'Liked' : 'Like';
+      modalLike.disabled = !!profile.liked;
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
     }
-    modalClose.addEventListener('click', ()=> modal.classList.remove('open'));
+
+    modalClose.addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
 
     modalLike.addEventListener('click', async ()=>{
       if(!currentModalProfile) return;
-      try{ await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId: currentModalProfile.id }) }); alert('Liked!'); modal.classList.remove('open'); }
-      catch(e){ alert('Could not like'); }
+      modalLike.disabled = true; modalLike.innerHTML = '<span class="spinner"></span> Liking';
+      try{
+        await apiFetch('/like', { method: 'POST', body: JSON.stringify({ targetId: currentModalProfile.id }) });
+        modalLike.innerHTML = 'Liked';
+        showToast('❤️ Liked ' + (currentModalProfile.name||''),'success');
+        // reflect in list
+        currentModalProfile.liked = true; loadMatches();
+      }catch(err){ modalLike.disabled = false; modalLike.innerHTML = 'Like'; showToast('Could not like','error'); }
     });
+
     modalChat.addEventListener('click', ()=>{
       if(!currentModalProfile) return;
       modal.classList.remove('open');
       openChatWith(currentModalProfile.id, currentModalProfile.name);
     });
 
-    // Upgrade
-    document.getElementById('upgrade').addEventListener('click', async ()=>{
-      if(!confirm('Upgrade to Premium?')) return;
+    /* --------------------
+       Chat flows
+       -------------------- */
+    async function loadChats(){
+      try{
+        const list = await apiFetch('/chats');
+        chats = Array.isArray(list) ? list : [];
+        renderChats(chats);
+      }catch(err){ console.error(err); showToast('Failed to load chats','error'); }
+    }
+    function renderChats(list){
+      chatsList.innerHTML = '';
+      if(!list.length){ chatsList.innerHTML = '<div class="muted">No chats yet.</div>'; return; }
+      list.forEach(c=>{
+        const item = document.createElement('div'); item.className='chat-item';
+        const img = document.createElement('img'); img.src = c.image || 'https://via.placeholder.com/48';
+        const body = document.createElement('div'); body.innerHTML = `<strong>${escapeHtml(c.name)}</strong><div class=\"muted\">${escapeHtml(c.lastMessage||'')}</div>`;
+        const openBtn = document.createElement('button'); openBtn.className='small-btn'; openBtn.textContent='Open';
+        openBtn.onclick = ()=> openChatWith(c.id, c.name);
+        item.append(img, body, openBtn);
+        chatsList.appendChild(item);
+      });
+    }
+
+    function openChatWith(id, name){
+      const message = prompt('Message to ' + name + ':');
+      if(!message) return;
+      // optimistic UI: show toast and send
+      const tempToastId = showToast('Sending message...', 'success', 2000);
+      apiFetch('/chat/' + encodeURIComponent(id), { method: 'POST', body: JSON.stringify({ message }) })
+        .then(()=>{ showToast('Message sent to ' + name,'success'); loadChats(); })
+        .catch(()=> showToast('Failed to send message','error'));
+    }
+
+    /* --------------------
+       Notifications
+       -------------------- */
+    async function loadNotifications(){
+      try{
+        const list = await apiFetch('/notifications');
+        notifications = Array.isArray(list) ? list : [];
+        renderNotifications(notifications);
+      }catch(err){ console.error(err); }
+    }
+    function renderNotifications(list){
+      notifList.innerHTML = '';
+      if(!list.length){ notifList.innerHTML = '<div class="muted">No new notifications — yet.</div>'; notifBadge.textContent = '0'; return; }
+      notifBadge.textContent = list.length;
+      list.forEach(n=>{
+        const el = document.createElement('div'); el.className='muted'; el.textContent = n.text; notifList.appendChild(el);
+      });
+    }
+    document.getElementById('clearNotifs').addEventListener('click', async ()=>{
+      try{ await apiFetch('/notifications/clear', { method: 'POST' }); notifications=[]; renderNotifications([]); showToast('Notifications cleared','success'); }
+      catch(e){ showToast('Failed to clear notifications','error'); }
+    });
+
+    /* --------------------
+       Likes / counts
+       -------------------- */
+    async function loadLikes(){
+      try{
+        const res = await apiFetch('/likes');
+        likesReceivedEl.textContent = res.received || 0; likesSentEl.textContent = res.sent || 0;
+      }catch(err){ console.error('likes', err); }
+    }
+
+    /* --------------------
+       Upgrade
+       -------------------- */
+    upgradeBtn.addEventListener('click', async ()=>{
+      if(upgradeBtn.disabled) return;
+      if(!confirm('Upgrade to Premium for enhanced features?')) return;
+      upgradeBtn.disabled = true; const old = upgradeBtn.textContent; upgradeBtn.innerHTML = '<span class="spinner"></span> Upgrading';
       try{
         const res = await apiFetch('/upgrade', { method: 'POST', body: JSON.stringify({ plan: 'premium' }) });
-        if(res && res.newStatus){
-          alert('Upgraded to ' + res.newStatus);
-          // update UI
-          // e.g., show premium badge — simplified here
-        }
-      }catch(err){ console.error('upgrade', err); alert('Upgrade failed'); }
+        if(res && res.newStatus){ showToast('Upgraded to ' + res.newStatus,'success'); currentUser.subscription = res.newStatus; renderProfile(currentUser); }
+        else{ showToast('Upgrade completed','success'); }
+      }catch(err){ showToast('Upgrade failed','error'); }
+      finally{ upgradeBtn.disabled = false; upgradeBtn.innerHTML = old; }
     });
 
-    // Logout
-    document.getElementById('nav-logout').addEventListener('click', (e)=>{
-      e.preventDefault(); localStorage.removeItem('token'); window.location.href='index.html';
+    /* --------------------
+       Edit profile modal save
+       -------------------- */
+    editProfileBtn.addEventListener('click', ()=>{
+      if(!currentUser) return;
+      editModal.classList.add('open'); editModal.setAttribute('aria-hidden','false');
+      modalName.value = currentUser.name || '';
+      modalAge.value = currentUser.age || '';
+      modalLocation.value = currentUser.location || '';
+      modalImg.value = currentUser.image || '';
+    });
+    modalCancel.addEventListener('click', ()=>{ editModal.classList.remove('open'); editModal.setAttribute('aria-hidden','true'); });
+    modalSave.addEventListener('click', async ()=>{
+      modalSave.disabled = true; modalSave.innerHTML = '<span class="spinner"></span> Saving';
+      const payload = { name: modalName.value, age: modalAge.value, location: modalLocation.value, image: modalImg.value };
+      try{
+        await apiFetch('/profile', { method: 'PUT', body: JSON.stringify(payload) });
+        currentUser = {...currentUser, ...payload}; renderProfile(currentUser);
+        editModal.classList.remove('open'); editModal.setAttribute('aria-hidden','true');
+        showToast('Profile updated','success');
+      }catch(err){ showToast('Failed to save profile','error'); }
+      finally{ modalSave.disabled = false; modalSave.innerHTML = 'Save'; }
     });
 
-    // Nav handlers
-    function setActive(link){
-      document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
-      link.classList.add('active');
-    }
+    /* --------------------
+       Utilities & helpers
+       -------------------- */
+    function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]); }
+
+    // nav handlers
+    function setActive(link){ document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active')); link.classList.add('active'); }
     navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navHome); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; });
     navMatches.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navMatches); document.getElementById('matchesSection').style.display='block'; document.getElementById('chatsSection').style.display='none'; loadMatches(); });
     navChats.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navChats); document.getElementById('matchesSection').style.display='none'; document.getElementById('chatsSection').style.display='block'; loadChats(); });
-    navSettings.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navSettings); alert('Settings panel would open here (placeholder).'); });
-
-    // Collapsible cards
-    document.querySelectorAll('[data-collapse]').forEach(hdr=>{
-      hdr.addEventListener('click', ()=> hdr.parentElement.classList.toggle('collapsed'));
+    navSettings.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navSettings); showToast('Settings coming soon','success'); });
+    navLogout.addEventListener('click', (e)=>{ e.preventDefault(); // optional server logout
+      apiFetch('/logout', { method: 'POST' }).catch(()=>{}).finally(()=>{ localStorage.removeItem('token'); window.location.href = 'index.html'; });
     });
 
-    // match filter change
+    // collapsible
+    document.querySelectorAll('[data-collapse]').forEach(hdr=> hdr.addEventListener('click', ()=> hdr.parentElement.classList.toggle('collapsed')));
+    document.querySelectorAll('.modal').forEach(m=> m.addEventListener('click', e=>{ if(e.target===m){ m.classList.remove('open'); m.setAttribute('aria-hidden','true'); } }));
+
+    // match filter
     document.getElementById('matchFilter').addEventListener('change', loadMatches);
 
-    // Start
+    // start
     init();
-
-    // Close modals by clicking outside
-    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('open'); }));
   </script>
 </body>
 </html>
