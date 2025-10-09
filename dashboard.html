@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — HeartLink</title>
+  <style>
+    :root {
+      --accent: #ff4d88;
+      --light-accent: #ffe6ef;
+      --muted: #6b6b6b;
+      --bg: #fff7fb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #1b1330;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      color: var(--accent);
+      margin: 0;
+      font-size: 22px;
+    }
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 20px;
+      padding: 30px;
+      flex: 1;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--accent);
+    }
+    .profile-summary img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+    }
+    .profile-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .match-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .match-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn:hover { opacity: 0.9; }
+    .notification {
+      background: var(--light-accent);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--muted);
+      background: white;
+      border-top: 1px solid #eee;
+    }
+    @media(max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>❤️ HeartLink</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Matches</a>
+      <a href="#">Messages</a>
+      <a href="#">Settings</a>
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Left Column: Profile Overview -->
+    <section class="card">
+      <h2>Your Profile</h2>
+      <div class="profile-summary">
+        <img src="https://via.placeholder.com/80" alt="User photo" />
+        <div>
+          <strong>Alex Morgan</strong><br>
+          29 • New York, NY<br>
+          <a href="#" style="color:var(--accent);font-size:14px;">Edit Profile</a>
+        </div>
+      </div>
+      <hr>
+      <p><strong>Membership:</strong> Premium 💎</p>
+      <p><strong>Status:</strong> Verified ✅</p>
+    </section>
+
+    <!-- Center Column: Matches & Messages -->
+    <section>
+      <div class="card" style="margin-bottom:20px;">
+        <h2>Match Suggestions</h2>
+        <div class="match-item">
+          <img src="https://via.placeholder.com/50" alt="match">
+          <div>
+            <strong>Jordan, 27</strong><br><small>2 miles away</small>
+          </div>
+          <button class="btn" style="margin-left:auto;">View</button>
+        </div>
+        <div class="match-item">
+          <img src="https://via.placeholder.com/50" alt="match">
+          <div>
+            <strong>Taylor, 31</strong><br><small>5 miles away</small>
+          </div>
+          <button class="btn" style="margin-left:auto;">View</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Messages</h2>
+        <div class="match-item">
+          <img src="https://via.placeholder.com/50" alt="msg">
+          <div>
+            <strong>Jamie</strong><br><small>Hey! How was your weekend?</small>
+          </div>
+          <button class="btn" style="margin-left:auto;">Open</button>
+        </div>
+        <div class="match-item">
+          <img src="https://via.placeholder.com/50" alt="msg">
+          <div>
+            <strong>Casey</strong><br><small>Ready for the event tomorrow?</small>
+          </div>
+          <button class="btn" style="margin-left:auto;">Open</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Notifications & Daily Tip -->
+    <section>
+      <div class="card" style="margin-bottom:20px;">
+        <h2>Notifications</h2>
+        <div class="notification">❤️ You got a new like from Jordan!</div>
+        <div class="notification">💬 Taylor sent you a message.</div>
+        <div class="notification">🎉 New speed dating event this weekend!</div>
+      </div>
+
+      <div class="card">
+        <h2>Daily Compatibility Tip</h2>
+        <p>✨ Take a few minutes to compliment your matches genuinely — authenticity attracts lasting connections.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 HeartLink. All rights reserved.
+  </footer>
+</body>
+</html>
