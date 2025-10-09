@@ -1,186 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HeartLink Dashboard</title>
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #fff5f7;
-    margin: 0;
-    color: #333;
-  }
-  header {
-    background-color: #ffb6c1;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 { color: #fff; margin: 0; }
-  nav a {
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  nav a:hover { text-decoration: underline; }
-  .container { padding: 20px; }
-  .matches-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-  }
-  .card {
-    background: white;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.2s;
-  }
-  .card:hover { transform: translateY(-3px); }
-  .btn {
-    background-color: #ff7fa8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  #chats, #notifications { display: none; }
-  #toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #ff7fa8;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    display: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeartLink Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #fff0f5;
+      color: #333;
+    }
+    header {
+      background: #ffb6c1;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header button {
+      background: white;
+      color: #ff69b4;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    header button:hover {
+      background: #ffe4e9;
+    }
+    main {
+      padding: 1rem 2rem;
+    }
+    .match-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .card:hover { transform: scale(1.02); }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .card h3 { margin: 0.5rem 0 0; }
+    .card button {
+      margin-top: 0.5rem;
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .card button:hover { background: #ff85c2; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff69b4;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      opacity: 0;
+      animation: fadeInOut 3s ease forwards;
+      z-index: 1000;
+    }
+    @keyframes fadeInOut {
+      0% {opacity: 0;}
+      10%,90% {opacity: 1;}
+      100% {opacity: 0;}
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    .modal-content h2 { color: #ff69b4; }
+    .modal-content button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .bronze { background: #cd7f32; color: white; }
+    .silver { background: #c0c0c0; color: black; }
+    .gold { background: #ffd700; color: black; }
+    .close-btn {
+      background: #ffb6c1;
+      color: white;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>HeartLink</h1>
-  <nav>
-    <a href="#" id="homeLink">Home</a>
-    <a href="#" id="matchesLink">Matches</a>
-    <a href="#" id="chatsLink">Chats</a>
-    <a href="#" id="notificationsLink">Notifications <span id="notifCount">(0)</span></a>
-    <a href="index.html" id="logoutLink">Logout</a>
-  </nav>
-</header>
-<div class="container">
-  <section id="matches">
-    <h2>Matches</h2>
-    <div class="matches-grid" id="matchesGrid"></div>
-  </section>
-  <section id="chats">
-    <h2>Chats</h2>
-    <div id="chatsList"></div>
-  </section>
-  <section id="notifications">
-    <h2>Notifications</h2>
-    <ul id="notifList"></ul>
-  </section>
-</div>
-<div id="toast"></div>
-<script>
-const matchesGrid = document.getElementById('matchesGrid');
-const notifList = document.getElementById('notifList');
-const notifCount = document.getElementById('notifCount');
-const chatsList = document.getElementById('chatsList');
-const toast = document.getElementById('toast');
-const sections = {
-  matches: document.getElementById('matches'),
-  chats: document.getElementById('chats'),
-  notifications: document.getElementById('notifications')
-};
+  <header>
+    <h1>❤️ HeartLink</h1>
+    <button id="upgradeBtn">⭐ Upgrade</button>
+  </header>
 
-function showSection(name){
-  Object.values(sections).forEach(sec => sec.style.display='none');
-  sections[name].style.display='block';
-}
+  <main>
+    <h2>Your Matches</h2>
+    <div class="match-list" id="matches"></div>
+  </main>
 
-function showToast(msg){
-  toast.textContent = msg;
-  toast.style.display='block';
-  setTimeout(()=>toast.style.display='none',3000);
-}
+  <!-- Upgrade Modal -->
+  <div class="modal" id="upgradeModal">
+    <div class="modal-content">
+      <h2>Upgrade Your Experience</h2>
+      <p>Select a plan to enjoy premium features:</p>
+      <button class="bronze" onclick="selectPlan('bronze',400)">🥉 Bronze — Ksh 400</button>
+      <button class="silver" onclick="selectPlan('silver',750)">🥈 Silver — Ksh 750</button>
+      <button class="gold" onclick="selectPlan('gold',1500)">🥇 Gold — Ksh 1500</button>
+      <button class="close-btn" onclick="toggleModal(false)">Close</button>
+    </div>
+  </div>
 
-// Mock user and data
-token = localStorage.getItem('token') || 'mockToken';
-const userGender = 'male';
+  <script>
+    // Toast helper
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(()=>toast.remove(), 3000);
+    }
 
-function generateMatches(){
-  matchesGrid.innerHTML='';
-  const genderToShow = userGender==='male'?'female':'male';
-  for(let i=1;i<=25;i++){
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`<h4>${genderToShow==='female'?'Sophia':'Liam'} ${i}</h4>
-      <p>${Math.floor(Math.random()*10)+20} yrs</p>
-      <button class='btn viewBtn'>View</button>
-      <button class='btn likeBtn'>Like</button>
-      <button class='btn chatBtn'>Chat</button>`;
-    matchesGrid.appendChild(card);
-  }
-}
+    // Mock data
+    const matches = [
+      {name: 'Sophie', age: 26, gender: 'female', img: 'https://picsum.photos/300/200?1'},
+      {name: 'Daniel', age: 29, gender: 'male', img: 'https://picsum.photos/300/200?2'},
+      {name: 'Amelia', age: 24, gender: 'female', img: 'https://picsum.photos/300/200?3'},
+      {name: 'Liam', age: 28, gender: 'male', img: 'https://picsum.photos/300/200?4'}
+    ];
 
-function randomBotMessage(){
-  const messages=[
-    'Hey there! How are you today? 😊',
-    'You seem interesting, wanna chat?',
-    'Loved your profile picture!',
-    'What’s your favorite hobby?',
-    'Hi! I’m new here too.'
-  ];
-  return messages[Math.floor(Math.random()*messages.length)];
-}
+    const matchList = document.getElementById('matches');
+    matches.forEach((m,i)=>{
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <img src="${m.img}" alt="${m.name}">
+        <h3>${m.name}, ${m.age}</h3>
+        <button onclick="likeMatch('${m.name}')">❤️ Like</button>
+        <button onclick="goToChat('${m.name}')">💬 Chat</button>
+      `;
+      matchList.appendChild(card);
+    });
 
-function generateRandomBotChats(){
-  chatsList.innerHTML='';
-  const bots = ['Ava','Noah','Mia','Ethan','Emma','Oliver'];
-  bots.forEach(bot=>{
-    const msg = randomBotMessage();
-    const div = document.createElement('div');
-    div.className='card';
-    div.innerHTML=`<strong>${bot}:</strong> ${msg}`;
-    chatsList.appendChild(div);
-    // Also push to notifications
-    const li = document.createElement('li');
-    li.textContent = `${bot}: ${msg}`;
-    notifList.appendChild(li);
-  });
-  notifCount.textContent = `(${bots.length})`;
-}
+    function likeMatch(name){
+      showToast(`You liked ${name}! 💖`);
+    }
 
-document.getElementById('matchesLink').addEventListener('click',()=>showSection('matches'));
-document.getElementById('chatsLink').addEventListener('click',()=>showSection('chats'));
-document.getElementById('notificationsLink').addEventListener('click',()=>showSection('notifications'));
+    function goToChat(name){
+      window.location.href = `chat.html?user=${encodeURIComponent(name)}`;
+    }
 
-document.addEventListener('click',e=>{
-  if(e.target.classList.contains('viewBtn')){
-    showToast('Viewing profile...');
-  }else if(e.target.classList.contains('likeBtn')){
-    e.target.disabled=true;
-    showToast('❤️ Liked successfully!');
-  }else if(e.target.classList.contains('chatBtn')){
-    showToast('Opening chat...');
-  }
-});
+    // Upgrade Modal
+    const modal = document.getElementById('upgradeModal');
+    document.getElementById('upgradeBtn').onclick = () => toggleModal(true);
 
-generateMatches();
-generateRandomBotChats();
-showSection('matches');
-</script>
+    function toggleModal(show){
+      modal.style.display = show ? 'flex' : 'none';
+    }
+
+    function selectPlan(plan, amount){
+      showToast(`Redirecting to ${plan.toUpperCase()} plan...`);
+      setTimeout(()=>{
+        window.location.href = `packages.html?plan=${plan}&amount=${amount}`;
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
