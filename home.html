@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HeartLink Home</title>
 <style>
   body {
@@ -12,6 +12,7 @@
     margin: 0;
     padding-bottom: 80px;
   }
+
   header {
     background-color: #ffb6c1;
     color: white;
@@ -23,10 +24,12 @@
     top: 0;
     z-index: 1000;
   }
+
   header h1 {
     font-size: 1.4em;
     margin: 0;
   }
+
   .icon-btn {
     background: none;
     border: none;
@@ -34,31 +37,38 @@
     color: white;
     font-size: 1.3em;
   }
+
+  /* Feature cards */
   .features {
     display: flex;
-    justify-content: space-around;
-    margin: 15px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 10px;
+    gap: 8px;
   }
   .feature-card {
+    flex: 1;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    width: 30%;
-    min-width: 100px;
     text-align: center;
-    padding: 15px;
+    padding: 10px 5px;
     transition: all 0.3s;
     cursor: pointer;
   }
   .feature-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background-color: #ffe4ec;
   }
   .feature-card i {
-    font-size: 1.8em;
+    font-size: 1.4em;
     color: #ff7fa8;
+    display: block;
   }
+  .feature-card p {
+    font-size: 0.8em;
+    margin: 5px 0 0;
+  }
+
   .recommend {
     padding: 15px;
   }
@@ -66,11 +76,13 @@
     margin-bottom: 10px;
     color: #ff7fa8;
   }
+
   .profiles {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 15px;
   }
+
   .profile-card {
     background: white;
     border-radius: 12px;
@@ -92,6 +104,7 @@
     font-size: 0.9em;
     margin-top: 5px;
   }
+
   .btn {
     background-color: #ff7fa8;
     color: white;
@@ -106,6 +119,7 @@
   .btn:hover {
     background-color: #ff5f93;
   }
+
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -130,6 +144,7 @@
     color: #ff7fa8;
     font-weight: bold;
   }
+
   #toast {
     position: fixed;
     bottom: 80px;
@@ -149,26 +164,29 @@
   <button class="icon-btn" onclick="showToast('You have 3 new messages!')">🔔</button>
 </header>
 
+<!-- Feature Section -->
 <div class="features">
-  <div class="feature-card" onclick="showToast('Opening Voice Chat...')">
+  <div class="feature-card" onclick="openVoiceChat()">
     <i>🎤</i>
     <p>Voice Chat</p>
   </div>
-  <div class="feature-card" onclick="showToast('Opening Secret Notes...')">
+  <div class="feature-card" onclick="openSecretNotes()">
     <i>💌</i>
     <p>Secret Note</p>
   </div>
-  <div class="feature-card" onclick="showToast('Opening Tasks Center...')">
+  <div class="feature-card" onclick="openTasks()">
     <i>📝</i>
     <p>Tasks Center</p>
   </div>
 </div>
 
+<!-- Recommendations -->
 <section class="recommend">
   <h2>Recommended for You 💖</h2>
   <div class="profiles" id="profiles"></div>
 </section>
 
+<!-- Bottom Navigation -->
 <div class="bottom-nav">
   <button class="active" onclick="navigate('home')">🏠<br>Home</button>
   <button onclick="navigate('moments')">📸<br>Moments</button>
@@ -203,14 +221,15 @@ function generateProfiles() {
       <img src="https://source.unsplash.com/collection/888146/200x200?sig=${Math.random()}" alt="${name}">
       <div class="profile-info"><strong>${name}</strong>, ${randomAge()}</div>
       <div class="profile-info">${randomDistance()}</div>
-      <button class="btn" onclick="sayHi('${name}')">👋 Say Hi</button>
+      <button class="btn" onclick="openChat('${name}')">👋 Say Hi</button>
     `;
     profiles.appendChild(card);
   });
 }
 
-function sayHi(name) {
-  showToast('You said Hi to ' + name + ' 💕');
+function openChat(name) {
+  showToast('Opening chat with ' + name + ' 💬');
+  setTimeout(() => window.location.href = 'chat.html?user=' + encodeURIComponent(name), 800);
 }
 
 function showToast(message) {
@@ -220,7 +239,50 @@ function showToast(message) {
 }
 
 function navigate(tab) {
-  showToast('Opening ' + tab.charAt(0).toUpperCase() + tab.slice(1) + '...');
+  switch(tab) {
+    case 'home':
+      showToast('You are already on Home ❤️');
+      break;
+    case 'moments':
+      showToast('Opening Camera...');
+      openCamera();
+      break;
+    case 'chat':
+      window.location.href = 'chat.html';
+      break;
+    case 'me':
+      window.location.href = 'profile.html';
+      break;
+  }
+}
+
+/* Feature buttons */
+function openVoiceChat() {
+  showToast('Opening Voice Chat...');
+  // Could link to voicechat.html
+}
+
+function openSecretNotes() {
+  showToast('Opening Secret Notes...');
+}
+
+function openTasks() {
+  showToast('Opening Task Center...');
+}
+
+/* Open camera for Moments */
+function openCamera() {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        showToast('Camera access granted 🎥');
+      })
+      .catch(() => {
+        showToast('Camera access denied ⚠️');
+      });
+  } else {
+    showToast('Camera not supported on this device ⚠️');
+  }
 }
 
 generateProfiles();
