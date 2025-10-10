@@ -158,10 +158,20 @@ function verifyPayment(){
     return;
   }
 
-  const amountStr = selectedAmount.toString();
+  const amounts = {400: 'Bronze', 750: 'Silver', 1500: 'Gold'};
+  let detectedAmount = null;
 
-  if(msg.includes(amountStr) && msg.includes('HAKIKA') && msg.includes('PROVISION')){
-    showToast(`✅ Payment of Ksh ${selectedAmount} Verified! Welcome to HeartLink.`);
+  // Extract numeric amounts
+  for (let amt in amounts) {
+    if (msg.includes(amt)) {
+      detectedAmount = parseInt(amt);
+      break;
+    }
+  }
+
+  if (msg.includes('HAKIKA') && msg.includes('PROVISION') && detectedAmount) {
+    const plan = amounts[detectedAmount];
+    showToast(`✅ Payment of Ksh ${detectedAmount} verified! ${plan} package activated.`);
     setTimeout(()=>window.location.href='dashboard.html',2000);
   } else {
     showToast('❌ Could not verify payment. Ensure message contains the amount and HAKIKA R PROVISION.');
