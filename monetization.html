@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💼 Monetization | HeartLink</title>
+<style>
+  :root {
+    --hl-pink: #ff7bd8;
+    --hl-dark-pink: #ff4fc0;
+    --hl-light-pink: #ffe6f5;
+    --hl-bg: #fff7fb;
+    --hl-text: #222;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--hl-bg);
+    color: var(--hl-text);
+  }
+
+  header {
+    background: linear-gradient(180deg, var(--hl-pink), var(--hl-light-pink));
+    color: white;
+    text-align: center;
+    padding: 40px 20px 60px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    position: relative;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  header p {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  .container {
+    padding: 20px;
+    margin-top: -40px;
+  }
+
+  .section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  }
+
+  .section h2 {
+    color: var(--hl-dark-pink);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  li::before {
+    content: "💗 ";
+  }
+
+  /* Current Plan Card */
+  .current-plan {
+    background: var(--hl-light-pink);
+    border-left: 6px solid var(--hl-pink);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .current-plan span {
+    color: var(--hl-dark-pink);
+    font-weight: 600;
+  }
+
+  /* Subscription Tiers */
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+
+  .tier {
+    background: linear-gradient(135deg, #fff, var(--hl-light-pink));
+    border: 2px solid var(--hl-pink);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    transition: 0.3s ease;
+  }
+
+  .tier:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .tier h3 {
+    color: var(--hl-pink);
+    margin-bottom: 5px;
+  }
+
+  .price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--hl-dark-pink);
+  }
+
+  .tier button {
+    background: var(--hl-pink);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+
+  .tier button:hover {
+    background: var(--hl-dark-pink);
+  }
+
+  .subscribed-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--hl-dark-pink);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 12px;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  }
+
+  .bottom-nav a {
+    text-align: center;
+    text-decoration: none;
+    color: #777;
+    font-size: 0.8rem;
+  }
+
+  .bottom-nav a.active {
+    color: var(--hl-pink);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💼 Monetization</h1>
+  <p>Upgrade to unlock premium HeartLink experiences</p>
+</header>
+
+<div class="container">
+  <div id="currentPlanCard" class="current-plan" style="display:none;">
+    Your current plan: <span id="planName"></span> — KSh <span id="planPrice"></span>/month
+  </div>
+
+  <div class="section">
+    <h2>✨ Freemium Model</h2>
+    <ul>
+      <li><strong>Free:</strong> Create profile, see matches, limited messaging</li>
+      <li><strong>Premium:</strong> Unlimited messages, video chat, advanced filters, access to events</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>🌟 Subscription Tiers</h2>
+    <div class="tiers">
+      <div class="tier" id="basic-tier">
+        <h3>Basic</h3>
+        <div class="price">KSh 450 / month</div>
+        <p>Messaging limits lifted & profile boost</p>
+        <button onclick="subscribe('Basic', 450)">Subscribe</button>
+      </div>
+      <div class="tier" id="premium-tier">
+        <h3>Premium</h3>
+        <div class="price">KSh 850 / month</div>
+        <p>Includes video chat and advanced match filters</p>
+        <button onclick="subscribe('Premium', 850)">Subscribe</button>
+      </div>
+      <div class="tier" id="vip-tier">
+        <h3>VIP</h3>
+        <div class="price">KSh 1500 / month</div>
+        <p>Full access + concierge dating services</p>
+        <button onclick="subscribe('VIP', 1500)">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="home.html">🏠<br>Home</a>
+  <a href="moment.html">🪩<br>Moment</a>
+  <a href="chat.html">💬<br>Chat</a>
+  <a href="profile.html" class="active">💗<br>Me</a>
+</nav>
+
+<script>
+function subscribe(tier, price) {
+  localStorage.setItem('subscriptionTier', tier);
+  localStorage.setItem('subscriptionPrice', price);
+  alert(`🎀 You’ve subscribed to the ${tier} Plan for KSh ${price}/month!`);
+  updateSubscriptionUI();
+}
+
+function updateSubscriptionUI() {
+  const tier = localStorage.getItem('subscriptionTier');
+  const price = localStorage.getItem('subscriptionPrice');
+  document.querySelectorAll('.subscribed-badge').forEach(b => b.remove());
+
+  if (tier && price) {
+    const tierId = tier.toLowerCase() + '-tier';
+    const badge = document.createElement('div');
+    badge.className = 'subscribed-badge';
+    badge.textContent = '✅ Subscribed';
+    document.getElementById(tierId).appendChild(badge);
+
+    const card = document.getElementById('currentPlanCard');
+    card.style.display = 'block';
+    document.getElementById('planName').textContent = tier;
+    document.getElementById('planPrice').textContent = price;
+  } else {
+    document.getElementById('currentPlanCard').style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateSubscriptionUI);
+</script>
+
+</body>
+</html>
