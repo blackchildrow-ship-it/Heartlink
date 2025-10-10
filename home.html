@@ -67,7 +67,11 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     overflow: hidden;
     position: relative;
+    cursor: pointer;
+    transition: transform 0.15s ease;
   }
+
+  .profile-card:hover { transform: scale(1.03); }
 
   .profile-card img {
     width: 100%;
@@ -198,11 +202,15 @@ function populateProfiles() {
         <div class="profile-meta">${p.status}</div>
       </div>
     `;
+    // when clicked, open profile.html with user name as query
+    card.addEventListener('click', () => {
+      window.location.href = \`profile.html?user=\${encodeURIComponent(p.name)}\`;
+    });
     container.appendChild(card);
   });
 }
 
-// populate once per load
+// populate on load
 populateProfiles();
 </script>
 
