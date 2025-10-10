@@ -1,291 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeartLink Home</title>
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #fff5f7;
-    color: #333;
-    margin: 0;
-    padding-bottom: 80px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeartLink — Home</title>
+  <style>
+    :root {
+      --bg:#fff7fb;
+      --accent:#ff4d88;
+      --muted:#6b6b6b;
+      --card:#ffffff;
+      --shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+    *{box-sizing:border-box;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 0;
+      color: #1b1330;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  header {
-    background-color: #ffb6c1;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
+    header {
+      background: linear-gradient(90deg,var(--accent),#ff7aa6);
+      color: white;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-  header h1 {
-    font-size: 1.4em;
-    margin: 0;
-  }
+    nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.2);
+    }
 
-  .icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-size: 1.3em;
-  }
+    main {
+      flex: 1;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
 
-  /* Feature cards */
-  .features {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-    gap: 8px;
-  }
-  .feature-card {
-    flex: 1;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    text-align: center;
-    padding: 10px 5px;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-  .feature-card:hover {
-    transform: translateY(-3px);
-    background-color: #ffe4ec;
-  }
-  .feature-card i {
-    font-size: 1.4em;
-    color: #ff7fa8;
-    display: block;
-  }
-  .feature-card p {
-    font-size: 0.8em;
-    margin: 5px 0 0;
-  }
+    .welcome {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+    }
 
-  .recommend {
-    padding: 15px;
-  }
-  .recommend h2 {
-    margin-bottom: 10px;
-    color: #ff7fa8;
-  }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 1000px;
+    }
 
-  .profiles {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
-  }
+    .profile-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .profile-card:hover {transform:translateY(-4px);}
+    .profile-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .profile-info {
+      padding: 14px;
+    }
+    .profile-info h3 {
+      margin: 6px 0;
+      font-size: 18px;
+      color:#1b1330;
+    }
+    .profile-info small {
+      color: var(--muted);
+    }
+    .btns {
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+    button {
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-chat{background:var(--accent);color:white;}
+    .btn-like{background:#ffe2eb;color:#ff3377;}
+    .btn-chat:hover,.btn-like:hover{opacity:0.85;}
 
-  .profile-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 10px;
-    text-align: center;
-    transition: all 0.3s;
-  }
-  .profile-card:hover {
-    transform: translateY(-3px);
-  }
-  .profile-card img {
-    width: 100%;
-    height: 140px;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  .profile-info {
-    font-size: 0.9em;
-    margin-top: 5px;
-  }
-
-  .btn {
-    background-color: #ff7fa8;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin-top: 8px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s;
-  }
-  .btn:hover {
-    background-color: #ff5f93;
-  }
-
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: white;
-    border-top: 1px solid #ddd;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    z-index: 1000;
-  }
-  .bottom-nav button {
-    background: none;
-    border: none;
-    color: #555;
-    font-size: 0.9em;
-    text-align: center;
-    cursor: pointer;
-  }
-  .bottom-nav button.active {
-    color: #ff7fa8;
-    font-weight: bold;
-  }
-
-  #toast {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    background-color: #ff7fa8;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    display: none;
-  }
-</style>
+    footer {
+      text-align: center;
+      padding: 16px;
+      background: rgba(0,0,0,0.03);
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>❤ HeartLink</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="matches.html">Matches</a>
+      <a href="chat.html">Messages</a>
+      <a href="profile.html">Profile</a>
+      <a href="#" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>HeartLink</h1>
-  <button class="icon-btn" onclick="showToast('You have 3 new messages!')">🔔</button>
-</header>
+  <main>
+    <div class="welcome" id="welcomeText">Hi, ❤️</div>
 
-<!-- Feature Section -->
-<div class="features">
-  <div class="feature-card" onclick="openVoiceChat()">
-    <i>🎤</i>
-    <p>Voice Chat</p>
-  </div>
-  <div class="feature-card" onclick="openSecretNotes()">
-    <i>💌</i>
-    <p>Secret Note</p>
-  </div>
-  <div class="feature-card" onclick="openTasks()">
-    <i>📝</i>
-    <p>Tasks Center</p>
-  </div>
-</div>
+    <div class="card-grid" id="recommendations"></div>
+  </main>
 
-<!-- Recommendations -->
-<section class="recommend">
-  <h2>Recommended for You 💖</h2>
-  <div class="profiles" id="profiles"></div>
-</section>
+  <footer>
+    © <span id="year"></span> HeartLink — Real People. Real Connections.
+  </footer>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <button class="active" onclick="navigate('home')">🏠<br>Home</button>
-  <button onclick="navigate('moments')">📸<br>Moments</button>
-  <button onclick="navigate('chat')">💬<br>Chat</button>
-  <button onclick="navigate('me')">👤<br>Me</button>
-</div>
+  <script>
+    // --- UTILITIES ---
+    const userData = JSON.parse(localStorage.getItem('heartlinkUser') || 'null');
+    const welcome = document.getElementById('welcomeText');
+    const recContainer = document.getElementById('recommendations');
+    const year = document.getElementById('year');
+    year.textContent = new Date().getFullYear();
 
-<div id="toast"></div>
+    // Redirect if not logged in
+    if(!userData || !userData.name){
+      alert("Please sign up or log in first.");
+      window.location.href = "signup.html";
+    }
 
-<script>
-const profiles = document.getElementById('profiles');
-const toast = document.getElementById('toast');
+    // Greet user
+    welcome.textContent = `Hi, ${userData.name} ❤️`;
 
-const sampleProfiles = [
-  'Ava','Sophia','Emma','Olivia','Isabella','Liam','Noah','Ethan','Mason','Lucas'
-];
+    // Simulate daily recommended matches (random profiles)
+    const sampleProfiles = [
+      {name:"Angela", age:25, distance:"2 km away", img:"https://i.pravatar.cc/300?img=45"},
+      {name:"Brian", age:27, distance:"3 km away", img:"https://i.pravatar.cc/300?img=12"},
+      {name:"Clara", age:22, distance:"1.5 km away", img:"https://i.pravatar.cc/300?img=47"},
+      {name:"David", age:30, distance:"4 km away", img:"https://i.pravatar.cc/300?img=32"},
+      {name:"Ella", age:24, distance:"2.2 km away", img:"https://i.pravatar.cc/300?img=21"},
+      {name:"Felix", age:29, distance:"5 km away", img:"https://i.pravatar.cc/300?img=38"}
+    ];
 
-function randomDistance() {
-  return (Math.floor(Math.random() * 10) + 1) + " km away";
-}
-
-function randomAge() {
-  return 20 + Math.floor(Math.random() * 10);
-}
-
-function generateProfiles() {
-  profiles.innerHTML = '';
-  sampleProfiles.forEach(name => {
-    const card = document.createElement('div');
-    card.className = 'profile-card';
-    card.innerHTML = `
-      <img src="https://source.unsplash.com/collection/888146/200x200?sig=${Math.random()}" alt="${name}">
-      <div class="profile-info"><strong>${name}</strong>, ${randomAge()}</div>
-      <div class="profile-info">${randomDistance()}</div>
-      <button class="btn" onclick="openChat('${name}')">👋 Say Hi</button>
-    `;
-    profiles.appendChild(card);
-  });
-}
-
-function openChat(name) {
-  showToast('Opening chat with ' + name + ' 💬');
-  setTimeout(() => window.location.href = 'chat.html?user=' + encodeURIComponent(name), 800);
-}
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.style.display = 'block';
-  setTimeout(() => toast.style.display = 'none', 3000);
-}
-
-function navigate(tab) {
-  switch(tab) {
-    case 'home':
-      showToast('You are already on Home ❤️');
-      break;
-    case 'moments':
-      showToast('Opening Camera...');
-      openCamera();
-      break;
-    case 'chat':
-      window.location.href = 'chat.html';
-      break;
-    case 'me':
-      window.location.href = 'profile.html';
-      break;
-  }
-}
-
-/* Feature buttons */
-function openVoiceChat() {
-  showToast('Opening Voice Chat...');
-  // Could link to voicechat.html
-}
-
-function openSecretNotes() {
-  showToast('Opening Secret Notes...');
-}
-
-function openTasks() {
-  showToast('Opening Task Center...');
-}
-
-/* Open camera for Moments */
-function openCamera() {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        showToast('Camera access granted 🎥');
-      })
-      .catch(() => {
-        showToast('Camera access denied ⚠️');
+    function showRecommendations(){
+      recContainer.innerHTML = "";
+      sampleProfiles.forEach(p=>{
+        const card = document.createElement('div');
+        card.className='profile-card';
+        card.innerHTML = `
+          <img class="profile-img" src="${p.img}" alt="${p.name}">
+          <div class="profile-info">
+            <h3>${p.name}, ${p.age}</h3>
+            <small>${p.distance}</small>
+            <div class="btns">
+              <button class="btn-like">❤️ Like</button>
+              <button class="btn-chat">💬 Say Hi</button>
+            </div>
+          </div>
+        `;
+        // like button
+        card.querySelector('.btn-like').onclick = ()=>{
+          alert(`You liked ${p.name}! 💖`);
+        };
+        // chat button
+        card.querySelector('.btn-chat').onclick = ()=>{
+          window.location.href = `chat.html?user=${encodeURIComponent(p.name)}`;
+        };
+        recContainer.appendChild(card);
       });
-  } else {
-    showToast('Camera not supported on this device ⚠️');
-  }
-}
+    }
 
-generateProfiles();
-</script>
+    showRecommendations();
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click',()=>{
+      localStorage.removeItem('heartlinkUser');
+      alert("You’ve been logged out.");
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
+
