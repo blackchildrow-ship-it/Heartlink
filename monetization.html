@@ -8,7 +8,7 @@
   :root {
     --hl-pink: #ff7bd8;
     --hl-dark-pink: #ff4fc0;
-    --hl-light-pink: #ffe6f5;
+    --hl-light-pink: #fff0f8;
     --hl-bg: #fff7fb;
     --hl-text: #222;
   }
@@ -27,7 +27,6 @@
     padding: 40px 20px 60px;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
-    position: relative;
   }
 
   header h1 {
@@ -66,11 +65,8 @@
     padding-left: 0;
   }
 
-  li::before {
-    content: "💗 ";
-  }
+  li::before { content: "💗 "; }
 
-  /* Current Plan Card */
   .current-plan {
     background: var(--hl-light-pink);
     border-left: 6px solid var(--hl-pink);
@@ -81,12 +77,8 @@
     font-size: 1rem;
   }
 
-  .current-plan span {
-    color: var(--hl-dark-pink);
-    font-weight: 600;
-  }
+  .current-plan span { color: var(--hl-dark-pink); font-weight: 600; }
 
-  /* Subscription Tiers */
   .tiers {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -99,8 +91,8 @@
     border-radius: 15px;
     padding: 20px;
     text-align: center;
-    position: relative;
     transition: 0.3s ease;
+    position: relative;
   }
 
   .tier:hover {
@@ -108,16 +100,8 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
-  .tier h3 {
-    color: var(--hl-pink);
-    margin-bottom: 5px;
-  }
-
-  .price {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: var(--hl-dark-pink);
-  }
+  .tier h3 { color: var(--hl-pink); margin-bottom: 5px; }
+  .price { font-size: 1.4rem; font-weight: bold; color: var(--hl-dark-pink); }
 
   .tier button {
     background: var(--hl-pink);
@@ -130,15 +114,11 @@
     font-weight: 600;
     transition: background 0.3s;
   }
-
-  .tier button:hover {
-    background: var(--hl-dark-pink);
-  }
+  .tier button:hover { background: var(--hl-dark-pink); }
 
   .subscribed-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 10px; right: 10px;
     background: var(--hl-dark-pink);
     color: white;
     padding: 5px 10px;
@@ -148,16 +128,13 @@
   }
 
   @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
+    0%,100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.05); opacity: 0.8; }
   }
 
-  /* Bottom Navigation */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     background: #fff;
     border-top: 1px solid #eee;
     display: flex;
@@ -173,9 +150,100 @@
     font-size: 0.8rem;
   }
 
-  .bottom-nav a.active {
-    color: var(--hl-pink);
+  .bottom-nav a.active { color: var(--hl-pink); font-weight: 600; }
+
+  /* Modal Styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .modal-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .modal h3 { color: var(--hl-dark-pink); margin-bottom: 10px; }
+
+  .modal label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    color: #555;
+    font-size: 0.9rem;
+  }
+
+  select, input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-top: 5px;
+  }
+
+  .modal button {
+    background: var(--hl-pink);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    margin-top: 15px;
+    cursor: pointer;
     font-weight: 600;
+  }
+
+  .modal button:hover { background: var(--hl-dark-pink); }
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #999;
+    position: absolute;
+    top: 15px; right: 20px;
+    cursor: pointer;
+  }
+
+  .mpesa-info {
+    background: var(--hl-light-pink);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .till-number {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--hl-dark-pink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .copy-btn {
+    background: var(--hl-pink);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
   }
 </style>
 </head>
@@ -206,21 +274,49 @@
         <h3>Basic</h3>
         <div class="price">KSh 450 / month</div>
         <p>Messaging limits lifted & profile boost</p>
-        <button onclick="subscribe('Basic', 450)">Subscribe</button>
+        <button onclick="openPaymentModal('Basic', 450)">Subscribe</button>
       </div>
       <div class="tier" id="premium-tier">
         <h3>Premium</h3>
         <div class="price">KSh 850 / month</div>
         <p>Includes video chat and advanced match filters</p>
-        <button onclick="subscribe('Premium', 850)">Subscribe</button>
+        <button onclick="openPaymentModal('Premium', 850)">Subscribe</button>
       </div>
       <div class="tier" id="vip-tier">
         <h3>VIP</h3>
         <div class="price">KSh 1500 / month</div>
         <p>Full access + concierge dating services</p>
-        <button onclick="subscribe('VIP', 1500)">Subscribe</button>
+        <button onclick="openPaymentModal('VIP', 1500)">Subscribe</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal" id="paymentModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closePaymentModal()">×</button>
+    <h3>💳 Complete Payment</h3>
+    <p id="planDetails"></p>
+
+    <label>Payment Method:</label>
+    <select id="paymentMethod" onchange="toggleMpesaInstructions()">
+      <option value="mpesa">M-Pesa</option>
+      <option value="card">Card</option>
+      <option value="wallet">Wallet</option>
+    </select>
+
+    <div id="mpesaSection" class="mpesa-info">
+      <p>Use <strong>Lipa na M-Pesa → Buy Goods & Services</strong></p>
+      <div class="till-number">
+        Till Number: <span id="tillNumber">9824375</span>
+        <button class="copy-btn" onclick="copyTill()">Copy</button>
+      </div>
+      <p>Enter the amount and PIN, then wait for confirmation message.</p>
+      <button onclick="confirmMpesa()">✅ Confirm Message</button>
+    </div>
+
+    <button id="confirmBtn" style="display:none;" onclick="confirmPayment()">Confirm Payment</button>
   </div>
 </div>
 
@@ -232,10 +328,42 @@
 </nav>
 
 <script>
-function subscribe(tier, price) {
-  localStorage.setItem('subscriptionTier', tier);
-  localStorage.setItem('subscriptionPrice', price);
-  alert(`🎀 You’ve subscribed to the ${tier} Plan for KSh ${price}/month!`);
+let selectedPlan = null;
+let selectedPrice = null;
+
+function openPaymentModal(plan, price) {
+  selectedPlan = plan;
+  selectedPrice = price;
+  document.getElementById('planDetails').textContent = `You're subscribing to the ${plan} plan for KSh ${price}.`;
+  document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closePaymentModal() {
+  document.getElementById('paymentModal').style.display = 'none';
+}
+
+function toggleMpesaInstructions() {
+  const method = document.getElementById('paymentMethod').value;
+  document.getElementById('mpesaSection').style.display = method === 'mpesa' ? 'block' : 'none';
+  document.getElementById('confirmBtn').style.display = method !== 'mpesa' ? 'block' : 'none';
+}
+
+function copyTill() {
+  navigator.clipboard.writeText('9824375');
+  alert('Till number copied!');
+}
+
+function confirmMpesa() {
+  alert('Please confirm that you received an M-Pesa payment message.');
+  window.location.href = 'verification.html';
+}
+
+function confirmPayment() {
+  const method = document.getElementById('paymentMethod').value;
+  closePaymentModal();
+  alert(`🎉 Payment successful via ${method.toUpperCase()}!`);
+  localStorage.setItem('subscriptionTier', selectedPlan);
+  localStorage.setItem('subscriptionPrice', selectedPrice);
   updateSubscriptionUI();
 }
 
