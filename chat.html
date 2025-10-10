@@ -1,163 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HeartLink Chat</title>
 <style>
   body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #fff5f7;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
   }
+
   header {
-    background-color: #ffb6c1;
-    color: white;
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background: linear-gradient(to right, #ffe6f2, #fff0f6);
+    color: #222;
+    text-align: center;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #eee;
   }
+
   header h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000;
   }
-  .btn {
-    background-color: #ff7fa8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
+
+  .banner {
+    width: 90%;
+    margin: 10px auto;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .banner img {
+    width: 100%;
+    border-radius: 15px;
+  }
+
+  .chat-list {
+    padding: 10px;
+  }
+
+  .chat-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f3f3f3;
+    padding: 10px 0;
     cursor: pointer;
   }
-  .chat-container {
+
+  .chat-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .chat-info {
     flex: 1;
+  }
+
+  .chat-info h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .chat-info p {
+    margin: 2px 0;
+    color: #888;
+    font-size: 13px;
+  }
+
+  .chat-time {
+    font-size: 12px;
+    color: #999;
+  }
+
+  /* Bottom navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ddd;
     display: flex;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
+    justify-content: space-around;
+    align-items: center;
+    padding: 6px 0;
   }
-  .message {
-    max-width: 70%;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-    border-radius: 15px;
-    line-height: 1.4;
-    word-wrap: break-word;
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #555;
+    text-align: center;
+    font-size: 13px;
   }
-  .bot {
-    background: white;
-    align-self: flex-start;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+  .bottom-nav a.active {
+    color: #ff4d94;
+    font-weight: 600;
   }
-  .user {
-    background: #ff7fa8;
-    color: white;
-    align-self: flex-end;
-  }
-  .input-area {
-    display: flex;
-    padding: 10px;
-    background: white;
-    box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
-  }
-  .input-area input {
-    flex: 1;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 8px 15px;
-    outline: none;
-    font-family: inherit;
-  }
-  .input-area button {
-    margin-left: 10px;
+
+  .bottom-nav img {
+    width: 25px;
+    height: 25px;
+    display: block;
+    margin: 0 auto 4px;
   }
 </style>
 </head>
 <body>
+
 <header>
-  <button class="btn" onclick="goBack()">← Back</button>
-  <h2 id="chatUser">Chat</h2>
-  <div></div>
+  <h2>Chat <small style="color:#ff4d94;">• Calls</small></h2>
 </header>
 
-<div class="chat-container" id="chatContainer">
-  <div class="message bot">Hi! 😊 I’m happy to chat with you.</div>
+<div class="banner">
+  <img src="https://i.imgur.com/zTTlDRh.jpg" alt="Joyful Love Banner">
 </div>
 
-<div class="input-area">
-  <input type="text" id="messageInput" placeholder="Type a message..." />
-  <button class="btn" id="sendBtn">Send</button>
+<div class="chat-list" id="chatList"></div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="home.html">
+    <img src="https://img.icons8.com/fluency/48/000000/home.png" alt="Home">
+    Home
+  </a>
+  <a href="moment.html">
+    <img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Moment">
+    Moment
+  </a>
+  <a href="chat.html" class="active">
+    <img src="https://img.icons8.com/fluency/48/000000/speech-bubble.png" alt="Chat">
+    Chat
+  </a>
+  <a href="profile.html">
+    <img src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png" alt="Me">
+    Me
+  </a>
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const chatUser = params.get('user') || 'Someone';
-document.getElementById('chatUser').textContent = chatUser;
-
-// JWT mock
-const token = localStorage.getItem('token') || 'mockToken';
-
-// Elements
-const chatContainer = document.getElementById('chatContainer');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-
-// Simulated fetch (mock backend call)
-async function sendMessageToBackend(msg) {
-  try {
-    // In real use, replace with:
-    // await fetch('/api/send', { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
-    return { ok: true };
-  } catch {
-    return { ok: false };
-  }
-}
-
-function addMessage(text, sender) {
-  const msgDiv = document.createElement('div');
-  msgDiv.className = `message ${sender}`;
-  msgDiv.textContent = text;
-  chatContainer.appendChild(msgDiv);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-function randomBotReply() {
-  const replies = [
-    "That's sweet of you 💕",
-    "Haha really? Tell me more!",
-    "I totally agree 😄",
-    "You seem fun to talk to!",
-    "Interesting! I didn’t know that."
+  // Example chats (You can make these dynamic later)
+  const chats = [
+    { name: "Sweet Love ❤️", message: "hey dear", time: "10-10 11:47", img: "https://i.pravatar.cc/100?img=47" },
+    { name: "Mercy", message: "are the ppl u meet on this platform real?", time: "10-10 09:50", img: "https://i.pravatar.cc/100?img=49" },
+    { name: "Chisom Osssai 🔥", message: "can we talk", time: "10-10 09:43", img: "https://i.pravatar.cc/100?img=50" },
+    { name: "Loveness❤️", message: "I want to talk to you", time: "10-10 09:42", img: "https://i.pravatar.cc/100?img=55" },
+    { name: "Beauty Hope", message: "Maybe we can know more each other", time: "10-10 09:41", img: "https://i.pravatar.cc/100?img=56" }
   ];
-  return replies[Math.floor(Math.random() * replies.length)];
-}
 
-sendBtn.addEventListener('click', async () => {
-  const text = messageInput.value.trim();
-  if (!text) return;
-  addMessage(text, 'user');
-  messageInput.value = '';
-  sendBtn.disabled = true;
-
-  await sendMessageToBackend(text);
-  setTimeout(() => {
-    addMessage(randomBotReply(), 'bot');
-    sendBtn.disabled = false;
-  }, 1000);
-});
-
-messageInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') sendBtn.click();
-});
-
-function goBack() {
-  window.location.href = 'dashboard.html';
-}
+  const chatList = document.getElementById('chatList');
+  chats.forEach(chat => {
+    const div = document.createElement('div');
+    div.className = 'chat-item';
+    div.innerHTML = `
+      <img src="${chat.img}" alt="${chat.name}">
+      <div class="chat-info">
+        <h4>${chat.name}</h4>
+        <p>${chat.message}</p>
+      </div>
+      <div class="chat-time">${chat.time}</div>
+    `;
+    div.onclick = () => {
+      localStorage.setItem('currentChat', JSON.stringify(chat));
+      window.location.href = 'message.html';
+    };
+    chatList.appendChild(div);
+  });
 </script>
 </body>
 </html>
