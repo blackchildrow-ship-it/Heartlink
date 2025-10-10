@@ -1,80 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Profile – HeartLink</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - HeartLink</title>
 <style>
   body {
     font-family: 'Poppins', sans-serif;
     background-color: #fff5f7;
-    color: #333;
     margin: 0;
-    text-align: center;
+    color: #333;
   }
+
   header {
     background-color: #ffb6c1;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     color: white;
-    padding: 15px;
-    font-size: 1.5em;
   }
+  header h1 { margin: 0; font-size: 1.4em; }
+  header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+
   .container {
-    margin: 30px auto;
-    background: white;
     padding: 20px;
-    max-width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: auto;
   }
-  img {
+
+  .profile-photo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .profile-photo img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 15px;
-    border: 3px solid #ffb6c1;
+    border: 3px solid #ff7fa8;
   }
+
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .info-card h2 {
+    color: #ff7fa8;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ffe4ec;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+
+  .info-row {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
   .btn {
     background-color: #ff7fa8;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px;
+    padding: 10px 15px;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 0.95em;
+    transition: background-color 0.3s;
   }
   .btn:hover {
-    background-color: #ff5c8d;
+    background-color: #ff5f93;
+  }
+
+  /* Modal styling */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .modal-content h3 {
+    color: #ff7fa8;
+    margin-top: 0;
+  }
+  .modal-content label {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+  }
+  .modal-content input, .modal-content select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 5px;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .bottom-nav button {
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+  .bottom-nav button.active {
+    color: #ff7fa8;
+    font-weight: bold;
   }
 </style>
 </head>
 <body>
-<header>Profile</header>
+
+<header>
+  <button onclick="window.location.href='home.html'">←</button>
+  <h1>My Profile</h1>
+  <button onclick="openEditModal()">✏️</button>
+</header>
+
 <div class="container">
-  <img id="profilePhoto" src="https://via.placeholder.com/120" alt="Profile Photo">
-  <h2 id="profileName">User</h2>
-  <p id="profileAge">Age: 25</p>
-  <p id="profileLocation">Location: Nairobi</p>
-  <p id="profileBio">“I love meeting new people and exploring new ideas.”</p>
-  <button class="btn" id="chatBtn">💬 Chat</button>
-  <button class="btn" onclick="window.location.href='dashboard.html'">← Back</button>
+  <div class="profile-photo">
+    <img id="profilePic" src="https://source.unsplash.com/collection/888146/200x200?sig=1" alt="Profile Photo">
+  </div>
+
+  <div class="info-card">
+    <h2>Basic Info</h2>
+    <div class="info-row"><strong>Name:</strong> <span id="nameDisplay">Ava Johnson</span></div>
+    <div class="info-row"><strong>Age:</strong> <span id="ageDisplay">25</span></div>
+    <div class="info-row"><strong>Location:</strong> <span id="countyDisplay">Nairobi</span></div>
+  </div>
+
+  <div class="info-card">
+    <h2>Preferences</h2>
+    <div class="info-row"><strong>Interested In:</strong> <span id="interestDisplay">Men</span></div>
+    <div class="info-row"><strong>Age Range:</strong> <span id="rangeDisplay">24 - 32</span></div>
+    <div class="info-row"><strong>Max Distance:</strong> <span id="distanceDisplay">25 km</span></div>
+  </div>
+
+  <button class="btn" onclick="openEditModal()">Edit Profile</button>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+    <label>Name</label>
+    <input type="text" id="nameInput" placeholder="Your name">
+    <label>Age</label>
+    <input type="number" id="ageInput" min="18" max="99">
+    <label>County</label>
+    <select id="countyInput">
+      <option value="">Select County</option>
+      <option>Nairobi</option><option>Mombasa</option><option>Kisumu</option>
+      <option>Nakuru</option><option>Eldoret</option><option>Kiambu</option>
+      <!-- Add all other counties as needed -->
+    </select>
+    <label>Interested In</label>
+    <select id="interestInput">
+      <option>Men</option><option>Women</option><option>Both</option>
+    </select>
+    <label>Age Range</label>
+    <input type="text" id="rangeInput" placeholder="e.g. 22 - 30">
+    <label>Max Distance (km)</label>
+    <input type="number" id="distanceInput" placeholder="e.g. 25">
+
+    <div style="text-align:right; margin-top:15px;">
+      <button class="btn" onclick="saveProfile()">Save</button>
+      <button class="btn" style="background:#ccc; color:#333;" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button onclick="window.location.href='home.html'">🏠<br>Home</button>
+  <button onclick="window.location.href='chat.html'">💬<br>Chat</button>
+  <button class="active">👤<br>Me</button>
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const name = params.get('name') || 'User';
-document.getElementById('profileName').textContent = name;
+function openEditModal() {
+  document.getElementById('editModal').style.display = 'block';
+  document.getElementById('nameInput').value = document.getElementById('nameDisplay').textContent;
+  document.getElementById('ageInput').value = document.getElementById('ageDisplay').textContent;
+  document.getElementById('countyInput').value = document.getElementById('countyDisplay').textContent;
+  document.getElementById('interestInput').value = document.getElementById('interestDisplay').textContent;
+  document.getElementById('rangeInput').value = document.getElementById('rangeDisplay').textContent;
+  document.getElementById('distanceInput').value = parseInt(document.getElementById('distanceDisplay').textContent);
+}
 
-// Optional mock details
-document.getElementById('profileAge').textContent = 'Age: ' + (20 + Math.floor(Math.random() * 10));
-const locations = ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret'];
-document.getElementById('profileLocation').textContent = 'Location: ' + locations[Math.floor(Math.random()*locations.length)];
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
 
-document.getElementById('chatBtn').addEventListener('click',()=>{
-  window.location.href = 'chat.html?user=' + encodeURIComponent(name);
-});
+function saveProfile() {
+  document.getElementById('nameDisplay').textContent = document.getElementById('nameInput').value;
+  document.getElementById('ageDisplay').textContent = document.getElementById('ageInput').value;
+  document.getElementById('countyDisplay').textContent = document.getElementById('countyInput').value;
+  document.getElementById('interestDisplay').textContent = document.getElementById('interestInput').value;
+  document.getElementById('rangeDisplay').textContent = document.getElementById('rangeInput').value;
+  document.getElementById('distanceDisplay').textContent = document.getElementById('distanceInput').value + " km";
+  closeEditModal();
+}
 </script>
+
 </body>
 </html>
 
