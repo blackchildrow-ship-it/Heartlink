@@ -80,7 +80,6 @@
     color: #999;
   }
 
-  /* Bottom navigation */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -125,7 +124,6 @@
 
 <div class="chat-list" id="chatList"></div>
 
-<!-- Bottom Navigation -->
 <div class="bottom-nav">
   <a href="home.html">
     <img src="https://img.icons8.com/fluency/48/000000/home.png" alt="Home">
@@ -146,33 +144,37 @@
 </div>
 
 <script>
-  // Example chats (You can make these dynamic later)
-  const chats = [
-    { name: "Sweet Love ❤️", message: "hey dear", time: "10-10 11:47", img: "https://i.pravatar.cc/100?img=47" },
-    { name: "Mercy", message: "are the ppl u meet on this platform real?", time: "10-10 09:50", img: "https://i.pravatar.cc/100?img=49" },
-    { name: "Chisom Osssai 🔥", message: "can we talk", time: "10-10 09:43", img: "https://i.pravatar.cc/100?img=50" },
-    { name: "Loveness❤️", message: "I want to talk to you", time: "10-10 09:42", img: "https://i.pravatar.cc/100?img=55" },
-    { name: "Beauty Hope", message: "Maybe we can know more each other", time: "10-10 09:41", img: "https://i.pravatar.cc/100?img=56" }
-  ];
+const chats = [
+  { name: "Sweet Love ❤️", message: "hey dear", img: "https://i.pravatar.cc/100?img=47" },
+  { name: "Mercy", message: "are the ppl u meet on this platform real?", img: "https://i.pravatar.cc/100?img=49" },
+  { name: "Chisom Osssai 🔥", message: "can we talk", img: "https://i.pravatar.cc/100?img=50" },
+  { name: "Loveness❤️", message: "I want to talk to you", img: "https://i.pravatar.cc/100?img=55" },
+  { name: "Beauty Hope", message: "Maybe we can know more each other", img: "https://i.pravatar.cc/100?img=56" }
+];
 
-  const chatList = document.getElementById('chatList');
-  chats.forEach(chat => {
-    const div = document.createElement('div');
-    div.className = 'chat-item';
-    div.innerHTML = `
-      <img src="${chat.img}" alt="${chat.name}">
-      <div class="chat-info">
-        <h4>${chat.name}</h4>
-        <p>${chat.message}</p>
-      </div>
-      <div class="chat-time">${chat.time}</div>
-    `;
-    div.onclick = () => {
-      localStorage.setItem('currentChat', JSON.stringify(chat));
-      window.location.href = 'message.html';
-    };
-    chatList.appendChild(div);
-  });
+const chatList = document.getElementById('chatList');
+
+chats.forEach(chat => {
+  // Load recent message if available
+  const messages = JSON.parse(localStorage.getItem(`messages_${chat.name}`)) || [];
+  const lastMsg = messages.length ? messages[messages.length - 1].text : chat.message;
+
+  const div = document.createElement('div');
+  div.className = 'chat-item';
+  div.innerHTML = `
+    <img src="${chat.img}" alt="${chat.name}">
+    <div class="chat-info">
+      <h4>${chat.name}</h4>
+      <p>${lastMsg}</p>
+    </div>
+    <div class="chat-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+  `;
+  div.onclick = () => {
+    localStorage.setItem('currentChat', JSON.stringify(chat));
+    window.location.href = 'message.html';
+  };
+  chatList.appendChild(div);
+});
 </script>
 </body>
 </html>
