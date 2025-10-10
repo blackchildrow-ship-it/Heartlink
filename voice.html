@@ -1,2 +1,504 @@
-bfshtghsb
-dbdsbtrsed
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Voice Chat | HeartLink</title>
+<style>
+  :root{
+    --accent:#ff4d88;
+    --bg:#fff7fb;
+    --card:#fff;
+    --muted:#666;
+    --shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:var(--bg);color:#111;min-height:100vh;display:flex;flex-direction:column;
+  }
+
+  header{
+    background:linear-gradient(90deg,var(--accent),#ff9ab8);
+    color:white;padding:14px;text-align:center;font-weight:700;position:sticky;top:0;z-index:60;
+  }
+
+  main{flex:1;display:flex;flex-direction:column;align-items:center;padding:18px;gap:16px}
+
+  .rec-area{
+    width:100%;max-width:720px;background:var(--card);border-radius:14px;box-shadow:var(--shadow);
+    padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px;
+  }
+
+  .controls{display:flex;gap:12px;align-items:center}
+  .btn{
+    background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;
+  }
+  .btn.secondary{background:#fff;border:1px solid #eee;color:#333}
+  .status{color:var(--muted);font-size:14px}
+  .wave-canvas{width:100%;height:80px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff6fb);box-shadow:inset 0 2px 6px rgba(0,0,0,0.03)}
+  .recordings{width:100%;max-width:720px;margin-top:6px;padding:0 6px}
+
+  .rec-item{
+    display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:10px;border-radius:10px;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,0.04)
+  }
+  .rec-left{display:flex;gap:12px;align-items:center}
+  .rec-meta{font-weight:700}
+  .rec-actions{display:flex;gap:8px;align-items:center}
+  .icon-btn{border:none;background:transparent;cursor:pointer;padding:8px;border-radius:8px}
+  audio{display:block;width:220px}
+
+  .bottom-nav{position:sticky;bottom:0;left:0;right:0;background:#fff;padding:8px;display:flex;justify-content:space-around;border-top:1px solid #eee}
+  .nav-btn{font-weight:700;color:var(--muted);text-align:center}
+  .nav-btn.active{color:var(--accent)}
+
+  .small{font-size:13px;color:var(--muted)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <header>🎤 Voice Chat</header>
+
+  <main>
+    <div class="rec-area" role="region" aria-label="Voice recorder">
+      <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+        <div>
+          <div style="font-weight:800;font-size:18px">Record a voice message</div>
+          <div class="small">Press record to capture your voice. Saved locally on this device.</div>
+        </div>
+        <div class="status" id="permissionStatus">Microphone: unknown</div>
+      </div>
+
+      <canvas id="waveCanvas" class="wave-canvas" aria-hidden="false"></canvas>
+
+      <div class="controls" style="margin-top:6px">
+        <button id="recordBtn" class="btn">Start Recording</button>
+        <button id="stopBtn" class="btn secondary" disabled>Stop</button>
+        <button id="saveBtn" class="btn secondary" disabled>Save</button>
+        <div id="timer" class="small" style="margin-left:8px">00:00</div>
+      </div>
+
+      <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
+        <div class="small">Format: webm/ogg (browser dependent)</div>
+        <div class="small" id="sizePreview"></div>
+      </div>
+    </div>
+
+    <div class="recordings" id="recordingsList" aria-live="polite">
+      <!-- populated dynamically -->
+    </div>
+  </main>
+
+  <div class="bottom-nav" role="navigation">
+    <div class="nav-btn" onclick="location.href='home.html'">🏠<br>Home</div>
+    <div class="nav-btn" onclick="location.href='moment.html'">📸<br>Moment</div>
+    <div class="nav-btn" onclick="location.href='chat.html'">💬<br>Chat</div>
+    <div class="nav-btn" onclick="location.href='profile.html'">😊<br>Me</div>
+  </div>
+
+<script>
+/*
+  Voice recorder with real mic input, waveform visualization, and IndexedDB storage.
+  - Works in secure context (https or localhost)
+  - Uses MediaRecorder for capture, AudioContext + AnalyserNode for waveform
+  - Saves blobs to IndexedDB under store 'voice-recordings'
+*/
+
+(() => {
+  // --- IndexedDB helper (minimal) ---
+  const DB_NAME = 'HeartLinkVoiceDB';
+  const STORE = 'recordings';
+  const DB_VERSION = 1;
+  let db;
+
+  function openDB(){
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        db = e.target.result;
+        if(!db.objectStoreNames.contains(STORE)){
+          db.createObjectStore(STORE, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+      req.onerror = (e) => reject(e.target.error);
+    });
+  }
+
+  function saveRecordingToDB(record){
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      const store = tx.objectStore(STORE);
+      const req = store.add(record);
+      req.onsuccess = ()=> resolve(req.result);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  function getAllRecordingsFromDB(){
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readonly');
+      const store = tx.objectStore(STORE);
+      const req = store.getAll();
+      req.onsuccess = ()=> resolve(req.result);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  function deleteRecordingFromDB(id){
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(STORE,'readwrite');
+      const store = tx.objectStore(STORE);
+      const req = store.delete(id);
+      req.onsuccess = ()=> resolve();
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  // --- UI elements ---
+  const recordBtn = document.getElementById('recordBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const timerEl = document.getElementById('timer');
+  const sizePreview = document.getElementById('sizePreview');
+  const permissionStatus = document.getElementById('permissionStatus');
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  const recordingsList = document.getElementById('recordingsList');
+
+  // --- Recording state ---
+  let mediaStream = null;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordingBlob = null;
+  let recorderStart = 0;
+  let timerInterval = null;
+
+  // --- WebAudio for waveform ---
+  let audioCtx = null;
+  let analyser = null;
+  let sourceNode = null;
+  let rafId = null;
+
+  function formatTime(seconds){
+    const mm = String(Math.floor(seconds/60)).padStart(2,'0');
+    const ss = String(Math.floor(seconds%60)).padStart(2,'0');
+    return `${mm}:${ss}`;
+  }
+
+  function startTimer(){
+    recorderStart = Date.now();
+    timerInterval = setInterval(()=>{
+      const sec = (Date.now() - recorderStart)/1000;
+      timerEl.textContent = formatTime(sec);
+    },250);
+  }
+  function stopTimer(){
+    clearInterval(timerInterval);
+    timerEl.textContent = '00:00';
+  }
+
+  function updateSizePreview(blob){
+    if(!blob){ sizePreview.textContent = ''; return;}
+    const kb = Math.round(blob.size / 1024);
+    sizePreview.textContent = `${kb} KB`;
+  }
+
+  // waveform drawing
+  function resizeCanvas(){
+    canvas.width = canvas.clientWidth * devicePixelRatio;
+    canvas.height = canvas.clientHeight * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function startVisualizing(){
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    sourceNode = audioCtx.createMediaStreamSource(mediaStream);
+    sourceNode.connect(analyser);
+    const bufferLength = analyser.fftSize;
+    const dataArray = new Uint8Array(bufferLength);
+
+    function draw(){
+      rafId = requestAnimationFrame(draw);
+      analyser.getByteTimeDomainData(dataArray);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // draw waveform centered vertically
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#ff4d88';
+      ctx.beginPath();
+      const sliceWidth = w / bufferLength;
+      let x = 0;
+      for(let i=0;i<bufferLength;i++){
+        const v = dataArray[i] / 128.0;
+        const y = (v * h / 2);
+        if(i===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+        x += sliceWidth;
+      }
+      ctx.stroke();
+    }
+    draw();
+  }
+
+  function stopVisualizing(){
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    if(sourceNode) sourceNode.disconnect();
+    if(analyser) analyser.disconnect();
+  }
+
+  // --- Request mic permission & prepare MediaRecorder ---
+  async function initMic(){
+    try{
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      permissionStatus.textContent = 'Microphone: granted';
+      recordBtn.disabled = false;
+    }catch(err){
+      permissionStatus.textContent = 'Microphone: denied';
+      recordBtn.disabled = true;
+      console.error('getUserMedia error', err);
+      alert('Microphone access denied or unavailable. Please enable microphone permissions to record.');
+    }
+  }
+
+  // --- Start recording ---
+  async function startRecording(){
+    if(!mediaStream) await initMic();
+    audioChunks = [];
+    // Prefer mimeType with webm/ogg depending on browser
+    let options = {};
+    if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) options.mimeType = 'audio/webm;codecs=opus';
+    else if(MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) options.mimeType = 'audio/ogg;codecs=opus';
+
+    try{
+      mediaRecorder = new MediaRecorder(mediaStream, options);
+    }catch(err){
+      console.error('MediaRecorder error', err);
+      alert('Recording is not supported in this browser with the chosen settings.');
+      return;
+    }
+
+    mediaRecorder.ondataavailable = (e) => {
+      if(e.data && e.data.size > 0) audioChunks.push(e.data);
+      updateSizePreview(new Blob(audioChunks));
+    };
+
+    mediaRecorder.onstop = () => {
+      recordingBlob = new Blob(audioChunks, { type: audioChunks[0]?.type || 'audio/webm' });
+      updateSizePreview(recordingBlob);
+      saveBtn.disabled = false;
+      stopVisualizing();
+    };
+
+    mediaRecorder.start();
+    startVisualizing();
+    startTimer();
+    recordBtn.disabled = true;
+    stopBtn.disabled = false;
+    saveBtn.disabled = true;
+    permissionStatus.textContent = 'Recording...';
+  }
+
+  // --- Stop recording ---
+  function stopRecording(){
+    if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+    stopTimer();
+    permissionStatus.textContent = 'Recording stopped';
+  }
+
+  // --- Save recorded blob to IndexedDB ---
+  async function saveRecording(){
+    if(!recordingBlob) return;
+    const name = `Voice ${new Date().toLocaleString()}`;
+    const rec = {
+      id: 'rec_' + Date.now(),
+      name,
+      createdAt: Date.now(),
+      blob: recordingBlob
+    };
+    // store blob in indexedDB
+    try{
+      await saveRecordingToDB(rec);
+      showToast('Saved recording');
+      recordingBlob = null;
+      updateSizePreview(null);
+      saveBtn.disabled = true;
+      await refreshListing();
+    }catch(err){
+      console.error(err);
+      alert('Failed to save recording: '+err);
+    }
+  }
+
+  // --- UI listing ---
+  async function refreshListing(){
+    const items = await getAllRecordingsFromDB();
+    // sort by newest
+    items.sort((a,b)=>b.createdAt - a.createdAt);
+    recordingsList.innerHTML = '';
+    if(items.length === 0){
+      const note = document.createElement('div');
+      note.className = 'small';
+      note.textContent = 'No recordings yet.';
+      recordingsList.appendChild(note);
+      return;
+    }
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'rec-item';
+      const left = document.createElement('div');
+      left.className = 'rec-left';
+      const meta = document.createElement('div');
+      meta.innerHTML = `<div class="rec-meta">${item.name}</div><div class="small">${new Date(item.createdAt).toLocaleString()}</div>`;
+      left.appendChild(meta);
+
+      const right = document.createElement('div');
+      right.className = 'rec-actions';
+
+      // play button with audio element
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.preload = 'none';
+      // create blob url
+      const url = URL.createObjectURL(item.blob);
+      audio.src = url;
+
+      const downloadBtn = document.createElement('button');
+      downloadBtn.className = 'icon-btn';
+      downloadBtn.title = 'Download';
+      downloadBtn.innerText = '⬇️';
+      downloadBtn.onclick = (e)=> {
+        e.stopPropagation();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (item.name || 'voice') + (item.blob.type.indexOf('wav')>-1?'.wav':'.webm');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      };
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'icon-btn';
+      delBtn.title = 'Delete';
+      delBtn.innerText = '🗑️';
+      delBtn.onclick = async (e) => {
+        e.stopPropagation();
+        if(confirm('Delete this recording?')) {
+          await deleteRecordingFromDB(item.id);
+          URL.revokeObjectURL(url);
+          refreshListing();
+          showToast('Recording deleted');
+        }
+      };
+
+      right.appendChild(audio);
+      right.appendChild(downloadBtn);
+      right.appendChild(delBtn);
+
+      row.appendChild(left);
+      row.appendChild(right);
+
+      recordingsList.appendChild(row);
+    });
+  }
+
+  // --- Simple toast ---
+  let toastTimer = null;
+  function showToast(msg){
+    let el = document.getElementById('hl_toast');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'hl_toast';
+      el.style.position = 'fixed';
+      el.style.bottom = '130px';
+      el.style.left = '50%';
+      el.style.transform = 'translateX(-50%)';
+      el.style.background = 'linear-gradient(90deg,#ff9ab8,#ff4d88)';
+      el.style.color = '#fff';
+      el.style.padding = '8px 14px';
+      el.style.borderRadius = '12px';
+      el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+      el.style.zIndex = 9999;
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.style.opacity = '1';
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ el.style.opacity = '0'; }, 2200);
+  }
+
+  // --- event wiring ---
+  recordBtn.addEventListener('click', async ()=>{
+    // initialize DB and mic if needed
+    if(!db) await openDB();
+    if(!mediaStream) await initMic();
+    startRecording();
+  });
+  stopBtn.addEventListener('click', ()=> stopRecording());
+  saveBtn.addEventListener('click', async ()=> {
+    // if we have blob ready from last recording
+    if(recordingBlob) {
+      await saveRecording();
+    } else {
+      showToast('No recording to save');
+    }
+  });
+
+  // When recording stops, enable save button
+  // Hook MediaRecorder stop in startRecording's onstop which sets recordingBlob
+
+  // init DB & render list and check mic permission
+  (async function boot(){
+    try{
+      await openDB();
+    }catch(err){
+      console.error('Failed to open DB', err);
+    }
+    await refreshListing();
+
+    // Try to check permission status (not guaranteed in all browsers)
+    if(navigator.permissions){
+      try{
+        const p = await navigator.permissions.query({name: 'microphone'});
+        p.onchange = ()=> {
+          permissionStatus.textContent = 'Microphone: ' + p.state;
+        };
+        permissionStatus.textContent = 'Microphone: ' + p.state;
+        if(p.state === 'granted'){
+          await initMic();
+        } else {
+          // don't auto-request; wait until user hits record
+          permissionStatus.textContent = 'Microphone: ' + p.state;
+        }
+      }catch(e){
+        // fallback: do nothing
+        permissionStatus.textContent = 'Microphone: permission unknown';
+      }
+    } else {
+      permissionStatus.textContent = 'Microphone: permission unknown';
+    }
+  })();
+
+  // Accessibility: keyboard space to start/stop
+  document.addEventListener('keydown', (e)=>{
+    if(e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+      e.preventDefault();
+      if(mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
+      else recordBtn.click();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
