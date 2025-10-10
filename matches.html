@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeartLink – Match Suggestions</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    color: #333;
+    margin: 0;
+  }
+  header {
+    background-color: #ffb6c1;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { margin: 0; font-size: 1.5em; }
+  .filters {
+    background: #ffe3ec;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filters input, .filters select {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    width: 220px;
+    text-align: center;
+    padding: 10px;
+  }
+  .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin: 4px;
+    cursor: pointer;
+  }
+  .btn:hover { background-color: #ff5c8d; }
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff7fa8;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: none;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  .modal-content textarea {
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 6px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Match Suggestions</h1>
+  <button class="btn" onclick="window.location.href='dashboard.html'">← Back</button>
+</header>
+
+<div class="filters">
+  <label>Age:
+    <input type="number" id="minAge" placeholder="Min" min="18" max="80" style="width:60px">
+    –
+    <input type="number" id="maxAge" placeholder="Max" min="18" max="80" style="width:60px">
+  </label>
+  <label>Distance:
+    <select id="distance">
+      <option value="">Any</option>
+      <option value="10">≤10 km</option>
+      <option value="25">≤25 km</option>
+      <option value="50">≤50 km</option>
+    </select>
+  </label>
+  <button class="btn" id="filterBtn">Filter</button>
+</div>
+
+<div class="container" id="matchesContainer"></div>
+<div id="toast"></div>
+
+<!-- Like Modal -->
+<div class="modal" id="likeModal">
+  <div class="modal-content">
+    <h3>Send a Compliment ❤️</h3>
+    <p id="likeTarget"></p>
+    <textarea id="likeComment" placeholder="Write a short comment..." required></textarea>
+    <br>
+    <button class="btn" id="sendLikeBtn">Send Like</button>
+    <button class="btn" onclick="closeModal('likeModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- Pass Modal -->
+<div class="modal" id="passModal">
+  <div class="modal-content">
+    <h3>Pass Feedback 💭</h3>
+    <p id="passTarget"></p>
+    <textarea id="passFeedback" placeholder="Optional feedback (why passing?)"></textarea>
+    <br>
+    <button class="btn" id="sendPassBtn">Confirm Pass</button>
+    <button class="btn" onclick="closeModal('passModal')">Cancel</button>
+  </div>
+</div>
+
+<script>
+const matchesContainer = document.getElementById('matchesContainer');
+const toast = document.getElementById('toast');
+let selectedName = '';
+
+const token = localStorage.getItem('token') || 'mockToken';
+
+// Mock data generator
+function generateMatches(count=10){
+  matchesContainer.innerHTML='';
+  for(let i=0;i<count;i++){
+    const name = ['Sophia','Ava','Mia','Emma','Isabella','Olivia','Liam','Noah','Ethan','James'][i%10];
+    const age = 20 + Math.floor(Math.random()*15);
+    const dist = [5,12,23,40,55][Math.floor(Math.random()*5)];
+    const img = `https://randomuser.me/api/portraits/${i%2===0?'women':'men'}/${i+10}.jpg`;
+    const card = document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <img src="${img}" alt="${name}">
+      <h3>${name}</h3>
+      <p>${age} years · ${dist} km away</p>
+      <button class="btn viewBtn">View</button>
+      <button class="btn likeBtn">Like</button>
+      <button class="btn passBtn">Pass</button>
+    `;
+    matchesContainer.appendChild(card);
+  }
+}
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',3000);
+}
+
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+document.addEventListener('click',e=>{
+  const card = e.target.closest('.card');
+  if(!card) return;
+  const name = card.querySelector('h3').textContent;
+
+  if(e.target.classList.contains('viewBtn')){
+    window.location.href='profile.html?name='+encodeURIComponent(name);
+  } 
+  else if(e.target.classList.contains('likeBtn')){
+    selectedName=name;
+    document.getElementById('likeTarget').textContent=`for ${name}`;
+    openModal('likeModal');
+  } 
+  else if(e.target.classList.contains('passBtn')){
+    selectedName=name;
+    document.getElementById('passTarget').textContent=`on ${name}`;
+    openModal('passModal');
+  }
+});
+
+document.getElementById('sendLikeBtn').addEventListener('click', async ()=>{
+  const comment=document.getElementById('likeComment').value.trim();
+  if(!comment){ showToast('💬 Please write a comment first!'); return; }
+
+  try{
+    const res = await fetch('/api/like', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({target:selectedName, comment})
+    });
+    showToast(res.ok?'❤️ Like sent!':'⚠️ Failed to send');
+  }catch{ showToast('⚠️ Error sending like'); }
+  closeModal('likeModal');
+});
+
+document.getElementById('sendPassBtn').addEventListener('click', async ()=>{
+  const feedback=document.getElementById('passFeedback').value.trim();
+  try{
+    const res = await fetch('/api/pass', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({target:selectedName, feedback})
+    });
+    showToast(res.ok?'💨 Passed successfully':'⚠️ Pass failed');
+  }catch{ showToast('⚠️ Error sending pass'); }
+  closeModal('passModal');
+});
+
+document.getElementById('filterBtn').addEventListener('click',()=>{
+  showToast('🎯 Filters applied!');
+  generateMatches(10);
+});
+
+generateMatches(10);
+</script>
+</body>
+</html>
