@@ -1,197 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeartLink — My Profile</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Profile | HeartLink</title>
 <style>
-  :root {
-    --accent:#ff4d88;
-    --bg:#fff7fb;
-    --card:#fff;
-    --muted:#666;
-    --shadow:0 4px 12px rgba(0,0,0,0.1);
-  }
   body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--bg);
     margin: 0;
-    color: #222;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: #e9ffe9;
+    color: #333;
   }
 
-  header {
-    width: 100%;
-    background: linear-gradient(90deg,var(--accent),#ff77aa);
-    color: white;
+  .header {
+    background: linear-gradient(180deg, #b8ff8e, #9eff7d);
+    padding: 30px 15px 70px;
+    position: relative;
     text-align: center;
-    padding: 14px;
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
+    color: #222;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
   }
 
-  header h1 { margin: 0; font-size: 20px; }
-
-  .container {
-    background: var(--card);
-    margin: 20px;
-    padding: 18px;
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    max-width: 400px;
-    width: 90%;
-  }
-
-  .profile-pic {
-    width: 110px;
-    height: 110px;
+  .header img {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
+    border: 3px solid white;
+    margin-top: 10px;
     object-fit: cover;
-    display: block;
-    margin: 0 auto 10px;
-    border: 3px solid var(--accent);
   }
 
-  label {
-    display: block;
+  .username {
+    font-size: 1.5rem;
     font-weight: 600;
     margin-top: 10px;
   }
 
-  input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+  .user-id {
+    font-size: 0.9rem;
+    color: #555;
     margin-top: 4px;
-    font-family: inherit;
   }
 
-  button {
-    width: 100%;
-    margin-top: 14px;
-    padding: 10px;
-    border: none;
-    background: var(--accent);
-    color: white;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: .2s;
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 10px;
   }
 
-  button:hover { opacity: .85; }
-
-  .back {
-    position: absolute;
-    top: 12px;
-    left: 14px;
-    background: rgba(255,255,255,0.3);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    padding: 6px 10px;
-    cursor: pointer;
-  }
-
-  footer {
-    margin-top: auto;
-    font-size: 12px;
-    color: var(--muted);
-    padding: 12px;
+  .stats div {
     text-align: center;
+  }
+
+  .stats div span {
+    display: block;
+    font-weight: 600;
+    color: #222;
+  }
+
+  .recharge-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #fff;
+    margin: -30px 15px 10px;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .recharge-btn {
+    background: #6aff2e;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .recharge-btn:hover {
+    background: #56e628;
+  }
+
+  .vip-card {
+    background: linear-gradient(135deg, #d7c28e, #bfa06d);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .task-box {
+    background: #fff;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .task-box .title {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .task-box p {
+    font-size: 0.9rem;
+    color: #444;
+  }
+
+  .task-box button {
+    background: #90ee90;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: #222;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 15px;
+  }
+
+  .grid-item {
+    background: #fff;
+    border-radius: 15px;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #222;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: 0.2s;
+  }
+
+  .grid-item:hover {
+    background: #ccffcc;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  }
+
+  .bottom-nav a {
+    text-align: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  .bottom-nav a.active {
+    color: #7dff00;
+    font-weight: 600;
   }
 </style>
 </head>
 <body>
-  <header>
-    <button class="back" onclick="window.location.href='home.html'">←</button>
-    <h1>My Profile</h1>
-  </header>
 
-  <div class="container">
-    <img id="profilePic" class="profile-pic" src="https://i.pravatar.cc/150?u=default" alt="Profile Picture">
-    <input type="file" id="photoUpload" accept="image/*">
-
-    <label>Name</label>
-    <input id="name" type="text" placeholder="Your name">
-
-    <label>Age</label>
-    <input id="age" type="number" placeholder="Your age">
-
-    <label>County</label>
-    <select id="county"></select>
-
-    <label>Bio</label>
-    <textarea id="bio" rows="3" placeholder="Say something about yourself..."></textarea>
-
-    <button id="saveBtn">Save Changes</button>
+<div class="header">
+  <img id="avatar" src="https://i.pravatar.cc/150?img=10" alt="User Avatar" />
+  <div class="username" id="username">Loading...</div>
+  <div class="user-id" id="userId">ID: ...</div>
+  <div class="stats">
+    <div><span id="friends">0</span>Friends</div>
+    <div><span id="following">0</span>Following</div>
+    <div><span id="followers">0</span>Followers</div>
+    <div><span id="visitors">0</span>Visitors</div>
   </div>
+</div>
 
-  <footer>© 2025 HeartLink — Real People. Real Connections.</footer>
+<div class="recharge-section">
+  <button class="recharge-btn">Recharge</button>
+  <div class="vip-card">VIP / SVIP</div>
+</div>
+
+<div class="task-box">
+  <div class="title">💰 Make Money Zone</div>
+  <p>Complete your info to get 20 gold coins</p>
+  <button onclick="window.location.href='signup.html'">Go to Complete</button>
+</div>
+
+<div class="grid">
+  <div class="grid-item">🏠<br>Family</div>
+  <div class="grid-item">💵<br>Income</div>
+  <div class="grid-item">🛍️<br>Store</div>
+  <div class="grid-item">⭐<br>Aristocracy</div>
+  <div class="grid-item">🎒<br>Bag</div>
+  <div class="grid-item">📈<br>Level</div>
+  <div class="grid-item">🏅<br>Badge</div>
+  <div class="grid-item">✅<br>Certified</div>
+  <div class="grid-item">🎧<br>Support</div>
+  <div class="grid-item">💬<br>Feedback</div>
+  <div class="grid-item">⚙️<br>Settings</div>
+  <div class="grid-item">💳<br>Wallet</div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="home.html">🏠<br>Home</a>
+  <a href="moment.html">🪩<br>Moment</a>
+  <a href="chat.html">💬<br>Chat</a>
+  <a href="profile.html" class="active">😊<br>Me</a>
+</nav>
 
 <script>
-  // --- Load counties dynamically (all 47) ---
-  const counties = [
-    "Mombasa","Kwale","Kilifi","Tana River","Lamu","Taita-Taveta","Garissa","Wajir","Mandera",
-    "Marsabit","Isiolo","Meru","Tharaka-Nithi","Embu","Kitui","Machakos","Makueni","Nyandarua",
-    "Nyeri","Kirinyaga","Murang'a","Kiambu","Turkana","West Pokot","Samburu","Trans Nzoia",
-    "Uasin Gishu","Elgeyo-Marakwet","Nandi","Baringo","Laikipia","Nakuru","Narok","Kajiado",
-    "Kericho","Bomet","Kakamega","Vihiga","Bungoma","Busia","Siaya","Kisumu","Homa Bay",
-    "Migori","Kisii","Nyamira","Nairobi"
-  ];
-  const countySelect = document.getElementById('county');
-  counties.forEach(c=>{
-    const opt = document.createElement('option');
-    opt.value = opt.textContent = c;
-    countySelect.appendChild(opt);
-  });
-
-  // --- Load user data ---
-  const user = JSON.parse(localStorage.getItem('heartlinkUser') || '{}');
-  const nameInput = document.getElementById('name');
-  const ageInput = document.getElementById('age');
-  const bioInput = document.getElementById('bio');
-  const pic = document.getElementById('profilePic');
-
-  if (user.name) nameInput.value = user.name;
-  if (user.age) ageInput.value = user.age;
-  if (user.bio) bioInput.value = user.bio;
-  if (user.county) countySelect.value = user.county;
-  if (user.photo) pic.src = user.photo;
-
-  // --- Save updates ---
-  document.getElementById('saveBtn').onclick = ()=>{
-    const updatedUser = {
-      ...user,
-      name: nameInput.value,
-      age: ageInput.value,
-      county: countySelect.value,
-      bio: bioInput.value,
-      photo: pic.src,
-      completed: true
-    };
-    localStorage.setItem('heartlinkUser', JSON.stringify(updatedUser));
-    alert("Profile saved successfully!");
-    window.location.href = "home.html";
+  // Simulate user data in localStorage
+  let user = JSON.parse(localStorage.getItem('user')) || {
+    name: "Zash Credit",
+    avatar: "https://i.pravatar.cc/150?img=" + Math.floor(Math.random() * 70),
+    id: "ID:" + Math.floor(100000000 + Math.random() * 900000000),
+    friends: 0,
+    following: 0,
+    followers: 0,
+    visitors: Math.floor(Math.random() * 100)
   };
 
-  // --- Profile picture upload ---
-  document.getElementById('photoUpload').addEventListener('change', e=>{
-    const file = e.target.files[0];
-    if (file){
-      const reader = new FileReader();
-      reader.onload = ()=> {
-        pic.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
+  document.getElementById('username').textContent = user.name;
+  document.getElementById('avatar').src = user.avatar;
+  document.getElementById('userId').textContent = user.id;
+  document.getElementById('friends').textContent = user.friends;
+  document.getElementById('following').textContent = user.following;
+  document.getElementById('followers').textContent = user.followers;
+  document.getElementById('visitors').textContent = user.visitors;
+
+  // Save data persistently
+  localStorage.setItem('user', JSON.stringify(user));
 </script>
+
 </body>
 </html>
-
