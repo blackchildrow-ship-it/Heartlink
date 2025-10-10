@@ -1,60 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeartLink Membership Plans</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Membership Packages – HeartLink</title>
 <style>
   body {
     font-family: 'Poppins', sans-serif;
     background-color: #fff5f7;
-    margin: 0;
     color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    margin: 0;
+    text-align: center;
   }
   header {
     background-color: #ffb6c1;
+    padding: 15px;
     color: white;
-    padding: 12px 20px;
+    font-size: 1.5em;
+  }
+  .container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 { margin: 0; font-size: 1.4rem; }
-  .btn {
-    background-color: #ff7fa8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-  }
-  .plans {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
     padding: 30px;
   }
   .card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     padding: 20px;
-    text-align: center;
+    width: 250px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     transition: transform 0.2s;
   }
   .card:hover { transform: translateY(-3px); }
-  .price { font-size: 1.8rem; color: #ff7fa8; margin: 10px 0; }
-  .features { font-size: 0.9rem; margin-bottom: 15px; }
-  footer {
-    background: #fff;
-    padding: 15px;
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn:hover { background-color: #ff5c8d; }
+  #payModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 400px;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .modal-content h3 {
     text-align: center;
-    font-size: 0.85rem;
-    color: #777;
+    color: #ff7fa8;
+  }
+  textarea {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 8px;
+    padding: 8px;
+    resize: vertical;
   }
   #toast {
     position: fixed;
@@ -69,83 +87,80 @@
 </style>
 </head>
 <body>
-<header>
-  <button class="btn" onclick="goBack()">← Back</button>
-  <h1>HeartLink Membership</h1>
-  <div></div>
-</header>
+<header>Choose Your Membership Plan</header>
 
-<main class="plans">
+<div class="container">
   <div class="card">
-    <h2>Bronze</h2>
-    <div class="price">Ksh 400</div>
-    <div class="features">
-      <p>Access basic chat features</p>
-      <p>See who liked you</p>
-    </div>
-    <button class="btn" onclick="purchase('bronze')">Pay Now</button>
+    <h3>Bronze</h3>
+    <p>Ksh 400 / month</p>
+    <button class="btn" onclick="openPay('Bronze')">Pay Now</button>
   </div>
+  <div class="card">
+    <h3>Silver</h3>
+    <p>Ksh 750 / month</p>
+    <button class="btn" onclick="openPay('Silver')">Pay Now</button>
+  </div>
+  <div class="card">
+    <h3>Gold</h3>
+    <p>Ksh 1500 / month</p>
+    <button class="btn" onclick="openPay('Gold')">Pay Now</button>
+  </div>
+</div>
 
-  <div class="card">
-    <h2>Silver</h2>
-    <div class="price">Ksh 750</div>
-    <div class="features">
-      <p>Everything in Bronze</p>
-      <p>Video call access</p>
-      <p>Priority matches</p>
-    </div>
-    <button class="btn" onclick="purchase('silver')">Pay Now</button>
+<div id="payModal">
+  <div class="modal-content">
+    <h3 id="planTitle">Payment Instructions</h3>
+    <p><strong>To complete your payment:</strong></p>
+    <ol>
+      <li>Go to <strong>M-PESA → Lipa na M-PESA</strong></li>
+      <li>Select <strong>Buy Goods and Services</strong></li>
+      <li>Enter Till Number: <strong>9824375</strong></li>
+      <li>Account Name: <strong>HAKIKA R PROVISION</strong></li>
+      <li>Enter the amount for your package.</li>
+      <li>Enter your M-PESA PIN and wait for confirmation SMS.</li>
+    </ol>
+    <hr>
+    <p>After receiving your confirmation SMS, paste it below:</p>
+    <textarea id="mpesaMsg" rows="4" placeholder="Paste M-PESA message here..."></textarea>
+    <button class="btn" onclick="verifyPayment()">Confirm Payment</button>
+    <button class="btn" style="background-color:#ccc;color:#333" onclick="closeModal()">Cancel</button>
   </div>
-
-  <div class="card">
-    <h2>Gold</h2>
-    <div class="price">Ksh 1500</div>
-    <div class="features">
-      <p>All Silver benefits</p>
-      <p>Exclusive events access</p>
-      <p>Premium badge</p>
-    </div>
-    <button class="btn" onclick="purchase('gold')">Pay Now</button>
-  </div>
-</main>
+</div>
 
 <div id="toast"></div>
 
-<footer>© 2025 HeartLink. All rights reserved.</footer>
-
 <script>
-const token = localStorage.getItem('token') || 'mockToken';
-const toast = document.getElementById('toast');
+let selectedPlan = '';
 
-function showToast(msg) {
+function showToast(msg){
+  const toast = document.getElementById('toast');
   toast.textContent = msg;
-  toast.style.display = 'block';
-  setTimeout(() => toast.style.display = 'none', 3000);
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',3000);
 }
 
-async function purchase(plan) {
-  showToast(`Processing your ${plan} plan...`);
-  try {
-    // Replace this mock call with your real backend endpoint
-    await fetch(`/api/purchase`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ plan })
-    });
-    setTimeout(() => {
-      showToast(`🎉 ${plan.toUpperCase()} plan activated!`);
-      setTimeout(() => window.location.href = 'dashboard.html', 1500);
-    }, 1000);
-  } catch {
-    showToast('❌ Failed to process payment.');
+function openPay(plan){
+  selectedPlan = plan;
+  document.getElementById('planTitle').textContent = `${plan} Package Payment`;
+  document.getElementById('payModal').style.display='flex';
+}
+
+function closeModal(){
+  document.getElementById('payModal').style.display='none';
+}
+
+function verifyPayment(){
+  const msg = document.getElementById('mpesaMsg').value.trim().toUpperCase();
+  if(!msg){
+    showToast('⚠️ Please paste your M-PESA message.');
+    return;
   }
-}
-
-function goBack() {
-  window.location.href = 'dashboard.html';
+  if(msg.includes(selectedPlan.toUpperCase()) && msg.includes('HAKIKA') && msg.includes('PROVISION')){
+    showToast(`✅ ${selectedPlan} Payment Verified! Welcome to HeartLink.`);
+    setTimeout(()=>window.location.href='dashboard.html',2000);
+  } else {
+    showToast('❌ Could not verify payment. Ensure message contains the package name and HAKIKA R PROVISION.');
+  }
 }
 </script>
 </body>
