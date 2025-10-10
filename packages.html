@@ -3,178 +3,160 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Membership Packages – HeartLink</title>
+<title>Choose Your Package – HeartLink</title>
 <style>
   body {
     font-family: 'Poppins', sans-serif;
     background-color: #fff5f7;
-    color: #333;
     margin: 0;
     text-align: center;
+    color: #333;
   }
   header {
     background-color: #ffb6c1;
-    padding: 15px;
     color: white;
+    padding: 15px;
     font-size: 1.5em;
   }
   .container {
+    padding: 20px;
+  }
+  .plans {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    padding: 30px;
+    gap: 15px;
+    margin-top: 20px;
   }
-  .card {
+  .plan {
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 20px;
     width: 250px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
   }
-  .card:hover { transform: translateY(-3px); }
+  .plan h3 {
+    color: #ff7fa8;
+  }
   .btn {
     background-color: #ff7fa8;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
+    border-radius: 6px;
+    padding: 10px 18px;
     margin-top: 10px;
     cursor: pointer;
     font-weight: bold;
   }
   .btn:hover { background-color: #ff5c8d; }
-  #payModal {
+  #howToPay {
     display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.4);
-    justify-content: center;
-    align-items: center;
-  }
-  .modal-content {
+    margin-top: 20px;
     background: white;
-    border-radius: 12px;
-    padding: 25px;
-    max-width: 400px;
-    text-align: left;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-  .modal-content h3 {
-    text-align: center;
-    color: #ff7fa8;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   }
   textarea {
-    width: 100%;
+    width: 90%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 8px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    margin-top: 8px;
-    padding: 8px;
-    resize: vertical;
   }
-  #toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #ff7fa8;
-    color: white;
-    padding: 10px 15px;
+  #verifyMsg {
+    color: #ff7fa8;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .back-btn {
+    background-color: #ccc;
+    color: #333;
+    border: none;
     border-radius: 6px;
-    display: none;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
   }
+  .back-btn:hover { background-color: #bbb; }
 </style>
 </head>
 <body>
-<header>Choose Your Membership Plan</header>
-
+<header>HeartLink Packages</header>
 <div class="container">
-  <div class="card">
-    <h3>Bronze</h3>
-    <p>Ksh 400 / month</p>
-    <button class="btn" onclick="openPay('Bronze', 400)">Pay Now</button>
+  <h2>Select Your Membership Plan</h2>
+  <div class="plans" id="plans">
+    <div class="plan">
+      <h3>Bronze</h3>
+      <p>Basic access</p>
+      <h4>Ksh 400</h4>
+      <button class="btn" onclick="showHowToPay(400)">Pay Now</button>
+    </div>
+    <div class="plan">
+      <h3>Silver</h3>
+      <p>Extra features</p>
+      <h4>Ksh 750</h4>
+      <button class="btn" onclick="showHowToPay(750)">Pay Now</button>
+    </div>
+    <div class="plan">
+      <h3>Gold</h3>
+      <p>All premium perks</p>
+      <h4>Ksh 1500</h4>
+      <button class="btn" onclick="showHowToPay(1500)">Pay Now</button>
+    </div>
   </div>
-  <div class="card">
-    <h3>Silver</h3>
-    <p>Ksh 750 / month</p>
-    <button class="btn" onclick="openPay('Silver', 750)">Pay Now</button>
-  </div>
-  <div class="card">
-    <h3>Gold</h3>
-    <p>Ksh 1500 / month</p>
-    <button class="btn" onclick="openPay('Gold', 1500)">Pay Now</button>
-  </div>
-</div>
 
-<div id="payModal">
-  <div class="modal-content">
-    <h3 id="planTitle">Payment Instructions</h3>
-    <p><strong>To complete your payment:</strong></p>
-    <ol>
-      <li>Go to <strong>M-PESA → Lipa na M-PESA</strong></li>
-      <li>Select <strong>Buy Goods and Services</strong></li>
-      <li>Enter Till Number: <strong>9824375</strong></li>
-      <li>Account Name: <strong>HAKIKA R PROVISION</strong></li>
-      <li>Enter the amount for your package.</li>
-      <li>Enter your M-PESA PIN and wait for confirmation SMS.</li>
+  <button class="back-btn" onclick="window.location.href='dashboard.html'">← Back</button>
+
+  <div id="howToPay">
+    <h3>How to Pay via M-PESA</h3>
+    <ol style="text-align:left;display:inline-block;">
+      <li>Go to your M-PESA menu</li>
+      <li>Select <strong>Lipa na M-PESA</strong></li>
+      <li>Choose <strong>Buy Goods and Services</strong></li>
+      <li>Enter Till Number <strong>9824375</strong></li>
+      <li>Enter the amount shown below</li>
+      <li>Enter your M-PESA PIN</li>
+      <li>Wait for confirmation SMS</li>
     </ol>
-    <hr>
-    <p>After receiving your confirmation SMS, paste it below:</p>
-    <textarea id="mpesaMsg" rows="4" placeholder="Paste M-PESA message here..."></textarea>
+    <p><strong>Amount:</strong> Ksh <span id="selectedAmount"></span></p>
+    <p>Once you receive your M-PESA confirmation SMS, paste it below to verify:</p>
+    <textarea id="mpesaMsg" placeholder="Paste M-PESA confirmation message here..."></textarea><br>
     <button class="btn" onclick="verifyPayment()">Confirm Payment</button>
-    <button class="btn" style="background-color:#ccc;color:#333" onclick="closeModal()">Cancel</button>
+    <div id="verifyMsg"></div>
   </div>
 </div>
-
-<div id="toast"></div>
 
 <script>
-let selectedPlan = '';
 let selectedAmount = 0;
 
-function showToast(msg){
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.style.display='block';
-  setTimeout(()=>toast.style.display='none',3000);
-}
-
-function openPay(plan, amount){
-  selectedPlan = plan;
+function showHowToPay(amount){
   selectedAmount = amount;
-  document.getElementById('planTitle').textContent = `${plan} Package Payment`;
-  document.getElementById('payModal').style.display='flex';
-}
-
-function closeModal(){
-  document.getElementById('payModal').style.display='none';
+  document.getElementById('selectedAmount').textContent = amount;
+  document.getElementById('howToPay').style.display = 'block';
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 
 function verifyPayment(){
-  const msg = document.getElementById('mpesaMsg').value.trim().toUpperCase();
-  if(!msg){
-    showToast('⚠️ Please paste your M-PESA message.');
-    return;
-  }
+  const msg = document.getElementById('mpesaMsg').value.toLowerCase();
+  const verifyMsg = document.getElementById('verifyMsg');
+  
+  const amounts = [400, 750, 1500];
+  const foundAmount = amounts.find(a => msg.includes(a.toString()));
+  const containsName = msg.includes('hakika r provision');
 
-  const amounts = {400: 'Bronze', 750: 'Silver', 1500: 'Gold'};
-  let detectedAmount = null;
-
-  // Detect which valid package amount appears in message
-  for (let amt in amounts) {
-    if (msg.includes(amt)) {
-      detectedAmount = parseInt(amt);
-      break;
-    }
-  }
-
-  if (msg.includes('HAKIKA') && msg.includes('PROVISION') && detectedAmount) {
-    const plan = amounts[detectedAmount];
-    showToast(`✅ Payment of Ksh ${detectedAmount} verified! ${plan} package activated.`);
-    setTimeout(()=>window.location.href='payment_success.html',2000);
+  if(foundAmount && containsName){
+    verifyMsg.style.color = 'green';
+    verifyMsg.textContent = `✅ Payment of Ksh ${foundAmount} verified successfully! Redirecting...`;
+    setTimeout(()=> window.location.href='payment_success.html', 2000);
   } else {
-    showToast('❌ Could not verify payment. Ensure message contains the amount and HAKIKA R PROVISION.');
+    verifyMsg.style.color = 'red';
+    verifyMsg.textContent = '❌ Payment could not be verified. Redirecting...';
+    setTimeout(()=> window.location.href='payment_failed.html', 2000);
   }
 }
 </script>
