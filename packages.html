@@ -1,2 +1,152 @@
-xn fykighujh.iuhbnuiupb ;u90
-hgcvgfyikt vt
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeartLink Membership Plans</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    margin: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #ffb6c1;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { margin: 0; font-size: 1.4rem; }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .plans {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); }
+  .price { font-size: 1.8rem; color: #ff7fa8; margin: 10px 0; }
+  .features { font-size: 0.9rem; margin-bottom: 15px; }
+  footer {
+    background: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+  }
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff7fa8;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<header>
+  <button class="btn" onclick="goBack()">← Back</button>
+  <h1>HeartLink Membership</h1>
+  <div></div>
+</header>
+
+<main class="plans">
+  <div class="card">
+    <h2>Bronze</h2>
+    <div class="price">Ksh 400</div>
+    <div class="features">
+      <p>Access basic chat features</p>
+      <p>See who liked you</p>
+    </div>
+    <button class="btn" onclick="purchase('bronze')">Pay Now</button>
+  </div>
+
+  <div class="card">
+    <h2>Silver</h2>
+    <div class="price">Ksh 750</div>
+    <div class="features">
+      <p>Everything in Bronze</p>
+      <p>Video call access</p>
+      <p>Priority matches</p>
+    </div>
+    <button class="btn" onclick="purchase('silver')">Pay Now</button>
+  </div>
+
+  <div class="card">
+    <h2>Gold</h2>
+    <div class="price">Ksh 1500</div>
+    <div class="features">
+      <p>All Silver benefits</p>
+      <p>Exclusive events access</p>
+      <p>Premium badge</p>
+    </div>
+    <button class="btn" onclick="purchase('gold')">Pay Now</button>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<footer>© 2025 HeartLink. All rights reserved.</footer>
+
+<script>
+const token = localStorage.getItem('token') || 'mockToken';
+const toast = document.getElementById('toast');
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  setTimeout(() => toast.style.display = 'none', 3000);
+}
+
+async function purchase(plan) {
+  showToast(`Processing your ${plan} plan...`);
+  try {
+    // Replace this mock call with your real backend endpoint
+    await fetch(`/api/purchase`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ plan })
+    });
+    setTimeout(() => {
+      showToast(`🎉 ${plan.toUpperCase()} plan activated!`);
+      setTimeout(() => window.location.href = 'dashboard.html', 1500);
+    }, 1000);
+  } catch {
+    showToast('❌ Failed to process payment.');
+  }
+}
+
+function goBack() {
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>
