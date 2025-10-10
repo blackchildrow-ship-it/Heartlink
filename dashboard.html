@@ -19,20 +19,13 @@
     align-items: center;
   }
   header h1 { color: #fff; margin: 0; }
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  nav a, nav button {
+  nav a {
     color: white;
+    margin: 0 10px;
     text-decoration: none;
     font-weight: bold;
-    background: none;
-    border: none;
-    cursor: pointer;
   }
-  nav a:hover, nav button:hover { text-decoration: underline; }
+  nav a:hover { text-decoration: underline; }
   .container { padding: 20px; }
   .matches-grid {
     display: grid;
@@ -72,58 +65,52 @@
     border-radius: 6px;
     display: none;
   }
+
   /* Upgrade Modal */
-  .modal {
+  #upgradeModal {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.4);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
   }
   .modal-content {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 20px;
-    width: 90%;
     max-width: 400px;
     text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
-  .modal-content h2 { color: #ff7fa8; }
   .plan {
-    display: block;
-    width: 100%;
+    background-color: #ffe4ec;
+    border-radius: 8px;
     margin: 10px 0;
     padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
   }
-  .bronze { background: #cd7f32; color: white; }
-  .silver { background: #c0c0c0; color: black; }
-  .gold { background: #ffd700; color: black; }
-  .close-btn {
-    background: #ffb6c1;
-    color: white;
-    margin-top: 1rem;
+  .plan:hover {
+    background-color: #ffd1e0;
   }
 </style>
 </head>
 <body>
 <header>
   <h1>HeartLink</h1>
-  <nav>
-    <a href="#" id="homeLink">Home</a>
-    <a href="#" id="matchesLink">Matches</a>
-    <a href="#" id="chatsLink">Chats</a>
-    <a href="#" id="notificationsLink">Notifications <span id="notifCount">(0)</span></a>
-    <button id="upgradeBtn">⭐ Upgrade</button>
-    <a href="index.html" id="logoutLink">Logout</a>
-  </nav>
+  <div>
+    <button class="btn" id="upgradeBtn">💎 Upgrade</button>
+  </div>
 </header>
+
+<nav style="background-color:#ffb6c1; text-align:center; padding:8px;">
+  <a href="#" id="homeLink">Home</a>
+  <a href="#" id="matchesLink">Matches</a>
+  <a href="#" id="chatsLink">Chats</a>
+  <a href="#" id="notificationsLink">Notifications (<span id="notifCount">0</span>)</a>
+  <a href="index.html" id="logoutLink">Logout</a>
+</nav>
+
 <div class="container">
   <section id="matches">
     <h2>Matches</h2>
@@ -138,17 +125,29 @@
     <ul id="notifList"></ul>
   </section>
 </div>
+
 <div id="toast"></div>
 
 <!-- Upgrade Modal -->
-<div class="modal" id="upgradeModal">
+<div id="upgradeModal">
   <div class="modal-content">
-    <h2>Upgrade Your Membership</h2>
-    <p>Select a plan to unlock premium features:</p>
-    <button class="plan bronze" onclick="selectPlan('bronze',400)">🥉 Bronze — Ksh 400</button>
-    <button class="plan silver" onclick="selectPlan('silver',750)">🥈 Silver — Ksh 750</button>
-    <button class="plan gold" onclick="selectPlan('gold',1500)">🥇 Gold — Ksh 1500</button>
-    <button class="close-btn" onclick="toggleModal(false)">Close</button>
+    <h3>Select Your Membership Plan</h3>
+    <div class="plan">
+      <h4>Bronze</h4>
+      <p>Ksh 400 / month</p>
+      <button class="btn" onclick="selectPlan('bronze')">Choose Bronze</button>
+    </div>
+    <div class="plan">
+      <h4>Silver</h4>
+      <p>Ksh 750 / month</p>
+      <button class="btn" onclick="selectPlan('silver')">Choose Silver</button>
+    </div>
+    <div class="plan">
+      <h4>Gold</h4>
+      <p>Ksh 1500 / month</p>
+      <button class="btn" onclick="selectPlan('gold')">Choose Gold</button>
+    </div>
+    <button class="btn" onclick="closeUpgrade()">Close</button>
   </div>
 </div>
 
@@ -158,6 +157,7 @@ const notifList = document.getElementById('notifList');
 const notifCount = document.getElementById('notifCount');
 const chatsList = document.getElementById('chatsList');
 const toast = document.getElementById('toast');
+const upgradeModal = document.getElementById('upgradeModal');
 const sections = {
   matches: document.getElementById('matches'),
   chats: document.getElementById('chats'),
@@ -175,7 +175,7 @@ function showToast(msg){
   setTimeout(()=>toast.style.display='none',3000);
 }
 
-// Mock JWT and data
+// Mock user and data
 const token = localStorage.getItem('token') || 'mockToken';
 const userGender = 'male';
 
@@ -185,13 +185,13 @@ function generateMatches(){
   for(let i=1;i<=25;i++){
     const card=document.createElement('div');
     card.className='card';
-    const name = genderToShow==='female'?'Sophia '+i:'Liam '+i;
+    const name = `${genderToShow==='female'?'Sophia':'Liam'} ${i}`;
     card.innerHTML=`
       <h4>${name}</h4>
       <p>${Math.floor(Math.random()*10)+20} yrs</p>
       <button class='btn viewBtn'>View</button>
       <button class='btn likeBtn'>Like</button>
-      <button class='btn chatBtn' data-name="${name}">Chat</button>`;
+      <button class='btn chatBtn' data-user='${name}'>Chat</button>`;
     matchesGrid.appendChild(card);
   }
 }
@@ -221,14 +221,27 @@ function generateRandomBotChats(){
     li.textContent = `${bot}: ${msg}`;
     notifList.appendChild(li);
   });
-  notifCount.textContent = `(${bots.length})`;
+  notifCount.textContent = bots.length;
 }
 
+// Navigation
 document.getElementById('matchesLink').addEventListener('click',()=>showSection('matches'));
 document.getElementById('chatsLink').addEventListener('click',()=>showSection('chats'));
 document.getElementById('notificationsLink').addEventListener('click',()=>showSection('notifications'));
 
-// Handle match card buttons
+// Upgrade Modal
+document.getElementById('upgradeBtn').addEventListener('click',()=>{
+  upgradeModal.style.display='flex';
+});
+function closeUpgrade(){
+  upgradeModal.style.display='none';
+}
+function selectPlan(plan){
+  showToast(`Redirecting to ${plan.toUpperCase()} plan...`);
+  setTimeout(()=>window.location.href=`packages.html?plan=${plan}`,1000);
+}
+
+// Button events
 document.addEventListener('click',e=>{
   if(e.target.classList.contains('viewBtn')){
     showToast('Viewing profile...');
@@ -236,28 +249,12 @@ document.addEventListener('click',e=>{
     e.target.disabled=true;
     showToast('❤️ Liked successfully!');
   }else if(e.target.classList.contains('chatBtn')){
-    const user = e.target.dataset.name;
+    const user = e.target.getAttribute('data-user');
     showToast('Opening chat...');
-    setTimeout(()=>window.location.href=`chat.html?user=${encodeURIComponent(user)}`,1000);
+    setTimeout(()=>window.location.href=`chat.html?user=${encodeURIComponent(user)}`,700);
   }
 });
 
-// Upgrade Modal Logic
-const modal = document.getElementById('upgradeModal');
-document.getElementById('upgradeBtn').addEventListener('click',()=>toggleModal(true));
-
-function toggleModal(show){
-  modal.style.display = show ? 'flex' : 'none';
-}
-
-function selectPlan(plan, amount){
-  showToast(`Redirecting to ${plan.toUpperCase()} plan...`);
-  setTimeout(()=>{
-    window.location.href = `packages.html?plan=${plan}&amount=${amount}`;
-  }, 1000);
-}
-
-// Initialize
 generateMatches();
 generateRandomBotChats();
 showSection('matches');
