@@ -5,95 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>My Profile | HeartLink</title>
 <style>
+  :root {
+    --hl-pink: #ff7bd8;
+    --hl-dark-pink: #ff4fc0;
+    --hl-light-pink: #ffd9f2;
+    --hl-bg: #fff7fb;
+    --hl-text: #222;
+    --hl-gray: #777;
+  }
+
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: #e9ffe9;
-    color: #333;
+    background: var(--hl-bg);
+    color: var(--hl-text);
   }
 
+  /* Header Section */
   .header {
-    background: linear-gradient(180deg, #b8ff8e, #9eff7d);
+    background: linear-gradient(180deg, var(--hl-pink), var(--hl-light-pink));
     padding: 30px 15px 70px;
     position: relative;
     text-align: center;
-    color: #222;
+    color: #fff;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
   }
 
   .header img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    border: 3px solid white;
-    margin-top: 10px;
+    border: 3px solid #fff;
     object-fit: cover;
   }
 
   .username {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin-top: 10px;
   }
 
   .user-id {
     font-size: 0.9rem;
-    color: #555;
-    margin-top: 4px;
+    color: #fff;
+    opacity: 0.9;
   }
 
   .stats {
     display: flex;
     justify-content: center;
     gap: 25px;
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
   .stats div {
     text-align: center;
+    font-size: 0.9rem;
   }
 
   .stats div span {
     display: block;
     font-weight: 600;
-    color: #222;
+    font-size: 1.1rem;
   }
 
+  /* Buttons Section */
   .recharge-section {
     display: flex;
     justify-content: space-around;
     align-items: center;
     background: #fff;
-    margin: -30px 15px 10px;
+    margin: -35px 15px 15px;
     padding: 15px;
     border-radius: 20px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
-  .recharge-btn {
-    background: #6aff2e;
-    color: #fff;
+  .recharge-btn, .vip-card {
     border: none;
     border-radius: 12px;
-    padding: 12px 30px;
+    padding: 12px 25px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .recharge-btn {
+    background: var(--hl-pink);
+    color: white;
   }
 
   .recharge-btn:hover {
-    background: #56e628;
+    background: var(--hl-dark-pink);
   }
 
   .vip-card {
-    background: linear-gradient(135deg, #d7c28e, #bfa06d);
-    color: white;
-    padding: 12px 25px;
-    border-radius: 12px;
-    font-weight: 600;
+    background: linear-gradient(135deg, #ffd5ef, #ff9ae0);
+    color: #fff;
   }
 
+  /* Task Box */
   .task-box {
     background: #fff;
     border-radius: 15px;
@@ -105,23 +118,20 @@
   .task-box .title {
     font-weight: 600;
     margin-bottom: 8px;
-  }
-
-  .task-box p {
-    font-size: 0.9rem;
-    color: #444;
+    color: var(--hl-dark-pink);
   }
 
   .task-box button {
-    background: #90ee90;
+    background: var(--hl-pink);
     border: none;
     border-radius: 10px;
-    padding: 6px 12px;
-    color: #222;
+    padding: 8px 15px;
+    color: white;
     font-weight: 600;
     cursor: pointer;
   }
 
+  /* Grid Menu */
   .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -133,17 +143,18 @@
     background: #fff;
     border-radius: 15px;
     text-align: center;
-    padding: 10px;
-    font-size: 0.8rem;
-    color: #222;
+    padding: 12px;
+    font-size: 0.85rem;
+    color: #333;
     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    transition: 0.2s;
+    transition: 0.3s;
   }
 
   .grid-item:hover {
-    background: #ccffcc;
+    background: var(--hl-light-pink);
   }
 
+  /* Bottom Nav */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -160,13 +171,56 @@
   .bottom-nav a {
     text-align: center;
     text-decoration: none;
-    color: #666;
+    color: #777;
     font-size: 0.8rem;
   }
 
   .bottom-nav a.active {
-    color: #7dff00;
+    color: var(--hl-pink);
     font-weight: 600;
+  }
+
+  /* Modals */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .modal-content h2 {
+    color: var(--hl-pink);
+  }
+
+  .modal-content button {
+    background: var(--hl-pink);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
   }
 </style>
 </head>
@@ -185,12 +239,12 @@
 </div>
 
 <div class="recharge-section">
-  <button class="recharge-btn">Recharge</button>
-  <div class="vip-card">VIP / SVIP</div>
+  <button class="recharge-btn" onclick="openModal('rechargeModal')">Recharge</button>
+  <button class="vip-card" onclick="openModal('vipModal')">VIP / SVIP</button>
 </div>
 
 <div class="task-box">
-  <div class="title">💰 Make Money Zone</div>
+  <div class="title">💖 Make Money Zone</div>
   <p>Complete your info to get 20 gold coins</p>
   <button onclick="window.location.href='signup.html'">Go to Complete</button>
 </div>
@@ -214,13 +268,33 @@
   <a href="home.html">🏠<br>Home</a>
   <a href="moment.html">🪩<br>Moment</a>
   <a href="chat.html">💬<br>Chat</a>
-  <a href="profile.html" class="active">😊<br>Me</a>
+  <a href="profile.html" class="active">💗<br>Me</a>
 </nav>
 
+<!-- Recharge Modal -->
+<div class="modal" id="rechargeModal">
+  <div class="modal-content">
+    <h2>💎 Recharge Coins</h2>
+    <p>Your current balance: <strong id="coinBalance">0</strong> 💰</p>
+    <button onclick="addCoins(20)">Add 20 Coins</button><br>
+    <button onclick="closeModal('rechargeModal')">Close</button>
+  </div>
+</div>
+
+<!-- VIP Modal -->
+<div class="modal" id="vipModal">
+  <div class="modal-content">
+    <h2>👑 VIP / SVIP Access</h2>
+    <p>Unlock exclusive pink themes and premium features.</p>
+    <button onclick="upgradeVIP()">Upgrade Now</button><br>
+    <button onclick="closeModal('vipModal')">Close</button>
+  </div>
+</div>
+
 <script>
-  // Simulate user data in localStorage
+  // Load user
   let user = JSON.parse(localStorage.getItem('user')) || {
-    name: "Zash Credit",
+    name: "HeartLink Member",
     avatar: "https://i.pravatar.cc/150?img=" + Math.floor(Math.random() * 70),
     id: "ID:" + Math.floor(100000000 + Math.random() * 900000000),
     friends: 0,
@@ -236,9 +310,31 @@
   document.getElementById('following').textContent = user.following;
   document.getElementById('followers').textContent = user.followers;
   document.getElementById('visitors').textContent = user.visitors;
-
-  // Save data persistently
   localStorage.setItem('user', JSON.stringify(user));
+
+  // Coins sync
+  let coins = parseInt(localStorage.getItem('coins')) || 0;
+  document.getElementById('coinBalance').textContent = coins;
+
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  function addCoins(amount) {
+    coins += amount;
+    localStorage.setItem('coins', coins);
+    document.getElementById('coinBalance').textContent = coins;
+    alert('🎀 You received ' + amount + ' coins!');
+  }
+
+  function upgradeVIP() {
+    alert('💗 VIP Activated! Enjoy your exclusive HeartLink perks!');
+    closeModal('vipModal');
+  }
 </script>
 
 </body>
