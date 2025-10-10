@@ -93,17 +93,17 @@
   <div class="card">
     <h3>Bronze</h3>
     <p>Ksh 400 / month</p>
-    <button class="btn" onclick="openPay('Bronze')">Pay Now</button>
+    <button class="btn" onclick="openPay('Bronze', 400)">Pay Now</button>
   </div>
   <div class="card">
     <h3>Silver</h3>
     <p>Ksh 750 / month</p>
-    <button class="btn" onclick="openPay('Silver')">Pay Now</button>
+    <button class="btn" onclick="openPay('Silver', 750)">Pay Now</button>
   </div>
   <div class="card">
     <h3>Gold</h3>
     <p>Ksh 1500 / month</p>
-    <button class="btn" onclick="openPay('Gold')">Pay Now</button>
+    <button class="btn" onclick="openPay('Gold', 1500)">Pay Now</button>
   </div>
 </div>
 
@@ -131,6 +131,7 @@
 
 <script>
 let selectedPlan = '';
+let selectedAmount = 0;
 
 function showToast(msg){
   const toast = document.getElementById('toast');
@@ -139,8 +140,9 @@ function showToast(msg){
   setTimeout(()=>toast.style.display='none',3000);
 }
 
-function openPay(plan){
+function openPay(plan, amount){
   selectedPlan = plan;
+  selectedAmount = amount;
   document.getElementById('planTitle').textContent = `${plan} Package Payment`;
   document.getElementById('payModal').style.display='flex';
 }
@@ -155,11 +157,14 @@ function verifyPayment(){
     showToast('⚠️ Please paste your M-PESA message.');
     return;
   }
-  if(msg.includes(selectedPlan.toUpperCase()) && msg.includes('HAKIKA') && msg.includes('PROVISION')){
-    showToast(`✅ ${selectedPlan} Payment Verified! Welcome to HeartLink.`);
+
+  const amountStr = selectedAmount.toString();
+
+  if(msg.includes(amountStr) && msg.includes('HAKIKA') && msg.includes('PROVISION')){
+    showToast(`✅ Payment of Ksh ${selectedAmount} Verified! Welcome to HeartLink.`);
     setTimeout(()=>window.location.href='dashboard.html',2000);
   } else {
-    showToast('❌ Could not verify payment. Ensure message contains the package name and HAKIKA R PROVISION.');
+    showToast('❌ Could not verify payment. Ensure message contains the amount and HAKIKA R PROVISION.');
   }
 }
 </script>
