@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Verification | HeartLink</title>
+<style>
+  :root {
+    --hl-pink: #ff7bd8;
+    --hl-dark-pink: #ff4fc0;
+    --hl-light-pink: #fff0f8;
+    --hl-bg: #fff7fb;
+    --hl-text: #333;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--hl-bg);
+    color: var(--hl-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(180deg, var(--hl-pink), var(--hl-light-pink));
+    width: 100%;
+    color: white;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 30px 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    font-size: 1.7rem;
+    margin: 0;
+  }
+
+  .container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 90%;
+    max-width: 420px;
+  }
+
+  h2 {
+    color: var(--hl-dark-pink);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: #666;
+  }
+
+  textarea {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 10px;
+    margin-top: 12px;
+    resize: none;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  button {
+    background: var(--hl-pink);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background: var(--hl-dark-pink);
+  }
+
+  .status {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .success {
+    color: green;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  }
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #777;
+    font-size: 0.8rem;
+  }
+
+  .bottom-nav a.active {
+    color: var(--hl-pink);
+    font-weight: 600;
+  }
+
+  .loading {
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from {opacity: 0.6;}
+    to {opacity: 1;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔍 Payment Verification</h1>
+  <p>Paste your full M-Pesa confirmation message below</p>
+</header>
+
+<div class="container">
+  <h2>Confirm Your Payment</h2>
+  <p>It must contain “<strong>HAKIKA R PROVISION</strong>” and the correct plan amount (KSh 450, 850, or 1500).</p>
+
+  <textarea id="mpesaText" placeholder="e.g. QFG123XYZ Confirmed. KSh850.00 sent to HAKIKA R PROVISION ..."></textarea>
+
+  <button onclick="verifyMessage()">Verify Payment</button>
+  <div class="status" id="status"></div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="home.html">🏠<br>Home</a>
+  <a href="moment.html">🪩<br>Moment</a>
+  <a href="chat.html">💬<br>Chat</a>
+  <a href="profile.html" class="active">💗<br>Me</a>
+</nav>
+
+<script>
+function verifyMessage() {
+  const text = document.getElementById("mpesaText").value.trim();
+  const status = document.getElementById("status");
+  status.textContent = "";
+  status.className = "status loading";
+  status.textContent = "⏳ Verifying payment...";
+
+  setTimeout(() => {
+    if (!text) {
+      status.textContent = "⚠️ Please paste your M-Pesa message.";
+      status.className = "status error";
+      return;
+    }
+
+    const includesHakika = text.toLowerCase().includes("hakika r provision");
+    const match = text.match(/ksh\s*([\d,]+(\.\d+)?)/i);
+    const validPlans = { 450: "Basic", 850: "Premium", 1500: "VIP" };
+
+    if (!includesHakika) {
+      status.textContent = "❌ Message does not contain 'HAKIKA R PROVISION'.";
+      status.className = "status error";
+      return;
+    }
+
+    if (!match) {
+      status.textContent = "⚠️ Could not detect amount in message.";
+      status.className = "status error";
+      return;
+    }
+
+    const amount = parseFloat(match[1].replace(/,/g, ""));
+    if (validPlans[amount]) {
+      // Save to localStorage
+      localStorage.setItem("subscriptionTier", validPlans[amount]);
+      localStorage.setItem("subscriptionPrice", amount);
+      localStorage.setItem("paymentVerified", "true");
+
+      status.textContent = `✅ Verified! ${validPlans[amount]} Plan (KSh ${amount}) successfully activated.`;
+      status.className = "status success";
+
+      setTimeout(() => window.location.href = "profile.html", 2500);
+    } else {
+      status.textContent = "❌ Invalid plan amount. Please confirm your payment matches KSh 450, 850, or 1500.";
+      status.className = "status error";
+    }
+  }, 1200);
+}
+</script>
+
+</body>
+</html>
