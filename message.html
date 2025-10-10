@@ -3,32 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat Conversation</title>
+<title>HeartLink Message</title>
 <style>
-  body { margin:0; font-family:'Poppins',sans-serif; background:#fff; }
-  header { display:flex; align-items:center; background:#fff0f6; padding:10px; }
+  body { margin:0; font-family:'Poppins',sans-serif; background:#fff; display:flex; flex-direction:column; height:100vh; }
+  header { display:flex; align-items:center; background:#fff0f6; padding:10px; border-bottom:1px solid #eee; }
   header img { width:35px; height:35px; border-radius:50%; margin-right:10px; }
   header h3 { margin:0; color:#000; font-size:16px; }
-  .chat-box { padding:15px; overflow-y:auto; height:75vh; }
-  .message { max-width:80%; margin:10px; padding:10px; border-radius:10px; }
+
+  .chat-box {
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .message {
+    max-width:80%;
+    margin:6px 0;
+    padding:10px 12px;
+    border-radius:10px;
+    word-wrap:break-word;
+    font-size:14px;
+  }
+
   .from-them { background:#f3f3f3; align-self:flex-start; }
-  .from-me { background:#ffb6c1; color:#fff; align-self:flex-end; margin-left:auto; }
-  .input-area { position:fixed; bottom:0; width:100%; background:#fff; border-top:1px solid #ddd; display:flex; align-items:center; padding:8px; }
-  .input-area input { flex:1; border:none; border-radius:20px; padding:8px 12px; background:#f5f5f5; }
-  .input-area button { border:none; background:#ff4d94; color:#fff; border-radius:50%; width:35px; height:35px; margin-left:10px; }
+  .from-me { background:#ff4d94; color:#fff; align-self:flex-end; }
+
+  .input-area {
+    display:flex;
+    align-items:center;
+    padding:10px;
+    border-top:1px solid #ddd;
+    background:#fff;
+  }
+
+  .input-area input {
+    flex:1;
+    border:none;
+    border-radius:20px;
+    padding:10px 15px;
+    background:#f5f5f5;
+    outline:none;
+  }
+
+  .input-area button {
+    border:none;
+    background:#ff4d94;
+    color:#fff;
+    border-radius:50%;
+    width:35px;
+    height:35px;
+    margin-left:10px;
+    cursor:pointer;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <button onclick="history.back()" style="background:none;border:none;font-size:20px;">⬅️</button>
+  <button onclick="history.back()" style="background:none;border:none;font-size:20px;cursor:pointer;">⬅️</button>
   <img id="chatPic" alt="Profile">
   <h3 id="chatName">Chat</h3>
 </header>
 
-<div class="chat-box" id="chatBox">
-  <div class="message from-them">Hey, can we talk for a min?</div>
-</div>
+<div class="chat-box" id="chatBox"></div>
 
 <div class="input-area">
   <input type="text" id="messageInput" placeholder="Type a message...">
@@ -37,23 +76,39 @@
 
 <script>
   const chatData = JSON.parse(localStorage.getItem('currentChat'));
-  if (chatData) {
-    document.getElementById('chatName').textContent = chatData.name;
-    document.getElementById('chatPic').src = chatData.img;
+  const chatName = chatData ? chatData.name : 'Chat';
+  const chatImg = chatData ? chatData.img : '';
+  const msgKey = `messages_${chatName}`;
+
+  document.getElementById('chatName').textContent = chatName;
+  document.getElementById('chatPic').src = chatImg;
+
+  const chatBox = document.getElementById('chatBox');
+
+  function loadMessages() {
+    const messages = JSON.parse(localStorage.getItem(msgKey)) || [];
+    chatBox.innerHTML = '';
+    messages.forEach(m => {
+      const div = document.createElement('div');
+      div.className = `message ${m.from === 'me' ? 'from-me' : 'from-them'}`;
+      div.textContent = m.text;
+      chatBox.appendChild(div);
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 
   function sendMessage() {
-    const box = document.getElementById('chatBox');
-    const msg = document.getElementById('messageInput').value.trim();
-    if (msg) {
-      const div = document.createElement('div');
-      div.className = 'message from-me';
-      div.textContent = msg;
-      box.appendChild(div);
-      document.getElementById('messageInput').value = '';
-      box.scrollTop = box.scrollHeight;
-    }
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const messages = JSON.parse(localStorage.getItem(msgKey)) || [];
+    messages.push({ from: 'me', text });
+    localStorage.setItem(msgKey, JSON.stringify(messages));
+    input.value = '';
+    loadMessages();
   }
+
+  loadMessages();
 </script>
 </body>
 </html>
