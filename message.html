@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Conversation</title>
+<style>
+  body { margin:0; font-family:'Poppins',sans-serif; background:#fff; }
+  header { display:flex; align-items:center; background:#fff0f6; padding:10px; }
+  header img { width:35px; height:35px; border-radius:50%; margin-right:10px; }
+  header h3 { margin:0; color:#000; font-size:16px; }
+  .chat-box { padding:15px; overflow-y:auto; height:75vh; }
+  .message { max-width:80%; margin:10px; padding:10px; border-radius:10px; }
+  .from-them { background:#f3f3f3; align-self:flex-start; }
+  .from-me { background:#ffb6c1; color:#fff; align-self:flex-end; margin-left:auto; }
+  .input-area { position:fixed; bottom:0; width:100%; background:#fff; border-top:1px solid #ddd; display:flex; align-items:center; padding:8px; }
+  .input-area input { flex:1; border:none; border-radius:20px; padding:8px 12px; background:#f5f5f5; }
+  .input-area button { border:none; background:#ff4d94; color:#fff; border-radius:50%; width:35px; height:35px; margin-left:10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <button onclick="history.back()" style="background:none;border:none;font-size:20px;">⬅️</button>
+  <img id="chatPic" alt="Profile">
+  <h3 id="chatName">Chat</h3>
+</header>
+
+<div class="chat-box" id="chatBox">
+  <div class="message from-them">Hey, can we talk for a min?</div>
+</div>
+
+<div class="input-area">
+  <input type="text" id="messageInput" placeholder="Type a message...">
+  <button onclick="sendMessage()">➤</button>
+</div>
+
+<script>
+  const chatData = JSON.parse(localStorage.getItem('currentChat'));
+  if (chatData) {
+    document.getElementById('chatName').textContent = chatData.name;
+    document.getElementById('chatPic').src = chatData.img;
+  }
+
+  function sendMessage() {
+    const box = document.getElementById('chatBox');
+    const msg = document.getElementById('messageInput').value.trim();
+    if (msg) {
+      const div = document.createElement('div');
+      div.className = 'message from-me';
+      div.textContent = msg;
+      box.appendChild(div);
+      document.getElementById('messageInput').value = '';
+      box.scrollTop = box.scrollHeight;
+    }
+  }
+</script>
+</body>
+</html>
