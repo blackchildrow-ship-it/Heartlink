@@ -1,603 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HeartLink — Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeartLink — Home</title>
+<style>
+  :root {
+    --pink: #ff4d88;
+    --soft: #fff6fa;
+    --card: #ffffff;
+    --muted: #777;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--soft);
+    margin: 0;
+    padding: 0;
+    color: #222;
+  }
 
-  <!-- Bootstrap (for responsive utilities) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  /* HEADER */
+  .header {
+    background: linear-gradient(90deg,#ff4d88,#ff77aa);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+  }
+  .header h1 {
+    font-size: 20px;
+    margin: 0;
+  }
 
-  <style>
-    :root{
-      --bg: #f9f5f7;
-      --accent: #ff4d88;
-      --accent-2: #ff9ab8;
-      --muted: #6b6b6b;
-      --card: #ffffff;
-      --green-accent: #ccffde;
-      --green-text: #008c61;
-      --shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(#fff,#fff6f9);font-family: "Poppins", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-    a{color:inherit;text-decoration:none}
-    /* Header */
-    .topbar {
-      background: linear-gradient(90deg,var(--accent),var(--accent-2));
-      color: #fff;
-      padding: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      box-shadow: var(--shadow);
-      position:sticky;
-      top:0;
-      z-index:1200;
-    }
-    .brand {display:flex;align-items:center;gap:10px;font-weight:700;}
-    .brand .logo {width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:800}
-    /* Top feature cards */
-    .top-features{display:flex;gap:12px;padding:16px;overflow-x:auto; -webkit-overflow-scrolling:touch;}
-    .feature {
-      min-width: 140px;
-      background: #fff;
-      border-radius:14px;
-      padding:14px;
-      box-shadow:var(--shadow);
-      text-align:center;
-      cursor:pointer;
-      flex:0 0 auto;
-    }
-    .feature .emoji{font-size:26px;display:block;margin-bottom:8px}
-    .feature .title{font-weight:700;color:var(--muted);font-size:15px}
-    .feature.small{min-width:130px}
+  /* TOP BOXES */
+  .top-boxes {
+    display: flex;
+    justify-content: space-around;
+    margin: 16px;
+    gap: 12px;
+  }
+  .box {
+    flex: 1;
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    padding: 14px 8px;
+    cursor: pointer;
+    transition: transform .2s;
+  }
+  .box:hover { transform: scale(1.03); }
+  .box h3 { margin: 6px 0; color: #333; font-size: 14px; }
+  .box small { color: var(--muted); }
 
-    /* Announcement stripe */
-    .stripe {
-      margin: 10px 16px;
-      background: linear-gradient(90deg,#bfe9ff,#f6f0ff);
-      border-radius: 12px;
-      padding: 12px 14px;
-      color: #1b1330;
-      box-shadow: var(--shadow);
-    }
+  /* NOTIFICATION BAR */
+  .notify {
+    background: linear-gradient(90deg, #4ec7f2, #a2e4ff);
+    margin: 10px 16px;
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .notify button {
+    background: #cfff00;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
-    /* Tabs row */
-    .tabs-row {display:flex;gap:18px;align-items:center;padding:10px 16px;}
-    .tab {font-weight:700; cursor:pointer;}
-    .tab.active {color:var(--accent); position:relative;}
-    .tab.active::after {content:"";position:absolute;left:0;right:0;bottom:-8px;height:4px;background:var(--accent);border-radius:6px}
+  /* TABS */
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    font-weight: 600;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .tabs span {
+    cursor: pointer;
+    position: relative;
+  }
+  .tabs .active {
+    color: var(--pink);
+  }
+  .tabs .active::after {
+    content: "";
+    position: absolute;
+    width: 40%;
+    height: 3px;
+    background: var(--pink);
+    bottom: -4px;
+    left: 30%;
+    border-radius: 3px;
+  }
 
-    /* two-column profile grid like screenshot */
-    .profiles-grid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding: 12px 12px 90px 12px; /* bottom padding for nav */
-      max-width:900px;
-      margin: 0 auto;
-    }
-    .profile-card{
-      background:var(--card);
-      border-radius:14px;
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      position: relative;
-      display:flex;
-      flex-direction:column;
-    }
-    .profile-image{
-      width:100%;
-      height:220px;
-      object-fit:cover;
-      display:block;
-      border-top-left-radius:14px;
-      border-top-right-radius:14px;
-    }
-    .profile-body{padding:12px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
-    .profile-name{font-size:18px;font-weight:800;color:#fff; /* overlay style later */ margin:0}
-    .info-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
-    .tag {
-      background: rgba(0,0,0,0.06);
-      padding:6px 8px;border-radius:10px;font-weight:700;color:#0e0e0e;font-size:13px;
-    }
-    /* Name overlay for the screenshot-like look */
-    .name-overlay{
-      position:absolute;
-      left:12px;
-      bottom:46px;
-      color:white;
-      font-weight:800;
-      font-size:18px;
-      text-shadow: 0 3px 10px rgba(0,0,0,0.35);
-    }
-    .meta-overlay{
-      position:absolute;
-      left:12px;
-      bottom:12px;
-      display:flex;gap:6px;
-    }
-    .meta-pill{
-      background:rgba(255,255,255,0.95);
-      padding:6px 8px;border-radius:8px;font-weight:700;font-size:12px;color:#0b0b0b;box-shadow:0 2px 6px rgba(0,0,0,0.08)
-    }
-    /* Hi badge like screenshot */
-    .hi-bubble{
-      position:absolute;
-      top:10px;
-      right:10px;
-      background:#daff9f;
-      color:#065; font-weight:800;
-      border-radius:18px;padding:6px 10px;font-size:13px;
-      box-shadow:0 6px 14px rgba(0,0,0,0.06);
-      cursor:pointer;
-    }
-    /* complete-profile banner */
-    .complete-banner{
-      position: fixed;
-      left: 16px;
-      right: 16px;
-      bottom: 84px;
-      background: linear-gradient(90deg,#e6ffe8,#dbffb6);
-      color: #033;
-      padding: 12px 14px;
-      border-radius: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      box-shadow: var(--shadow);
-      z-index:1100;
-    }
-    .complete-banner .btn {
-      background:#0b0; color:#fff; border-radius:8px; padding:8px 12px; font-weight:700; text-decoration:none;
-    }
+  /* PROFILES */
+  .profiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px 14px 80px;
+  }
+  .profile {
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+  }
+  .profile img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+  }
+  .profile .info {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .profile .hi {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ccff00;
+    color: #000;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+  .profile .badge {
+    display: flex;
+    gap: 4px;
+    font-size: 11px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .badge span {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 8px;
+  }
 
-    /* bottom nav like screenshot */
-    .bottom-nav{
-      position: fixed;
-      left:0;right:0;
-      bottom:0;
-      background:#fff;
-      padding:8px 10px;
-      display:flex;
-      justify-content:space-around;
-      align-items:center;
-      box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
-      z-index:1200;
-    }
-    .nav-btn{display:flex;flex-direction:column;align-items:center;color:var(--muted);font-weight:700;border:none;background:none}
-    .nav-btn.active{color:var(--accent)}
-    /* smaller screens adjustments */
-    @media(max-width:560px){
-      .profile-image{height:180px}
-      .name-overlay{font-size:16px;bottom:50px}
-      .profiles-grid{gap:10px}
-    }
-  </style>
+  /* COMPLETE BANNER */
+  .complete-banner {
+    background: #d3ffb6;
+    color: #111;
+    margin: 6px 16px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  .complete-banner button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0;
+    box-shadow: var(--shadow);
+  }
+  .nav-item {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .nav-item.active { color: var(--pink); }
+</style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">❤</div>
-      <div>HeartLink</div>
-    </div>
-    <div style="display:flex;gap:12px;align-items:center">
-      <button class="btn btn-sm btn-light" id="searchBtn" title="Search">🔍</button>
-      <button class="btn btn-sm btn-light" id="notifBtn" title="Notifications">🔔<span id="notifCount" style="margin-left:6px;color:#fff;font-weight:800;background:#ff6fa1;padding:2px 6px;border-radius:12px;display:inline-block;transform:translateY(-2px)">0</span></button>
-    </div>
+<div class="header">
+  <h1>❤ HeartLink</h1>
+  <div id="userName"></div>
+</div>
+
+<div class="top-boxes">
+  <div class="box" onclick="window.location.href='voice.html'">
+    <h3>🎤 Voice Chat</h3><small>Voice chat now</small>
   </div>
-
-  <!-- TOP FEATURE CARDS (interactive) -->
-  <div class="top-features">
-    <div class="feature" onclick="location.href='voice.html'">
-      <div class="emoji">🎤</div>
-      <div class="title">Voice Chat</div>
-      <div style="font-size:12px;color:var(--muted)">Voice chat now</div>
-    </div>
-    <div class="feature" onclick="location.href='note.html'">
-      <div class="emoji">💌</div>
-      <div class="title">Secret Note</div>
-      <div style="font-size:12px;color:var(--muted)">Send secret</div>
-    </div>
-    <div class="feature" onclick="location.href='tasks.html'">
-      <div class="emoji">🎯</div>
-      <div class="title">Tasks Center</div>
-      <div style="font-size:12px;color:var(--muted)">Earn coins</div>
-    </div>
+  <div class="box" onclick="window.location.href='note.html'">
+    <h3>💌 Secret Note</h3><small>Send secret</small>
   </div>
-
-  <!-- announcement stripe -->
-  <div class="stripe mx-3">
-    <strong style="color:#0077cc">05:37 </strong>
-    <span style="font-weight:800;color:#009">Yournightdreams</span> to <span style="font-weight:700">Mystery man</span> — Completed wishlist Special Greeting x1
-    <span style="float:right"><button class="btn btn-sm btn-light" onclick="alert('TV wall')">View TV wall</button></span>
+  <div class="box" onclick="window.location.href='tasks.html'">
+    <h3>🎯 Tasks Center</h3><small>Earn coins</small>
   </div>
+</div>
 
-  <!-- tabs -->
-  <div class="tabs-row mx-3">
-    <div class="tab active" data-tab="recommend" onclick="switchTab(this,'recommend')">Recommend</div>
-    <div class="tab" data-tab="newcomer" onclick="switchTab(this,'newcomer')">Newcomer</div>
-    <div class="tab" data-tab="nearby" onclick="switchTab(this,'nearby')">Nearby</div>
+<div class="notify">
+  <div>🌟 <b>Yournightdreams</b> to Mystery man — <small>Special Greeting ×1</small></div>
+  <button>View</button>
+</div>
 
-    <div style="flex:1"></div>
-    <button class="btn btn-sm btn-light" onclick="alert('Filters / ranking')">📊</button>
-    <button class="btn btn-sm btn-light" onclick="alert('Search')">🔍</button>
-  </div>
+<div class="tabs">
+  <span class="active">Recommend</span>
+  <span>Newcomer</span>
+  <span>Nearby</span>
+</div>
 
-  <!-- greeting -->
-  <div style="text-align:left;padding:0 18px 8px 18px;">
-    <div style="font-weight:800;font-size:18px;color:var(--accent)" id="greeting">Hi, ❤️</div>
-  </div>
+<div class="complete-banner" id="completeBanner">
+  <div>Complete your profile and claim 166 free coins!</div>
+  <button onclick="window.location.href='profile.html'">To Complete</button>
+</div>
 
-  <!-- profile grid -->
-  <div class="profiles-grid" id="profilesGrid" aria-live="polite"></div>
+<div class="profiles" id="profiles"></div>
 
-  <!-- complete profile banner (hidden by default, shown when incomplete) -->
-  <div id="completeBanner" class="complete-banner" style="display:none">
-    <div>Complete profile and can claim <strong>166 free coins</strong></div>
-    <div style="display:flex;gap:8px">
-      <a href="profile.html" class="btn" id="completeBtn">To Complete</a>
-      <button class="btn btn-light" onclick="dismissBanner()">Dismiss</button>
-    </div>
-  </div>
+<div class="navbar">
+  <div class="nav-item active" onclick="window.location.href='home.html'">🏠<br>Home</div>
+  <div class="nav-item" onclick="window.location.href='moment.html'">🌍<br>Moment</div>
+  <div class="nav-item" onclick="window.location.href='chat.html'">💬<br>Chat</div>
+  <div class="nav-item" onclick="window.location.href='profile.html'">😊<br>Me</div>
+</div>
 
-  <!-- floating preferences -->
-  <div style="position:fixed;right:18px;bottom:140px;z-index:1200">
-    <button class="btn btn-danger" id="prefsBtn" style="border-radius:50%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:var(--shadow);width:56px;height:56px;font-size:22px">⚙️</button>
-  </div>
+<script>
+  // Simulated user
+  const user = JSON.parse(localStorage.getItem('heartlinkUser') || '{"name":"Guest","completed":false}');
+  document.getElementById('userName').textContent = "Hi, " + user.name + " ❤️";
 
-  <!-- Preferences modal (bootstrap modal will be used) -->
-  <div class="modal fade" id="prefsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-bottom">
-      <div class="modal-content" style="border-radius:12px;">
-        <div class="modal-header">
-          <h5 class="modal-title" id="prefsTitle" style="color:var(--accent)">Preferences</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <label class="form-label">Age range (e.g. 22-30)</label>
-          <input id="prefAge" class="form-control" placeholder="22-30">
-          <label class="form-label mt-2">Max distance (km)</label>
-          <input id="prefDist" class="form-control" type="number" placeholder="e.g. 10">
-          <label class="form-label mt-2">Interests (comma separated)</label>
-          <input id="prefInterests" class="form-control" placeholder="music, travel">
-        </div>
-        <div class="modal-footer">
-          <button id="clearPrefs" class="btn btn-light">Clear</button>
-          <button id="savePrefsBtn" class="btn" style="background:var(--accent);color:#fff">Save</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  // Show banner if profile incomplete
+  if(!user.completed){
+    document.getElementById('completeBanner').style.display = "flex";
+  }
 
-  <!-- bottom nav -->
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="location.href='home.html'">🏠<br>Home</button>
-    <button class="nav-btn" onclick="location.href='moment.html'">📸<br>Moment</button>
-    <button class="nav-btn" onclick="location.href='chat.html'">💬<br>Chat</button>
-    <button class="nav-btn" onclick="location.href='profile.html'">😊<br>Me</button>
-  </div>
+  // Sample profiles
+  const sampleProfiles = [
+    {name:"Haleemat", age:23, distance:">500km", tag:"World Peace", img:"https://i.pravatar.cc/300?img=60"},
+    {name:"Peace", age:20, distance:">500km", tag:"No", img:"https://i.pravatar.cc/300?img=50"},
+    {name:"Lyme", age:24, distance:"120km", tag:"Yes", img:"https://i.pravatar.cc/300?img=35"},
+    {name:"Cheptoo", age:25, distance:"80km", tag:"Active", img:"https://i.pravatar.cc/300?img=45"},
+  ];
 
-  <!-- Bootstrap + JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  const container = document.getElementById('profiles');
+  sampleProfiles.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = "profile";
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <div class="hi">Hi</div>
+      <div class="info"><b>${p.name}</b> ❤️<br><div class="badge"><span>💫 ${p.age}</span><span>${p.distance}</span><span>${p.tag}</span></div></div>
+    `;
+    card.onclick = ()=>window.location.href=`chat.html?user=${encodeURIComponent(p.name)}`;
+    container.appendChild(card);
+  });
+</script>
 
-  <script>
-    // --- Helpers & initial data storage keys ---
-    const STORAGE_USER = 'heartlinkUser';
-    const STORAGE_PREFS = 'heartPrefs';
-    const STORAGE_INTERACTIONS = 'heartInteractions';
-    const STORAGE_PROFILES = 'heartProfiles'; // optional preloaded profiles
-    const STORAGE_POSTS = 'heartPosts'; // moments feed posts
-
-    // For demo: default sample profile set if none saved
-    const SAMPLE_PROFILES = [
-      { name: "Haleemat", age: 23, distance: 520, interest: "World Peace", img: "https://i.pravatar.cc/600?img=10", verified: true },
-      { name: "peace", age: 20, distance: 520, interest: "No", img: "https://i.pravatar.cc/600?img=12", verified: true },
-      { name: "Lyne", age: 24, distance: 120, interest: "Travel", img: "https://i.pravatar.cc/600?img=14", verified: true },
-      { name: "Cheptoo", age: 26, distance: 150, interest: "Fitness", img: "https://i.pravatar.cc/600?img=18", verified: false },
-      { name: "Mary", age: 22, distance: 4, interest: "Music", img: "https://i.pravatar.cc/600?img=22", verified: false },
-      { name: "Brian", age: 29, distance: 5, interest: "Tech", img: "https://i.pravatar.cc/600?img=25", verified: false },
-      { name: "Alice", age: 27, distance: 7, interest: "Art", img: "https://i.pravatar.cc/600?img=27", verified: false },
-      { name: "Faith", age: 24, distance: 3, interest: "Music", img: "https://i.pravatar.cc/600?img=30", verified: true },
-      // fill up to 24 with generated avatars:
-    ];
-    while (SAMPLE_PROFILES.length < 24) {
-      const i = SAMPLE_PROFILES.length + 30;
-      SAMPLE_PROFILES.push({ name: "User" + (SAMPLE_PROFILES.length+1), age: 20 + (SAMPLE_PROFILES.length % 12), distance: Math.round(Math.random()*500)/10 + 1, interest: ["music","travel","movies","fitness","tech"][SAMPLE_PROFILES.length%5], img:`https://i.pravatar.cc/600?img=${i}`, verified: Math.random()>0.6 });
-    }
-
-    // Utilities
-    const $ = (id)=>document.getElementById(id);
-
-    // Load or create user
-    let user = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
-    if(!user || !user.name){
-      // For demo convenience - create a demo user if none exists
-      user = { name: "Mary", email: "mary@example.com", age: 0, county: "", photos: [] };
-      localStorage.setItem(STORAGE_USER, JSON.stringify(user));
-      // In a real app we'd redirect to signup/login
-      // location.href = 'signup.html';
-    }
-    $('greeting')?.remove?.(); // no-op if element not present
-    document.querySelectorAll('#greeting').forEach(n => n.textContent = `Hi, ${user.name} ❤️`);
-    // If greeting element exists:
-    const greetingEl = document.getElementById('greeting');
-    if(greetingEl) greetingEl.textContent = `Hi, ${user.name} ❤️`;
-
-    // Profiles: read from localStorage if present, otherwise use sample
-    let profiles = JSON.parse(localStorage.getItem(STORAGE_PROFILES) || 'null');
-    if(!profiles || !Array.isArray(profiles) || profiles.length === 0){
-      profiles = SAMPLE_PROFILES.slice();
-      localStorage.setItem(STORAGE_PROFILES, JSON.stringify(profiles));
-    }
-
-    // interactions array
-    function saveInteraction(profile){
-      const existing = JSON.parse(localStorage.getItem(STORAGE_INTERACTIONS) || '[]');
-      if(!existing.find(p=>p.name === profile.name)) existing.unshift(profile);
-      localStorage.setItem(STORAGE_INTERACTIONS, JSON.stringify(existing));
-      // Also increment a notification count (demo)
-      const notifCountEl = document.getElementById('notifCount');
-      let n = parseInt(notifCountEl.textContent) || 0;
-      notifCountEl.textContent = (n + 1);
-    }
-
-    // Complete-profile banner logic: show if at least one of the required fields is missing
-    function checkProfileCompleteness(){
-      const userData = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
-      const required = ['name','age','county']; // define required fields
-      let incomplete = false;
-      if(!userData) incomplete = true;
-      else {
-        for(const key of required){
-          if(!userData[key] || userData[key] === "" || userData[key] === 0){
-            incomplete = true; break;
-          }
-        }
-      }
-      const banner = document.getElementById('completeBanner');
-      if(incomplete) banner.style.display = 'flex'; else banner.style.display = 'none';
-    }
-
-    // Render profiles in the grid (max 24)
-    const grid = document.getElementById('profilesGrid');
-    function buildCard(p){
-      const card = document.createElement('div');
-      card.className = 'profile-card';
-      // image element + fallback:
-      const img = document.createElement('img');
-      img.className = 'profile-image';
-      img.src = p.img || `https://i.pravatar.cc/600?u=${encodeURIComponent(p.name)}`;
-      img.alt = p.name;
-      card.appendChild(img);
-
-      // "Hi" bubble
-      const hi = document.createElement('div');
-      hi.className = 'hi-bubble';
-      hi.innerText = 'Hi';
-      hi.title = `Say Hi to ${p.name}`;
-      hi.onclick = (ev) => {
-        ev.stopPropagation();
-        saveInteraction(p);
-        // open chat
-        location.href = `chat.html?user=${encodeURIComponent(p.name)}`;
-      };
-      card.appendChild(hi);
-
-      // name overlay (like screenshot)
-      const nameOverlay = document.createElement('div');
-      nameOverlay.className = 'name-overlay';
-      nameOverlay.innerHTML = `${p.name} ${p.verified ? ' <span style="color:#ffd54d;font-size:14px">✔️</span>' : ''}`;
-      card.appendChild(nameOverlay);
-
-      // meta pills (age, distance, interest)
-      const meta = document.createElement('div');
-      meta.className = 'meta-overlay';
-      const agePill = document.createElement('div'); agePill.className='meta-pill'; agePill.innerText = `${p.age}`;
-      const distLabel = document.createElement('div'); distLabel.className='meta-pill'; 
-      const distStr = (p.distance > 500 ? '>500km' : (Math.round(p.distance*10)/10 + 'km'));
-      distLabel.innerText = distStr;
-      const interestPill = document.createElement('div'); interestPill.className='meta-pill'; interestPill.innerText = p.interest || '';
-      meta.appendChild(agePill); meta.appendChild(distLabel); meta.appendChild(interestPill);
-      card.appendChild(meta);
-
-      // body container (keeps spacing, but text overlays are used)
-      const body = document.createElement('div');
-      body.className = 'profile-body';
-      // include small action row for accessibility / additional actions
-      const info = document.createElement('div');
-      info.className = 'd-flex align-items-center justify-content-between';
-      const spacer = document.createElement('div'); spacer.innerHTML = `<strong style="color:#111;font-weight:800">${p.name}</strong> <div style="color:${p.verified ? '#ff9a9a' : '#777'};font-weight:700">${p.verified ? 'Verified' : ''}</div>`;
-      info.appendChild(spacer);
-      body.appendChild(info);
-
-      const actionRow = document.createElement('div');
-      actionRow.className = 'd-flex gap-2 btns';
-      // Like button
-      const likeBtn = document.createElement('button');
-      likeBtn.className = 'btn-like';
-      likeBtn.innerText = '❤️';
-      likeBtn.onclick = (ev) => {
-        ev.stopPropagation();
-        saveInteraction(p);
-        // optional: show tiny toast
-        showToast(`${p.name} liked!`);
-      };
-      // Quick view / chat button
-      const chatBtn = document.createElement('button');
-      chatBtn.className = 'btn-chat';
-      chatBtn.innerText = '💬';
-      chatBtn.onclick = (ev) => {
-        ev.stopPropagation();
-        saveInteraction(p);
-        location.href = `chat.html?user=${encodeURIComponent(p.name)}`;
-      };
-      actionRow.appendChild(likeBtn);
-      actionRow.appendChild(chatBtn);
-      body.appendChild(actionRow);
-
-      card.appendChild(body);
-
-      // card click -> open profile page (profile.html?user=...)
-      card.onclick = () => {
-        location.href = `profile.html?user=${encodeURIComponent(p.name)}`;
-      };
-
-      return card;
-    }
-
-    function renderProfiles(list){
-      grid.innerHTML = '';
-      const limited = list.slice(0, 24);
-      for(const p of limited){
-        grid.appendChild(buildCard(p));
-      }
-    }
-
-    // Tabs switching
-    let currentTab = 'recommend';
-    function switchTab(el, tabName){
-      // update active UI
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      currentTab = tabName;
-      // simulate tab behaviour: recommend = default order, newcomer = newest, nearby = sort by distance
-      let out = profiles.slice();
-      if(tabName === 'newcomer'){
-        // we treat profiles added later as newcomers, so shuffle reverse
-        out = out.slice().reverse();
-      } else if (tabName === 'nearby'){
-        out = out.slice().sort((a,b)=> (a.distance || 999) - (b.distance || 999));
-      } else {
-        // recommend: show verified first then random
-        out = out.slice().sort((a,b) => (b.verified - a.verified) || (Math.random() - .5));
-      }
-      applyPreferencesAndRender(out);
-    }
-
-    // Preferences saved/apply
-    function getPrefs(){
-      return JSON.parse(localStorage.getItem(STORAGE_PREFS) || '{}');
-    }
-    function applyPreferencesAndRender(list){
-      const prefs = getPrefs();
-      let filtered = list.slice();
-      // ageRange as "min-max"
-      if(prefs.ageRange){
-        const parts = prefs.ageRange.split('-').map(x=>parseInt(x.trim()));
-        if(parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])){
-          filtered = filtered.filter(p => p.age >= parts[0] && p.age <= parts[1]);
-        }
-      }
-      if(prefs.maxDistance && !isNaN(prefs.maxDistance)){
-        filtered = filtered.filter(p => (p.distance || 99999) <= prefs.maxDistance);
-      }
-      if(prefs.interests && prefs.interests.length){
-        filtered = filtered.filter(p => prefs.interests.some(i => p.interest && p.interest.toLowerCase().includes(i.toLowerCase())));
-      }
-      renderProfiles(filtered);
-    }
-
-    // Toast small feedback
-    let toastTimer = null;
-    function showToast(msg){
-      let el = document.getElementById('hl_toast');
-      if(!el){
-        el = document.createElement('div');
-        el.id = 'hl_toast';
-        el.style.position = 'fixed';
-        el.style.bottom = '140px';
-        el.style.left = '50%';
-        el.style.transform = 'translateX(-50%)';
-        el.style.background = 'linear-gradient(90deg,#ff7aa6,#ff4d88)';
-        el.style.color = '#fff';
-        el.style.padding = '8px 14px';
-        el.style.borderRadius = '12px';
-        el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
-        el.style.zIndex = '1400';
-        document.body.appendChild(el);
-      }
-      el.textContent = msg;
-      el.style.opacity = '1';
-      if(toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=>{ el.style.opacity = '0'; }, 2000);
-    }
-
-    // Initialize UI
-    function init(){
-      // load preferences into modal fields
-      const prefs = getPrefs();
-      $('prefAge').value = prefs.ageRange || '';
-      $('prefDist').value = prefs.maxDistance || '';
-      $('prefInterests').value = (prefs.interests || []).join(', ');
-      // render default tab
-      switchTab(document.querySelector('.tab[data-tab="recommend"]'), 'recommend');
-      // banner
-      checkProfileCompleteness();
-    }
-
-    // DOM helpers for modal inputs (Bootstrap provides modal)
-    function $(id){ return document.getElementById(id); }
-
-    // prefs modal wiring
-    const prefsModal = new bootstrap.Modal(document.getElementById('prefsModal'), { backdrop: true });
-    $('prefsBtn').addEventListener('click', ()=> {
-      // populate fields from storage
-      const p = getPrefs();
-      $('prefAge').value = p.ageRange || '';
-      $('prefDist').value = p.maxDistance || '';
-      $('prefInterests').value = (p.interests || []).join(', ');
-      prefsModal.show();
-    });
-    $('savePrefsBtn').addEventListener('click', ()=>{
-      const ageRange = $('prefAge').value.trim();
-      const maxDistance = parseFloat($('prefDist').value) || null;
-      const interests = $('prefInterests').value.split(',').map(s=>s.trim()).filter(Boolean);
-      const payload = { ageRange: ageRange || '', maxDistance: maxDistance || '', interests };
-      localStorage.setItem(STORAGE_PREFS, JSON.stringify(payload));
-      prefsModal.hide();
-      applyPreferencesAndRender(profiles);
-      showToast('Preferences saved');
-    });
-    $('clearPrefs').addEventListener('click', ()=>{
-      localStorage.removeItem(STORAGE_PREFS);
-      $('prefAge').value = ''; $('prefDist').value = ''; $('prefInterests').value = '';
-      prefsModal.hide();
-      applyPreferencesAndRender(profiles);
-      showToast('Preferences cleared');
-    });
-
-    // Dismiss banner
-    function dismissBanner(){ document.getElementById('completeBanner').style.display = 'none'; localStorage.setItem('bannerDismissed', '1'); }
-
-    // wire logout
-    document.getElementById('logoutBtn').addEventListener('click', ()=>{
-      // don't wipe prefs for demo, only clear user/session
-      localStorage.removeItem(STORAGE_USER);
-      alert('Logged out');
-      location.href = 'index.html';
-    });
-
-    // small helper to get modal input elements by id used above
-    function $(id){ return document.getElementById(id); }
-
-    // Add piping for quick id lookups used before (if not present, create noop)
-    if(!document.getElementById('greeting')){
-      const g = document.createElement('div'); g.id = 'greeting'; g.style.display='none'; document.body.prepend(g);
-    }
-
-    // inject inputs for earlier references (prefAge, prefDist, prefInterests)
-    // (they already exist inside modal above so $() works)
-
-    // initialize
-    init();
-
-    // Expose checkProfileCompleteness globally (banner)
-    window.dismissBanner = dismissBanner;
-
-  </script>
 </body>
 </html>
