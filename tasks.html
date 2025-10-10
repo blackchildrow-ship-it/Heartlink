@@ -11,18 +11,30 @@
       background-color: #fff;
       color: #333;
     }
+
     header {
-      background-color: #ffeff7;
+      background: linear-gradient(90deg, #ffb6c1, #ff69b4);
       padding: 1rem;
       text-align: center;
       font-weight: bold;
       font-size: 1.4rem;
-      color: #ff5b9e;
+      color: #fff;
       position: sticky;
       top: 0;
       z-index: 10;
       border-bottom: 1px solid #ffd6e9;
     }
+
+    .coin-counter {
+      background: #fff7fb;
+      color: #ff69b4;
+      text-align: center;
+      padding: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid #ffe6f0;
+    }
+
     .section-title {
       background: linear-gradient(to right, #c37bff, #ff88b3);
       color: white;
@@ -31,12 +43,14 @@
       margin: 15px;
       font-weight: 600;
     }
+
     .task-list {
       display: flex;
       flex-direction: column;
       gap: 15px;
       padding: 0 15px 80px 15px;
     }
+
     .task {
       background: #fff;
       border-radius: 15px;
@@ -46,25 +60,31 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .task-info {
       flex: 1;
     }
+
     .task-info h4 {
       margin: 0;
       color: #333;
       font-size: 1rem;
       font-weight: 600;
     }
+
     .task-info p {
       margin: 3px 0 0;
       font-size: 0.85rem;
       color: #777;
     }
+
     .reward {
       color: #fbbf24;
       font-weight: bold;
       font-size: 0.9rem;
+      margin-top: 5px;
     }
+
     .go-btn {
       background-color: #00c853;
       color: white;
@@ -75,14 +95,17 @@
       cursor: pointer;
       transition: 0.3s;
     }
+
     .go-btn:hover {
       background-color: #009b3a;
     }
+
     .progress {
       font-size: 0.8rem;
       color: #999;
       margin-top: 3px;
     }
+
     /* Bottom nav */
     .bottom-nav {
       position: fixed;
@@ -97,12 +120,14 @@
       border-top: 1px solid #eee;
       box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
     }
+
     .bottom-nav a {
       text-decoration: none;
       color: #666;
       text-align: center;
       font-size: 0.8rem;
     }
+
     .bottom-nav a.active {
       color: #ff5b9e;
       font-weight: 600;
@@ -111,9 +136,9 @@
 </head>
 <body>
   <header>Task Center</header>
+  <div class="coin-counter" id="coinCounter">💰 Total Coins: 0</div>
 
   <div class="section-title">🎯 Newcomer Tasks</div>
-
   <div class="task-list" id="taskList"></div>
 
   <nav class="bottom-nav">
@@ -136,13 +161,32 @@
 
     // Load from localStorage
     let taskProgress = JSON.parse(localStorage.getItem("taskProgress")) || {};
+    let totalCoins = parseInt(localStorage.getItem("totalCoins")) || 0;
 
     const taskList = document.getElementById("taskList");
+    const coinCounter = document.getElementById("coinCounter");
 
-    function saveProgress() {
-      localStorage.setItem("taskProgress", JSON.stringify(taskProgress));
+    function updateCoinDisplay() {
+      coinCounter.textContent = `💰 Total Coins: ${totalCoins}`;
     }
 
+    function saveData() {
+      localStorage.setItem("taskProgress", JSON.stringify(taskProgress));
+      localStorage.setItem("totalCoins", totalCoins);
+    }
+
+    function goToTask(id, page, reward) {
+      if (!taskProgress[id].completed) {
+        taskProgress[id].completed = true;
+        taskProgress[id].progress = "✔ Completed";
+        totalCoins += reward;
+        saveData();
+        updateCoinDisplay();
+      }
+      window.location.href = page;
+    }
+
+    // Render tasks
     tasks.forEach(task => {
       if (!taskProgress[task.id]) {
         taskProgress[task.id] = { progress: task.progress, completed: false };
@@ -157,17 +201,14 @@
           <div class="reward">💰 ${task.reward} coins</div>
           <div class="progress">${taskProgress[task.id].progress}</div>
         </div>
-        <button class="go-btn" onclick="goToTask(${task.id}, '${task.page}')">Go</button>
+        <button class="go-btn" onclick="goToTask(${task.id}, '${task.page}', ${task.reward})">
+          ${taskProgress[task.id].completed ? "Done" : "Go"}
+        </button>
       `;
       taskList.appendChild(div);
     });
 
-    function goToTask(id, page) {
-      taskProgress[id].completed = true;
-      taskProgress[id].progress = "✔ Completed";
-      saveProgress();
-      window.location.href = page;
-    }
+    updateCoinDisplay();
   </script>
 </body>
 </html>
