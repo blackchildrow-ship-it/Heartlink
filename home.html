@@ -278,7 +278,7 @@
     if (!user || !user.name) {
       window.location.href = "signup.html";
     }
-    greeting.textContent = Hi, ${user.name} ❤️;
+    greeting.textContent = `Hi, ${user.name} ❤️`;
 
     const profiles = [
       {name:"Haleemat", age:23, distance:500, interest:"World Peace", img:"https://i.pravatar.cc/300?img=10"},
@@ -309,7 +309,7 @@
     }
 
     function chat(name) {
-      window.location.href = chat.html?user=${encodeURIComponent(name)};
+      window.location.href = `chat.html?user=${encodeURIComponent(name)}`;
     }
 
     function switchTab(el, tab) {
