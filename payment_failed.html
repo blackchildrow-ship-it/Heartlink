@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payment Failed – HeartLink</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    color: #333;
+    margin: 0;
+    text-align: center;
+    padding: 0;
+  }
+  header {
+    background-color: #ffb6c1;
+    padding: 15px;
+    color: white;
+    font-size: 1.5em;
+  }
+  .container {
+    margin-top: 60px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+  .emoji {
+    font-size: 4em;
+    color: #ff7fa8;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn:hover {
+    background-color: #ff5c8d;
+  }
+  a.btn {
+    text-decoration: none;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+<header>Payment Verification Failed</header>
+<div class="container">
+  <div class="emoji">💔</div>
+  <h2>We couldn't verify your payment</h2>
+  <p>Please make sure your M-PESA confirmation message includes:</p>
+  <ul style="text-align:left;display:inline-block;text-align:left;">
+    <li>The correct <strong>amount</strong> (Ksh 400, 750, or 1500)</li>
+    <li>The name <strong>HAKIKA R PROVISION</strong></li>
+    <li>That you paid via <strong>Buy Goods</strong> to Till Number <strong>9824375</strong></li>
+  </ul>
+  <p>If you already paid and still see this, contact support below.</p>
+  <a href="packages.html" class="btn">🔁 Try Again</a>
+  <a href="mailto:support@heartlink.co.ke" class="btn" style="background:#ccc;color:#333;">📩 Contact Support</a>
+</div>
+</body>
+</html>
