@@ -1,207 +1,173 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sign Up — HeartLink</title>
-  <style>
-    :root {
-      --accent: #ff4d88;
-      --muted: #6b6b6b;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    body {
-      margin: 0;
-      background: linear-gradient(180deg, #fff, #fff7fb);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-    .card {
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 600px;
-    }
-    h1 { text-align: center; margin: 0 0 20px; color: #1b1330; }
-    h2 { margin-top: 0; color: #1b1330; }
-    form { display: flex; flex-direction: column; gap: 16px; }
-    input, select, textarea {
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      font-size: 16px;
-      width: 100%;
-    }
-    textarea { resize: vertical; min-height: 80px; }
-    .btn {
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      border: 0;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .btn-primary { background: linear-gradient(90deg, var(--accent), #ff7aa6); color: white; }
-    .btn-secondary { background: #f4f4f4; color: #333; }
-    .progress { height: 6px; background: #ffe0eb; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
-    .progress-bar { height: 6px; background: var(--accent); width: 14.2%; border-radius: 4px; transition: width 0.4s; }
-    .step { display: none; }
-    .step.active { display: block; }
-    .social-btns { display: flex; flex-direction: column; gap: 10px; }
-    .social-btns button { background: #f4f4f4; border: 1px solid #ddd; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    .radio-group { display: flex; gap: 15px; flex-wrap: wrap; }
-    .photos-preview { display: flex; gap: 10px; flex-wrap: wrap; }
-    .photos-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
-    small { color: var(--muted); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeartLink | Sign Up</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #ffe4ec, #fff5f7);
+    margin: 0;
+    padding: 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .signup-box {
+    background: white;
+    border-radius: 15px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 20px rgba(255, 182, 193, 0.4);
+    max-width: 420px;
+    width: 90%;
+  }
+  h1 {
+    text-align: center;
+    color: #ff7fa8;
+    margin-bottom: 5px;
+  }
+  .progress {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 500;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+  .gender-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .gender-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background-color: #ff5f93;
+  }
+  .social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .social-buttons button {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    background: #fff;
+  }
+  .social-buttons button:hover {
+    background: #fff0f5;
+  }
+  .microcopy {
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+    margin-top: 10px;
+  }
+</style>
 </head>
 <body>
-  <div class="card">
-    <div class="progress"><div class="progress-bar" id="progress"></div></div>
-    <h1>Create Your HeartLink Profile</h1>
 
-    <form id="wizard">
-      <!-- Step 1: Account Setup -->
-      <div class="step active" id="step1">
-        <h2>Account Setup</h2>
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Password" required>
-        <div class="social-btns">
-          <button type="button">Continue with Google</button>
-          <button type="button">Continue with Apple</button>
-          <button type="button">Continue with Facebook</button>
-        </div>
-        <small>We never post on your behalf.</small>
-      </div>
+<div class="signup-box">
+  <h1>Join HeartLink</h1>
+  <div class="progress">Step 1 of 3</div>
 
-      <!-- Step 2: Basic Info -->
-      <div class="step" id="step2">
-        <h2>Basic Info</h2>
-        <input type="text" placeholder="Full Name" required>
-        <input type="number" placeholder="Age" required>
-        <input type="text" placeholder="Location" required>
-        <div>
-          <label><strong>Gender:</strong></label>
-          <div class="radio-group">
-            <label><input type="radio" name="gender" required> Male</label>
-            <label><input type="radio" name="gender"> Female</label>
-            <label><input type="radio" name="gender"> Non-binary</label>
-            <label><input type="radio" name="gender"> Prefer not to say</label>
-          </div>
-        </div>
-        <select required>
-          <option value="">Orientation</option>
-          <option>Straight</option>
-          <option>Gay</option>
-          <option>Lesbian</option>
-          <option>Bisexual</option>
-          <option>Other</option>
-        </select>
-      </div>
+  <form id="signupForm">
+    <label>Full Name</label>
+    <input type="text" name="fullname" required>
 
-      <!-- Step 3: Photos -->
-      <div class="step" id="step3">
-        <h2>Upload Photos</h2>
-        <input type="file" id="photos" accept="image/*" multiple>
-        <div class="photos-preview" id="preview"></div>
-        <small>Upload up to 6 photos. Verified photos earn a badge!</small>
-      </div>
+    <label>Age</label>
+    <input type="number" name="age" min="18" max="99" required>
 
-      <!-- Step 4: About You -->
-      <div class="step" id="step4">
-        <h2>About You</h2>
-        <textarea placeholder="Write a short bio..."></textarea>
-        <input type="text" placeholder="Interests (comma-separated)">
-        <input type="text" placeholder="Profession">
-        <input type="text" placeholder="Lifestyle (active, relaxed, etc.)">
-      </div>
+    <label>Gender</label>
+    <div class="gender-options">
+      <label><input type="radio" name="gender" value="male" required> Male</label>
+      <label><input type="radio" name="gender" value="female" required> Female</label>
+    </div>
 
-      <!-- Step 5: What You’re Looking For -->
-      <div class="step" id="step5">
-        <h2>What You’re Looking For</h2>
-        <select required>
-          <option value="">Relationship goals</option>
-          <option>Long-term</option>
-          <option>Short-term</option>
-          <option>Friendship</option>
-          <option>Open to explore</option>
-        </select>
-        <input type="text" placeholder="Preferences (age range, distance, etc.)">
-      </div>
+    <label>Orientation</label>
+    <select name="orientation" required>
+      <option value="">Select</option>
+      <option>Straight</option>
+      <option>Gay</option>
+      <option>Lesbian</option>
+      <option>Bisexual</option>
+      <option>Other</option>
+    </select>
 
-      <!-- Step 6: Personality Test -->
-      <div class="step" id="step6">
-        <h2>Personality Quiz</h2>
-        <p>Choose what describes you best:</p>
-        <label><input type="radio" name="q1"> Extroverted</label>
-        <label><input type="radio" name="q1"> Introverted</label>
-        <label><input type="radio" name="q1"> Balanced</label>
-        <p>Your MBTI (if known): <input type="text" placeholder="e.g. INFP"></p>
-      </div>
+    <label>County</label>
+    <select name="county" required>
+      <option value="">Select County</option>
+      <option>Baringo</option><option>Bomet</option><option>Bungoma</option>
+      <option>Busia</option><option>Elgeyo-Marakwet</option><option>Embu</option>
+      <option>Garissa</option><option>Homa Bay</option><option>Isiolo</option>
+      <option>Kajiado</option><option>Kakamega</option><option>Kericho</option>
+      <option>Kiambu</option><option>Kilifi</option><option>Kirinyaga</option>
+      <option>Kisii</option><option>Kisumu</option><option>Kitui</option>
+      <option>Kwale</option><option>Laikipia</option><option>Lamu</option>
+      <option>Machakos</option><option>Makueni</option><option>Mandera</option>
+      <option>Marsabit</option><option>Meru</option><option>Migori</option>
+      <option>Mombasa</option><option>Murang’a</option><option>Nairobi</option>
+      <option>Nakuru</option><option>Nandi</option><option>Narok</option>
+      <option>Nyamira</option><option>Nyandarua</option><option>Nyeri</option>
+      <option>Samburu</option><option>Siaya</option><option>Taita Taveta</option>
+      <option>Tana River</option><option>Tharaka-Nithi</option><option>Trans Nzoia</option>
+      <option>Turkana</option><option>Uasin Gishu</option><option>Vihiga</option>
+      <option>Wajir</option><option>West Pokot</option>
+    </select>
 
-      <!-- Step 7: Dealbreakers & Values -->
-      <div class="step" id="step7">
-        <h2>Dealbreakers & Values</h2>
-        <label><input type="checkbox"> Smoking</label>
-        <label><input type="checkbox"> Political alignment important</label>
-        <label><input type="checkbox"> Religion important</label>
-        <label><input type="checkbox"> Want kids</label>
-      </div>
+    <button type="submit" class="btn">Continue</button>
+  </form>
 
-      <div style="display:flex;justify-content:space-between;margin-top:20px">
-        <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
-        <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
-      </div>
-    </form>
+  <div class="social-buttons">
+    <button>Continue with Google</button>
+    <button>Continue with Apple</button>
+    <button>Continue with Facebook</button>
   </div>
 
-  <script>
-    const steps = document.querySelectorAll('.step');
-    const progress = document.getElementById('progress');
-    const nextBtn = document.getElementById('nextBtn');
-    const backBtn = document.getElementById('backBtn');
-    let current = 0;
+  <div class="microcopy">We never post on your behalf.</div>
+</div>
 
-    function showStep(index) {
-      steps.forEach((s, i) => s.classList.toggle('active', i === index));
-      progress.style.width = ((index + 1) / steps.length * 100) + '%';
-      backBtn.style.display = index === 0 ? 'none' : 'inline-block';
-      nextBtn.textContent = index === steps.length - 1 ? 'Finish' : 'Next';
-    }
+<script>
+  document.getElementById('signupForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    // Normally this is where you'd call your backend API
+    // For now, simulate signup success:
+    alert('Signup successful! Redirecting to your HeartLink dashboard...');
+    window.location.href = "home.html";
+  });
+</script>
 
-    nextBtn.onclick = () => {
-      if (current < steps.length - 1) {
-        current++;
-        showStep(current);
-      } else {
-        window.location.href = 'dashboard.html';
-      }
-    };
-
-    backBtn.onclick = () => {
-      if (current > 0) {
-        current--;
-        showStep(current);
-      }
-    };
-
-    showStep(current);
-
-    // Photo preview
-    document.getElementById('photos').addEventListener('change', function () {
-      const preview = document.getElementById('preview');
-      preview.innerHTML = '';
-      [...this.files].slice(0, 6).forEach(file => {
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        preview.appendChild(img);
-      });
-    });
-  </script>
 </body>
 </html>
