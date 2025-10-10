@@ -8,372 +8,352 @@
     :root {
       --bg: #fff7fb;
       --accent: #ff4d88;
-      --accent-light: #ff9fc2;
       --muted: #6b6b6b;
       --card: #ffffff;
-      --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      --shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; }
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
       background: var(--bg);
-      margin: 0;
-      padding: 0;
       color: #1b1330;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    /* HEADER */
     header {
       background: linear-gradient(90deg, var(--accent), #ff7aa6);
       color: white;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    nav {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 8px;
-      transition: background 0.3s, transform 0.2s;
-    }
-    nav a:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: scale(1.05);
-    }
-
-    /* MAIN CONTENT */
-    main {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .welcome {
-      font-size: 26px;
+      padding: 16px;
+      text-align: center;
       font-weight: 700;
+      font-size: 20px;
+    }
+
+    .top-cards {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      justify-content: center;
+    }
+    .top-card {
+      flex: 0 0 120px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      padding: 16px;
       color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .top-card:hover { transform: scale(1.05); }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    .tabs span {
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .tabs .active {
+      color: var(--accent);
+    }
+    .tabs .active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .greeting {
       text-align: center;
       margin-top: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
     }
 
-    .card-grid {
+    .profiles {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      width: 100%;
-      max-height: 70vh;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      padding: 12px;
       overflow-y: auto;
-      padding-right: 6px;
-      scrollbar-width: thin;
+      flex: 1;
     }
-
     .profile-card {
       background: var(--card);
-      border-radius: 14px;
+      border-radius: 16px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
     }
-    .profile-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-    }
-    .profile-img {
+    .profile-card img {
       width: 100%;
-      height: 160px;
+      height: 180px;
       object-fit: cover;
     }
     .profile-info {
-      padding: 12px 14px;
+      padding: 10px;
     }
     .profile-info h3 {
       margin: 4px 0;
       font-size: 16px;
-      color: #1b1330;
     }
     .profile-info small {
       color: var(--muted);
-      display: block;
-      margin-bottom: 6px;
+      font-size: 13px;
     }
-    .btns {
+    .hi-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #cfffef;
+      color: #008c61;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
       display: flex;
-      gap: 6px;
-    }
-    button {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 14px;
-    }
-    .btn-chat {
-      background: var(--accent);
-      color: white;
-    }
-    .btn-like {
-      background: #ffe2eb;
-      color: var(--accent);
-    }
-    .btn-chat:hover,
-    .btn-like:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
     }
 
-    /* Floating Preferences Button */
-    .fab {
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+      background: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      bottom: 0;
+    }
+    .bottom-nav button {
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .bottom-nav .active {
+      color: var(--accent);
+    }
+
+    /* Floating preferences button */
+    .pref-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 80px;
       right: 20px;
       background: var(--accent);
       color: white;
       border: none;
       border-radius: 50%;
-      width: 56px;
-      height: 56px;
-      font-size: 24px;
+      width: 60px;
+      height: 60px;
+      font-size: 26px;
+      box-shadow: var(--shadow);
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s ease;
-      display: grid;
-      place-items: center;
-    }
-    .fab:hover {
-      transform: scale(1.1);
     }
 
-    /* Preferences Modal */
-    .modal {
+    .pref-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0,0,0,0.4);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999;
     }
-    .modal.active {
-      display: flex;
-    }
-    .modal-content {
+    .pref-content {
       background: white;
-      border-radius: 16px;
-      padding: 24px;
-      width: 90%;
-      max-width: 400px;
+      padding: 20px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
+      width: 90%;
+      max-width: 360px;
     }
-    .modal-content h2 {
+    .pref-content h3 {
       margin-top: 0;
       color: var(--accent);
+      text-align: center;
     }
-    .modal-content label {
+    label {
       display: block;
       margin-top: 10px;
       font-weight: 600;
     }
-    .modal-content input,
-    .modal-content select {
+    input, select {
       width: 100%;
       padding: 8px;
-      border: 1px solid #ccc;
       border-radius: 8px;
-      margin-top: 6px;
+      border: 1px solid #ddd;
+      margin-top: 4px;
     }
-    .modal-buttons {
-      display: flex;
-      justify-content: space-between;
+    .pref-content button {
       margin-top: 16px;
-    }
-    .modal-buttons button {
-      flex: 1;
-      margin: 0 4px;
+      background: var(--accent);
+      color: white;
+      border: none;
       padding: 10px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 16px;
-      background: rgba(0, 0, 0, 0.03);
-      font-size: 14px;
-      color: var(--muted);
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>💗 HeartLink</h1>
-    <nav>
-      <a href="home.html">Home</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="matches.html">Matches</a>
-      <a href="chat.html">Messages</a>
-      <a href="profile.html">Profile</a>
-      <a href="#" id="logoutBtn">Logout</a>
-    </nav>
-  </header>
+  <header>❤ HeartLink</header>
 
-  <main>
-    <div class="welcome" id="welcomeText">Hi, ❤️</div>
-    <div class="card-grid" id="recommendations"></div>
-  </main>
+  <div class="top-cards">
+    <div class="top-card" onclick="window.location.href='voice.html'">🎙 Voice Chat</div>
+    <div class="top-card" onclick="window.location.href='note.html'">💌 Secret Note</div>
+    <div class="top-card" onclick="window.location.href='tasks.html'">🎯 Tasks Center</div>
+  </div>
 
-  <!-- Preferences Modal -->
-  <div class="modal" id="prefsModal">
-    <div class="modal-content">
-      <h2>Preferences</h2>
+  <div class="tabs">
+    <span class="active" onclick="switchTab(this,'recommend')">Recommend</span>
+    <span onclick="switchTab(this,'newcomer')">Newcomer</span>
+    <span onclick="switchTab(this,'nearby')">Nearby</span>
+  </div>
+
+  <div class="greeting" id="greeting">Hi, ❤️</div>
+
+  <div class="profiles" id="profileGrid"></div>
+
+  <button class="pref-btn" onclick="openPrefs()">⚙️</button>
+
+  <div class="pref-modal" id="prefModal">
+    <div class="pref-content">
+      <h3>Preferences</h3>
       <label>Age Range:</label>
-      <input type="number" id="minAge" placeholder="Min Age" min="18">
-      <input type="number" id="maxAge" placeholder="Max Age" min="18">
+      <input type="text" id="ageRange" placeholder="e.g. 20-30" />
 
-      <label>Distance (km):</label>
-      <input type="number" id="maxDistance" placeholder="Max Distance" min="1">
+      <label>Max Distance (km):</label>
+      <input type="number" id="distance" placeholder="e.g. 10" />
 
-      <label>Interests:</label>
-      <select id="interests" multiple>
-        <option>Music</option>
-        <option>Travel</option>
-        <option>Sports</option>
-        <option>Art</option>
-        <option>Cooking</option>
-        <option>Movies</option>
-        <option>Technology</option>
+      <label>Interest:</label>
+      <select id="interest">
+        <option value="">Any</option>
+        <option value="Music">Music</option>
+        <option value="Travel">Travel</option>
+        <option value="Art">Art</option>
+        <option value="Tech">Tech</option>
+        <option value="Fitness">Fitness</option>
       </select>
 
-      <div class="modal-buttons">
-        <button id="savePrefs" class="btn-chat">Save</button>
-        <button id="closePrefs" class="btn-like">Cancel</button>
-      </div>
+      <button onclick="savePrefs()">Save Preferences</button>
     </div>
   </div>
 
-  <button class="fab" id="prefsBtn">⚙️</button>
-
-  <footer>
-    © <span id="year"></span> HeartLink — Real People. Real Connections.
-  </footer>
+  <div class="bottom-nav">
+    <button class="active" onclick="window.location.href='home.html'">🏠 Home</button>
+    <button onclick="window.location.href='moment.html'">🌍 Moment</button>
+    <button onclick="window.location.href='chat.html'">💬 Chat</button>
+    <button onclick="window.location.href='profile.html'">😊 Me</button>
+  </div>
 
   <script>
-    const userData = JSON.parse(localStorage.getItem('heartlinkUser') || 'null');
-    const welcome = document.getElementById('welcomeText');
-    const recContainer = document.getElementById('recommendations');
-    const year = document.getElementById('year');
-    const modal = document.getElementById('prefsModal');
-    const prefsBtn = document.getElementById('prefsBtn');
-    const savePrefs = document.getElementById('savePrefs');
-    const closePrefs = document.getElementById('closePrefs');
-    year.textContent = new Date().getFullYear();
+    const greeting = document.getElementById('greeting');
+    const profileGrid = document.getElementById('profileGrid');
+    const prefModal = document.getElementById('prefModal');
 
-    if (!userData || !userData.name) {
-      alert("Please sign up or log in first.");
+    const user = JSON.parse(localStorage.getItem('heartlinkUser') || 'null');
+    if (!user || !user.name) {
       window.location.href = "signup.html";
     }
+    greeting.textContent = `Hi, ${user.name} ❤️`;
 
-    welcome.textContent = `Hi, ${userData.name} ❤️`;
+    const profiles = [
+      {name:"Haleemat", age:23, distance:500, interest:"World Peace", img:"https://i.pravatar.cc/300?img=10"},
+      {name:"Peace", age:20, distance:500, interest:"No", img:"https://i.pravatar.cc/300?img=12"},
+      {name:"Lyne", age:24, distance:200, interest:"Travel", img:"https://i.pravatar.cc/300?img=14"},
+      {name:"Cheptoo", age:26, distance:150, interest:"Fitness", img:"https://i.pravatar.cc/300?img=18"},
+      {name:"Mary", age:22, distance:4, interest:"Music", img:"https://i.pravatar.cc/300?img=22"},
+      {name:"Brian", age:29, distance:5, interest:"Tech", img:"https://i.pravatar.cc/300?img=25"},
+      {name:"Alice", age:27, distance:7, interest:"Art", img:"https://i.pravatar.cc/300?img=27"},
+      {name:"Faith", age:24, distance:3, interest:"Music", img:"https://i.pravatar.cc/300?img=30"}
+    ];
 
-    const sampleProfiles = Array.from({ length: 24 }).map((_, i) => ({
-      name: ["Angela","Brian","Clara","David","Ella","Felix","Grace","Henry","Isabella","Jack","Kara","Leo","Mia","Noah","Olivia","Paul","Quinn","Ruth","Samuel","Tina","Uma","Victor","Wendy","Zane"][i],
-      age: 20 + Math.floor(Math.random() * 15),
-      distance: `${(Math.random() * 6 + 1).toFixed(1)} km away`,
-      img: `https://i.pravatar.cc/300?img=${i + 10}`
-    }));
-
-    function getPrefs() {
-      return JSON.parse(localStorage.getItem('heartlinkPrefs') || '{}');
-    }
-
-    function savePreferences() {
-      const prefs = {
-        minAge: parseInt(document.getElementById('minAge').value) || 18,
-        maxAge: parseInt(document.getElementById('maxAge').value) || 99,
-        maxDistance: parseFloat(document.getElementById('maxDistance').value) || 10,
-        interests: Array.from(document.getElementById('interests').selectedOptions).map(o => o.value)
-      };
-      localStorage.setItem('heartlinkPrefs', JSON.stringify(prefs));
-      modal.classList.remove('active');
-      showRecommendations();
-    }
-
-    function showRecommendations() {
-      recContainer.innerHTML = "";
-      const prefs = getPrefs();
-      const filtered = sampleProfiles.filter(p => {
-        const age = p.age;
-        const dist = parseFloat(p.distance);
-        return age >= (prefs.minAge || 18) && age <= (prefs.maxAge || 99) && dist <= (prefs.maxDistance || 10);
-      });
-      filtered.forEach(p => {
+    function renderProfiles(list) {
+      profileGrid.innerHTML = "";
+      list.slice(0, 24).forEach(p => {
         const card = document.createElement('div');
-        card.className = 'profile-card';
+        card.className = "profile-card";
         card.innerHTML = `
-          <img class="profile-img" src="${p.img}" alt="${p.name}">
+          <img src="${p.img}" alt="${p.name}">
+          <div class="hi-badge" onclick="chat('${p.name}')">Hi</div>
           <div class="profile-info">
             <h3>${p.name}, ${p.age}</h3>
-            <small>${p.distance}</small>
-            <div class="btns">
-              <button class="btn-like">❤️ Like</button>
-              <button class="btn-chat">💬 Say Hi</button>
-            </div>
+            <small>${p.distance}km · ${p.interest}</small>
           </div>
         `;
-        card.querySelector('.btn-like').onclick = () => alert(`You liked ${p.name}! 💖`);
-        card.querySelector('.btn-chat').onclick = () => window.location.href = `chat.html?user=${encodeURIComponent(p.name)}`;
-        recContainer.appendChild(card);
+        profileGrid.appendChild(card);
       });
     }
 
-    prefsBtn.onclick = () => {
-      modal.classList.add('active');
-      const prefs = getPrefs();
-      document.getElementById('minAge').value = prefs.minAge || '';
-      document.getElementById('maxAge').value = prefs.maxAge || '';
-      document.getElementById('maxDistance').value = prefs.maxDistance || '';
-    };
+    function chat(name) {
+      window.location.href = `chat.html?user=${encodeURIComponent(name)}`;
+    }
 
-    savePrefs.onclick = savePreferences;
-    closePrefs.onclick = () => modal.classList.remove('active');
+    function switchTab(el, tab) {
+      document.querySelectorAll('.tabs span').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderProfiles(profiles.sort(() => Math.random() - 0.5));
+    }
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('heartlinkUser');
-      alert("You’ve been logged out.");
-      window.location.href = "index.html";
+    function openPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('heartPrefs') || '{}');
+      document.getElementById('ageRange').value = prefs.ageRange || '';
+      document.getElementById('distance').value = prefs.distance || '';
+      document.getElementById('interest').value = prefs.interest || '';
+      prefModal.style.display = "flex";
+    }
+
+    function savePrefs() {
+      const prefs = {
+        ageRange: document.getElementById('ageRange').value,
+        distance: document.getElementById('distance').value,
+        interest: document.getElementById('interest').value
+      };
+      localStorage.setItem('heartPrefs', JSON.stringify(prefs));
+      prefModal.style.display = "none";
+      applyPrefs();
+    }
+
+    function applyPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('heartPrefs') || '{}');
+      let filtered = [...profiles];
+      if (prefs.distance) filtered = filtered.filter(p => p.distance <= prefs.distance);
+      if (prefs.interest) filtered = filtered.filter(p => p.interest === prefs.interest);
+      if (prefs.ageRange) {
+        const [min,max] = prefs.ageRange.split('-').map(Number);
+        filtered = filtered.filter(p => p.age >= min && p.age <= max);
+      }
+      renderProfiles(filtered);
+    }
+
+    prefModal.addEventListener('click', e => {
+      if (e.target === prefModal) prefModal.style.display = "none";
     });
 
-    showRecommendations();
+    applyPrefs();
   </script>
 </body>
 </html>
