@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile – HeartLink</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    color: #333;
+    margin: 0;
+    text-align: center;
+  }
+  header {
+    background-color: #ffb6c1;
+    color: white;
+    padding: 15px;
+    font-size: 1.5em;
+  }
+  .container {
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  }
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #ffb6c1;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn:hover {
+    background-color: #ff5c8d;
+  }
+</style>
+</head>
+<body>
+<header>Profile</header>
+<div class="container">
+  <img id="profilePhoto" src="https://via.placeholder.com/120" alt="Profile Photo">
+  <h2 id="profileName">User</h2>
+  <p id="profileAge">Age: 25</p>
+  <p id="profileLocation">Location: Nairobi</p>
+  <p id="profileBio">“I love meeting new people and exploring new ideas.”</p>
+  <button class="btn" onclick="window.location.href='dashboard.html'">← Back</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name') || 'User';
+document.getElementById('profileName').textContent = name;
+
+// Optionally randomize some details for realism
+document.getElementById('profileAge').textContent = 'Age: ' + (20 + Math.floor(Math.random() * 10));
+const locations = ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret'];
+document.getElementById('profileLocation').textContent = 'Location: ' + locations[Math.floor(Math.random()*locations.length)];
+</script>
+</body>
+</html>
