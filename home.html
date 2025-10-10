@@ -1,173 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HeartLink — Home</title>
-<style>
-:root{
-  --bg:#fff7fb;--accent:#ff4d88;--muted:#6b6b6b;
-  --card:#fff;--shadow:0 6px 18px rgba(0,0,0,0.08);
-}
-*{box-sizing:border-box;}
-body{
-  font-family:'Poppins',sans-serif;background:var(--bg);
-  margin:0;color:#1b1330;display:flex;flex-direction:column;
-  min-height:100vh;
-}
-header{
-  background:linear-gradient(90deg,var(--accent),#ff7aa6);
-  color:white;padding:16px 28px;display:flex;
-  justify-content:space-between;align-items:center;
-  box-shadow:var(--shadow);
-}
-header h1{margin:0;font-size:20px;}
-nav a{
-  color:white;text-decoration:none;font-weight:600;
-  padding:8px 12px;border-radius:8px;transition:.3s;
-}
-nav a:hover{background:rgba(255,255,255,0.2);}
-main{
-  flex:1;padding:20px;display:flex;flex-direction:column;align-items:center;
-}
-.welcome{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:12px;}
-.card-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:12px;width:100%;max-width:900px;overflow-y:auto;
-}
-.profile-card{
-  background:var(--card);border-radius:16px;box-shadow:var(--shadow);
-  overflow:hidden;transition:.2s;display:flex;flex-direction:column;
-}
-.profile-card:hover{transform:translateY(-3px);}
-.profile-img{width:100%;height:160px;object-fit:cover;}
-.profile-info{padding:10px;text-align:center;}
-.profile-info h3{margin:6px 0;font-size:16px;}
-.profile-info small{color:var(--muted);}
-.btns{display:flex;gap:8px;justify-content:center;margin-top:8px;}
-button{
-  border:none;border-radius:10px;padding:8px 10px;cursor:pointer;
-  font-weight:600;transition:.2s;
-}
-.btn-like{background:#ffe2eb;color:#ff3377;}
-.btn-chat{background:var(--accent);color:white;}
-.btn-like:hover,.btn-chat:hover{opacity:0.9;}
-footer{text-align:center;padding:10px;background:rgba(0,0,0,0.03);font-size:13px;color:var(--muted);}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeartLink — Home</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --accent: #ff4d88;
+      --muted: #6b6b6b;
+      --card: #ffffff;
+      --shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: #1b1330;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-#prefBtn{
-  position:fixed;bottom:20px;right:20px;background:var(--accent);
-  color:white;border:none;padding:12px 18px;border-radius:50px;
-  font-weight:600;box-shadow:var(--shadow);cursor:pointer;
-}
-#prefPanel{
-  position:fixed;bottom:70px;right:20px;background:white;
-  border-radius:12px;box-shadow:var(--shadow);
-  padding:14px;display:none;flex-direction:column;gap:10px;width:240px;
-}
-#prefPanel input{width:100%;padding:6px;border:1px solid #ddd;border-radius:6px;}
-#prefPanel button{background:var(--accent);color:white;border:none;padding:8px;border-radius:8px;}
-</style>
+    header {
+      background: linear-gradient(90deg, var(--accent), #ff7aa6);
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .top-cards {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      justify-content: center;
+    }
+    .top-card {
+      flex: 0 0 120px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      padding: 16px;
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .top-card:hover { transform: scale(1.05); }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    .tabs span {
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .tabs .active {
+      color: var(--accent);
+    }
+    .tabs .active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .greeting {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .profiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      padding: 12px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .profile-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .profile-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .profile-info {
+      padding: 10px;
+    }
+    .profile-info h3 {
+      margin: 4px 0;
+      font-size: 16px;
+    }
+    .profile-info small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .hi-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #cfffef;
+      color: #008c61;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+      background: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      bottom: 0;
+    }
+    .bottom-nav button {
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .bottom-nav .active {
+      color: var(--accent);
+    }
+
+    /* Floating preferences button */
+    .pref-btn {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 26px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .pref-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .pref-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      width: 90%;
+      max-width: 360px;
+    }
+    .pref-content h3 {
+      margin-top: 0;
+      color: var(--accent);
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-top: 4px;
+    }
+    .pref-content button {
+      margin-top: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>❤ HeartLink</h1>
-  <nav>
-    <a href="home.html">Home</a>
-    <a href="moment.html">Moments</a>
-    <a href="chat.html">Messages</a>
-    <a href="profile.html">Me</a>
-    <a href="#" id="logoutBtn">Logout</a>
-  </nav>
-</header>
+  <header>❤ HeartLink</header>
 
-<main>
-  <div class="welcome" id="welcomeText">Hi, ❤️</div>
-  <div class="card-grid" id="recommendations"></div>
-</main>
+  <div class="top-cards">
+    <div class="top-card" onclick="window.location.href='voice.html'">🎙 Voice Chat</div>
+    <div class="top-card" onclick="window.location.href='note.html'">💌 Secret Note</div>
+    <div class="top-card" onclick="window.location.href='tasks.html'">🎯 Tasks Center</div>
+  </div>
 
-<button id="prefBtn">⚙️ Preferences</button>
-<div id="prefPanel">
-  <label>Max Age:</label>
-  <input type="number" id="agePref" placeholder="e.g. 30">
-  <label>Max Distance (km):</label>
-  <input type="number" id="distPref" placeholder="e.g. 10">
-  <button id="savePrefs">Save</button>
-</div>
+  <div class="tabs">
+    <span class="active" onclick="switchTab(this,'recommend')">Recommend</span>
+    <span onclick="switchTab(this,'newcomer')">Newcomer</span>
+    <span onclick="switchTab(this,'nearby')">Nearby</span>
+  </div>
 
-<footer>© <span id="year"></span> HeartLink — Real People. Real Connections.</footer>
+  <div class="greeting" id="greeting">Hi, ❤️</div>
 
-<script>
-const user = JSON.parse(localStorage.getItem('heartlinkUser')||'null');
-if(!user){alert("Please sign up first.");location.href="signup.html";}
-document.getElementById('welcomeText').textContent=`Hi, ${user.name} ❤️`;
-document.getElementById('year').textContent=new Date().getFullYear();
+  <div class="profiles" id="profileGrid"></div>
 
-const sampleProfiles=[
-{name:"Angela",age:25,dist:2,img:"https://i.pravatar.cc/200?img=45"},
-{name:"Brian",age:27,dist:3,img:"https://i.pravatar.cc/200?img=12"},
-{name:"Clara",age:22,dist:1.5,img:"https://i.pravatar.cc/200?img=47"},
-{name:"David",age:30,dist:4,img:"https://i.pravatar.cc/200?img=32"},
-{name:"Ella",age:24,dist:2.2,img:"https://i.pravatar.cc/200?img=21"},
-{name:"Felix",age:29,dist:5,img:"https://i.pravatar.cc/200?img=38"}
-];
-const rec=document.getElementById('recommendations');
+  <button class="pref-btn" onclick="openPrefs()">⚙️</button>
 
-function showProfiles(){
-  const prefs=JSON.parse(localStorage.getItem('heartPrefs')||'{}');
-  rec.innerHTML="";
-  sampleProfiles.filter(p=>{
-    let ok=true;
-    if(prefs.age && p.age>prefs.age)ok=false;
-    if(prefs.dist && p.dist>prefs.dist)ok=false;
-    return ok;
-  }).forEach(p=>{
-    const c=document.createElement('div');
-    c.className='profile-card';
-    c.innerHTML=`
-      <img src="${p.img}" class="profile-img">
-      <div class="profile-info">
-        <h3>${p.name}, ${p.age}</h3>
-        <small>${p.dist} km away</small>
-        <div class="btns">
-          <button class="btn-like">❤️</button>
-          <button class="btn-chat">Say Hi 💬</button>
-        </div>
-      </div>`;
-    c.querySelector('.btn-like').onclick=()=>{
-      alert("You liked "+p.name);
-      saveInteraction(p);
-    };
-    c.querySelector('.btn-chat').onclick=()=>{
-      saveInteraction(p);
-      location.href=`chat.html?user=${encodeURIComponent(p.name)}`;
-    };
-    rec.appendChild(c);
-  });
-}
+  <div class="pref-modal" id="prefModal">
+    <div class="pref-content">
+      <h3>Preferences</h3>
+      <label>Age Range:</label>
+      <input type="text" id="ageRange" placeholder="e.g. 20-30" />
 
-function saveInteraction(profile){
-  let arr=JSON.parse(localStorage.getItem('heartInteractions')||'[]');
-  if(!arr.find(x=>x.name===profile.name)) arr.push(profile);
-  localStorage.setItem('heartInteractions',JSON.stringify(arr));
-}
+      <label>Max Distance (km):</label>
+      <input type="number" id="distance" placeholder="e.g. 10" />
 
-showProfiles();
+      <label>Interest:</label>
+      <select id="interest">
+        <option value="">Any</option>
+        <option value="Music">Music</option>
+        <option value="Travel">Travel</option>
+        <option value="Art">Art</option>
+        <option value="Tech">Tech</option>
+        <option value="Fitness">Fitness</option>
+      </select>
 
-document.getElementById('logoutBtn').onclick=()=>{
-  localStorage.clear();
-  location.href="index.html";
-};
+      <button onclick="savePrefs()">Save Preferences</button>
+    </div>
+  </div>
 
-const prefBtn=document.getElementById('prefBtn');
-const panel=document.getElementById('prefPanel');
-prefBtn.onclick=()=>panel.style.display=panel.style.display==='flex'?'none':'flex';
-document.getElementById('savePrefs').onclick=()=>{
-  const prefs={age:+document.getElementById('agePref').value,dist:+document.getElementById('distPref').value};
-  localStorage.setItem('heartPrefs',JSON.stringify(prefs));
-  alert("Preferences saved!");
-  panel.style.display='none';
-  showProfiles();
-};
-</script>
+  <div class="bottom-nav">
+    <button class="active" onclick="window.location.href='home.html'">🏠 Home</button>
+    <button onclick="window.location.href='moment.html'">🌍 Moment</button>
+    <button onclick="window.location.href='chat.html'">💬 Chat</button>
+    <button onclick="window.location.href='profile.html'">😊 Me</button>
+  </div>
+
+  <script>
+    const greeting = document.getElementById('greeting');
+    const profileGrid = document.getElementById('profileGrid');
+    const prefModal = document.getElementById('prefModal');
+
+    const user = JSON.parse(localStorage.getItem('heartlinkUser') || 'null');
+    if (!user || !user.name) {
+      window.location.href = "signup.html";
+    }
+    greeting.textContent = Hi, ${user.name} ❤️;
+
+    const profiles = [
+      {name:"Haleemat", age:23, distance:500, interest:"World Peace", img:"https://i.pravatar.cc/300?img=10"},
+      {name:"Peace", age:20, distance:500, interest:"No", img:"https://i.pravatar.cc/300?img=12"},
+      {name:"Lyne", age:24, distance:200, interest:"Travel", img:"https://i.pravatar.cc/300?img=14"},
+      {name:"Cheptoo", age:26, distance:150, interest:"Fitness", img:"https://i.pravatar.cc/300?img=18"},
+      {name:"Mary", age:22, distance:4, interest:"Music", img:"https://i.pravatar.cc/300?img=22"},
+      {name:"Brian", age:29, distance:5, interest:"Tech", img:"https://i.pravatar.cc/300?img=25"},
+      {name:"Alice", age:27, distance:7, interest:"Art", img:"https://i.pravatar.cc/300?img=27"},
+      {name:"Faith", age:24, distance:3, interest:"Music", img:"https://i.pravatar.cc/300?img=30"}
+    ];
+
+    function renderProfiles(list) {
+      profileGrid.innerHTML = "";
+      list.slice(0, 24).forEach(p => {
+        const card = document.createElement('div');
+        card.className = "profile-card";
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <div class="hi-badge" onclick="chat('${p.name}')">Hi</div>
+          <div class="profile-info">
+            <h3>${p.name}, ${p.age}</h3>
+            <small>${p.distance}km · ${p.interest}</small>
+          </div>
+        `;
+        profileGrid.appendChild(card);
+      });
+    }
+
+    function chat(name) {
+      window.location.href = chat.html?user=${encodeURIComponent(name)};
+    }
+
+    function switchTab(el, tab) {
+      document.querySelectorAll('.tabs span').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderProfiles(profiles.sort(() => Math.random() - 0.5));
+    }
+
+    function openPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('heartPrefs') || '{}');
+      document.getElementById('ageRange').value = prefs.ageRange || '';
+      document.getElementById('distance').value = prefs.distance || '';
+      document.getElementById('interest').value = prefs.interest || '';
+      prefModal.style.display = "flex";
+    }
+
+    function savePrefs() {
+      const prefs = {
+        ageRange: document.getElementById('ageRange').value,
+        distance: document.getElementById('distance').value,
+        interest: document.getElementById('interest').value
+      };
+      localStorage.setItem('heartPrefs', JSON.stringify(prefs));
+      prefModal.style.display = "none";
+      applyPrefs();
+    }
+
+    function applyPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('heartPrefs') || '{}');
+      let filtered = [...profiles];
+      if (prefs.distance) filtered = filtered.filter(p => p.distance <= prefs.distance);
+      if (prefs.interest) filtered = filtered.filter(p => p.interest === prefs.interest);
+      if (prefs.ageRange) {
+        const [min,max] = prefs.ageRange.split('-').map(Number);
+        filtered = filtered.filter(p => p.age >= min && p.age <= max);
+      }
+      renderProfiles(filtered);
+    }
+
+    prefModal.addEventListener('click', e => {
+      if (e.target === prefModal) prefModal.style.display = "none";
+    });
+
+    applyPrefs();
+  </script>
 </body>
 </html>
