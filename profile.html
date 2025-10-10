@@ -57,6 +57,7 @@
   <p id="profileAge">Age: 25</p>
   <p id="profileLocation">Location: Nairobi</p>
   <p id="profileBio">“I love meeting new people and exploring new ideas.”</p>
+  <button class="btn" id="chatBtn">💬 Chat</button>
   <button class="btn" onclick="window.location.href='dashboard.html'">← Back</button>
 </div>
 
@@ -65,10 +66,14 @@ const params = new URLSearchParams(window.location.search);
 const name = params.get('name') || 'User';
 document.getElementById('profileName').textContent = name;
 
-// Optionally randomize some details for realism
+// Optional mock details
 document.getElementById('profileAge').textContent = 'Age: ' + (20 + Math.floor(Math.random() * 10));
 const locations = ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret'];
 document.getElementById('profileLocation').textContent = 'Location: ' + locations[Math.floor(Math.random()*locations.length)];
+
+document.getElementById('chatBtn').addEventListener('click',()=>{
+  window.location.href = 'chat.html?user=' + encodeURIComponent(name);
+});
 </script>
 </body>
 </html>
