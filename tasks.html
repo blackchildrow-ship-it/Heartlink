@@ -1,2 +1,173 @@
-dxv se5rt vw3v y65bn
-tndrtynb wesuy6thre
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Center | HeartLink</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #fff;
+      color: #333;
+    }
+    header {
+      background-color: #ffeff7;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #ff5b9e;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid #ffd6e9;
+    }
+    .section-title {
+      background: linear-gradient(to right, #c37bff, #ff88b3);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 15px;
+      font-weight: 600;
+    }
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 0 15px 80px 15px;
+    }
+    .task {
+      background: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .task-info {
+      flex: 1;
+    }
+    .task-info h4 {
+      margin: 0;
+      color: #333;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .task-info p {
+      margin: 3px 0 0;
+      font-size: 0.85rem;
+      color: #777;
+    }
+    .reward {
+      color: #fbbf24;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .go-btn {
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .go-btn:hover {
+      background-color: #009b3a;
+    }
+    .progress {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 3px;
+    }
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #eee;
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: #666;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .bottom-nav a.active {
+      color: #ff5b9e;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>Task Center</header>
+
+  <div class="section-title">🎯 Newcomer Tasks</div>
+
+  <div class="task-list" id="taskList"></div>
+
+  <nav class="bottom-nav">
+    <a href="home.html">🏠<br>Home</a>
+    <a href="moment.html">🪩<br>Moment</a>
+    <a href="chat.html">💬<br>Chat</a>
+    <a href="profile.html">😊<br>Me</a>
+  </nav>
+
+  <script>
+    const tasks = [
+      { id: 1, title: "Follow 3 Different Girls", desc: "Follow 3 people to earn coins", reward: 15, progress: "0/3", page: "home.html" },
+      { id: 2, title: "Upload Avatar", desc: "Upload a photo of yourself", reward: 20, progress: "0/1", page: "profile.html" },
+      { id: 3, title: "Upload 4 Photos", desc: "Upload 4 photos of yourself", reward: 20, progress: "0/4", page: "profile.html" },
+      { id: 4, title: "Complete Info", desc: "Fill in your profile info", reward: 20, progress: "0/1", page: "profile.html" },
+      { id: 5, title: "Voice Chat", desc: "Start a 2-minute voice chat", reward: 50, progress: "0/1", page: "voice.html" },
+      { id: 6, title: "Signature", desc: "Fill in your signature to show personality", reward: 20, progress: "0/1", page: "profile.html" },
+      { id: 7, title: "Voice Card", desc: "Record a short voice card", reward: 20, progress: "0/1", page: "voice.html" },
+    ];
+
+    // Load from localStorage
+    let taskProgress = JSON.parse(localStorage.getItem("taskProgress")) || {};
+
+    const taskList = document.getElementById("taskList");
+
+    function saveProgress() {
+      localStorage.setItem("taskProgress", JSON.stringify(taskProgress));
+    }
+
+    tasks.forEach(task => {
+      if (!taskProgress[task.id]) {
+        taskProgress[task.id] = { progress: task.progress, completed: false };
+      }
+
+      const div = document.createElement("div");
+      div.className = "task";
+      div.innerHTML = `
+        <div class="task-info">
+          <h4>${task.title}</h4>
+          <p>${task.desc}</p>
+          <div class="reward">💰 ${task.reward} coins</div>
+          <div class="progress">${taskProgress[task.id].progress}</div>
+        </div>
+        <button class="go-btn" onclick="goToTask(${task.id}, '${task.page}')">Go</button>
+      `;
+      taskList.appendChild(div);
+    });
+
+    function goToTask(id, page) {
+      taskProgress[id].completed = true;
+      taskProgress[id].progress = "✔ Completed";
+      saveProgress();
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
