@@ -71,28 +71,33 @@
 <header>
   <h1>HeartLink</h1>
   <nav>
-    <a href="#" id="homeLink">Home</a>
+    <a href="home.html" id="homeLink">Home</a>
     <a href="#" id="matchesLink">Matches</a>
     <a href="#" id="chatsLink">Chats</a>
     <a href="#" id="notificationsLink">Notifications <span id="notifCount">(0)</span></a>
     <a href="index.html" id="logoutLink">Logout</a>
   </nav>
 </header>
+
 <div class="container">
   <section id="matches">
     <h2>Matches</h2>
     <div class="matches-grid" id="matchesGrid"></div>
   </section>
+
   <section id="chats">
     <h2>Chats</h2>
     <div id="chatsList"></div>
   </section>
+
   <section id="notifications">
     <h2>Notifications</h2>
     <ul id="notifList"></ul>
   </section>
 </div>
+
 <div id="toast"></div>
+
 <script>
 const matchesGrid = document.getElementById('matchesGrid');
 const notifList = document.getElementById('notifList');
@@ -124,14 +129,15 @@ function generateMatches(){
   matchesGrid.innerHTML='';
   const genderToShow = userGender==='male'?'female':'male';
   for(let i=1;i<=25;i++){
-    const name = `${genderToShow==='female'?'Sophia':'Liam'} ${i}`;
     const card=document.createElement('div');
     card.className='card';
-    card.innerHTML=`<h4>${name}</h4>
+    card.innerHTML=`
+      <h4>${genderToShow==='female'?'Sophia':'Liam'} ${i}</h4>
       <p>${Math.floor(Math.random()*10)+20} yrs</p>
       <button class='btn viewBtn'>View</button>
       <button class='btn likeBtn'>Like</button>
-      <button class='btn chatBtn'>Chat</button>`;
+      <button class='btn chatBtn'>Chat</button>
+    `;
     matchesGrid.appendChild(card);
   }
 }
@@ -154,8 +160,9 @@ function generateRandomBotChats(){
     const msg = randomBotMessage();
     const div = document.createElement('div');
     div.className='card';
-    div.innerHTML=`<strong>${bot}:</strong> ${msg}`;
+    div.innerHTML = `<strong>${bot}:</strong> ${msg}`;
     chatsList.appendChild(div);
+
     // Also push to notifications
     const li = document.createElement('li');
     li.textContent = `${bot}: ${msg}`;
@@ -170,14 +177,16 @@ document.getElementById('notificationsLink').addEventListener('click',()=>showSe
 
 document.addEventListener('click',e=>{
   if(e.target.classList.contains('viewBtn')){
-    const name = e.target.closest('.card').querySelector('h4').textContent;
-    window.location.href = 'profile.html?name=' + encodeURIComponent(name);
+    showToast('Viewing profile...');
+    // Redirect to profile page
+    const name = e.target.parentElement.querySelector('h4').textContent.split(' ')[0];
+    window.location.href = `profile.html?user=${encodeURIComponent(name)}`;
   }else if(e.target.classList.contains('likeBtn')){
     e.target.disabled=true;
     showToast('❤️ Liked successfully!');
   }else if(e.target.classList.contains('chatBtn')){
-    const name = e.target.closest('.card').querySelector('h4').textContent;
-    window.location.href = 'chat.html?user=' + encodeURIComponent(name);
+    const name = e.target.parentElement.querySelector('h4').textContent.split(' ')[0];
+    window.location.href = `chat.html?user=${encodeURIComponent(name)}`;
   }
 });
 
