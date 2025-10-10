@@ -161,7 +161,7 @@ function verifyPayment(){
   const amounts = {400: 'Bronze', 750: 'Silver', 1500: 'Gold'};
   let detectedAmount = null;
 
-  // Extract numeric amounts
+  // Detect which valid package amount appears in message
   for (let amt in amounts) {
     if (msg.includes(amt)) {
       detectedAmount = parseInt(amt);
@@ -172,7 +172,7 @@ function verifyPayment(){
   if (msg.includes('HAKIKA') && msg.includes('PROVISION') && detectedAmount) {
     const plan = amounts[detectedAmount];
     showToast(`✅ Payment of Ksh ${detectedAmount} verified! ${plan} package activated.`);
-    setTimeout(()=>window.location.href='dashboard.html',2000);
+    setTimeout(()=>window.location.href='payment_success.html',2000);
   } else {
     showToast('❌ Could not verify payment. Ensure message contains the amount and HAKIKA R PROVISION.');
   }
