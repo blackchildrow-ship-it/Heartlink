@@ -5,24 +5,128 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>HeartLink — Moments</title>
 <style>
-:root{--bg:#fff7fb;--accent:#ff4d88;--muted:#6b6b6b;--card:#fff;--shadow:0 6px 18px rgba(0,0,0,0.08);}
-body{font-family:'Poppins',sans-serif;background:var(--bg);margin:0;color:#1b1330;}
-header{background:linear-gradient(90deg,var(--accent),#ff7aa6);color:white;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);}
-nav a{color:white;text-decoration:none;font-weight:600;padding:8px 12px;border-radius:8px;}
+:root{
+  --bg:#fff7fb;
+  --accent:#ff4d88;
+  --muted:#6b6b6b;
+  --card:#fff;
+  --shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  margin:0;
+  color:#1b1330;
+}
+header{
+  background:linear-gradient(90deg,var(--accent),#ff7aa6);
+  color:white;
+  padding:16px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:var(--shadow);
+}
+nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  padding:8px 12px;
+  border-radius:8px;
+}
 nav a:hover{background:rgba(255,255,255,0.2);}
-main{padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.post{background:var(--card);box-shadow:var(--shadow);border-radius:14px;overflow:hidden;max-width:500px;width:100%;}
-.post img{width:100%;height:300px;object-fit:cover;}
-.post-content{padding:12px;}
+main{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.post{
+  background:var(--card);
+  box-shadow:var(--shadow);
+  border-radius:14px;
+  overflow:hidden;
+  max-width:500px;
+  width:100%;
+}
+.post img{
+  width:100%;
+  height:300px;
+  object-fit:cover;
+}
+.post-content{
+  padding:12px;
+}
 .post-content h3{margin:0 0 6px 0;}
-.actions{display:flex;gap:10px;margin-top:8px;}
-.actions button{flex:1;border:none;padding:8px;border-radius:8px;cursor:pointer;font-weight:600;}
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:8px;
+}
+.actions button{
+  flex:1;
+  border:none;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
 .like-btn{background:#ffe2eb;color:#ff3377;}
 .comment-btn{background:var(--accent);color:white;}
 .comment-box{margin-top:8px;}
-.comment-box input{width:100%;padding:6px;border-radius:8px;border:1px solid #ddd;}
+.comment-box input{
+  width:100%;
+  padding:6px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
 .comment{font-size:14px;margin-top:4px;color:var(--muted);}
-footer{text-align:center;padding:10px;background:rgba(0,0,0,0.03);font-size:13px;color:var(--muted);}
+footer{
+  text-align:center;
+  padding:10px;
+  background:rgba(0,0,0,0.03);
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* Upload post section */
+#newPostForm{
+  background:var(--card);
+  box-shadow:var(--shadow);
+  padding:16px;
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-width:500px;
+  width:100%;
+}
+#newPostForm input[type="file"]{border:none;}
+#newPostForm textarea{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:8px;
+  resize:none;
+}
+#preview{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+  border-radius:12px;
+  display:none;
+}
+#postBtn{
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+#postBtn:hover{opacity:0.9;}
 </style>
 </head>
 <body>
@@ -36,37 +140,48 @@ footer{text-align:center;padding:10px;background:rgba(0,0,0,0.03);font-size:13px
   </nav>
 </header>
 
-<main id="feed"></main>
+<main>
+  <form id="newPostForm">
+    <h3>Share a new Moment ✨</h3>
+    <input type="file" id="imageUpload" accept="image/*">
+    <img id="preview" alt="Preview">
+    <textarea id="caption" placeholder="Write a caption..." rows="3"></textarea>
+    <button type="submit" id="postBtn">Post Moment</button>
+  </form>
+
+  <div id="feed"></div>
+</main>
 
 <footer>© <span id="year"></span> HeartLink — Real People. Real Connections.</footer>
 
 <script>
 document.getElementById('year').textContent=new Date().getFullYear();
+
+const user = JSON.parse(localStorage.getItem('heartlinkUser')||'null');
+if(!user){alert("Please sign up first.");location.href="signup.html";}
+
 const feed=document.getElementById('feed');
+let posts=JSON.parse(localStorage.getItem('heartPosts')||'[]');
+const interactions=JSON.parse(localStorage.getItem('heartInteractions')||'[]');
 
-const interacted=JSON.parse(localStorage.getItem('heartInteractions')||'[]');
-let posts=[];
-
-if(interacted.length>0){
-  posts=interacted.map((p,i)=>({
+// Auto-generate posts from interactions if none exist
+if(posts.length===0 && interactions.length>0){
+  posts=interactions.map((p,i)=>({
     id:Date.now()+i,
     name:p.name,
-    img:p.img||`https://i.pravatar.cc/400?img=${Math.floor(Math.random()*70)+1}`,
+    img:p.img,
     caption:`💬 ${p.name} shared a new moment!`,
     likes:Math.floor(Math.random()*10),
     comments:[]
   }));
-}else{
-  posts=[
-    {id:1,name:"Peace 💕",img:"https://i.pravatar.cc/400?img=15",caption:"Feeling grateful today ✨",likes:3,comments:[{name:"Lyne",text:"Beautiful ❤️"}]},
-    {id:2,name:"Haleemat 🌸",img:"https://i.pravatar.cc/400?img=10",caption:"New vibes, new me 💅",likes:5,comments:[{name:"Mary",text:"Gorgeous!"}]}
-  ];
+  localStorage.setItem('heartPosts',JSON.stringify(posts));
 }
-localStorage.setItem('heartPosts',JSON.stringify(posts));
+
+function savePosts(){localStorage.setItem('heartPosts',JSON.stringify(posts));}
 
 function renderFeed(){
   feed.innerHTML="";
-  posts.forEach(p=>{
+  posts.slice().reverse().forEach(p=>{
     const post=document.createElement('div');
     post.className='post';
     post.innerHTML=`
@@ -86,14 +201,18 @@ function renderFeed(){
         </div>
       </div>`;
     const likeBtn=post.querySelector('.like-btn');
-    likeBtn.onclick=()=>{p.likes++;likeBtn.textContent=`❤️ ${p.likes}`;savePosts();};
+    likeBtn.onclick=()=>{
+      p.likes++;
+      likeBtn.textContent=`❤️ ${p.likes}`;
+      savePosts();
+    };
     const cBtn=post.querySelector('.comment-btn');
     const cBox=post.querySelector('.comment-box');
     cBtn.onclick=()=>{cBox.style.display=cBox.style.display==='none'?'block':'none';};
     const input=cBox.querySelector('input');
     input.addEventListener('keypress',e=>{
       if(e.key==='Enter'&&input.value.trim()!==''){
-        p.comments.push({name:'You',text:input.value.trim()});
+        p.comments.push({name:user.name,text:input.value.trim()});
         input.value='';
         savePosts();
         renderFeed();
@@ -102,8 +221,44 @@ function renderFeed(){
     feed.appendChild(post);
   });
 }
-function savePosts(){localStorage.setItem('heartPosts',JSON.stringify(posts));}
 renderFeed();
+
+// --- New post upload ---
+const upload=document.getElementById('imageUpload');
+const preview=document.getElementById('preview');
+upload.onchange=()=>{
+  const file=upload.files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      preview.src=e.target.result;
+      preview.style.display='block';
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+document.getElementById('newPostForm').onsubmit=e=>{
+  e.preventDefault();
+  const caption=document.getElementById('caption').value.trim();
+  if(!preview.src){alert("Please choose an image.");return;}
+  const newPost={
+    id:Date.now(),
+    name:user.name,
+    img:preview.src,
+    caption:caption || "✨ Shared a new moment!",
+    likes:0,
+    comments:[]
+  };
+  posts.push(newPost);
+  savePosts();
+  preview.src="";
+  preview.style.display='none';
+  document.getElementById('caption').value="";
+  upload.value="";
+  renderFeed();
+  alert("Moment posted successfully 💖");
+};
 </script>
 </body>
 </html>
