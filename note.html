@@ -1,2 +1,237 @@
-cxfdgbtynyim,o;l
-kmfgty bnyedrt b
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Message | HeartLink</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #c6ffb3;
+    background: linear-gradient(180deg, #b6ffb6, #a3fba3);
+    overflow-x: hidden;
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    color: white;
+    padding: 60px 10px 30px;
+    background: linear-gradient(180deg, #ffb6e6, #ffaee0);
+  }
+
+  header::before {
+    content: "";
+    background-image: url('https://i.imgur.com/2vHEBvA.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    top: 0;
+    left: 0;
+    opacity: 0.2;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  header p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+  }
+
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .message {
+    background-color: #e5ffe0;
+    color: #333;
+    border-radius: 18px;
+    padding: 10px 15px;
+    max-width: 80%;
+    align-self: flex-start;
+    word-wrap: break-word;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+
+  .message.user {
+    background-color: #d1ffd1;
+    align-self: flex-end;
+  }
+
+  .note-box {
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+  }
+
+  .note-box h2 {
+    font-size: 1.2rem;
+    color: #3a3a3a;
+    margin-bottom: 5px;
+  }
+
+  .note-box p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .input-box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  textarea {
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    resize: none;
+    height: 60px;
+    font-size: 0.9rem;
+    background-color: #f7f7f7;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  textarea:focus {
+    outline: 2px solid #90ee90;
+  }
+
+  button {
+    background-color: #00c853;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  button:hover {
+    background-color: #00a245;
+  }
+
+  .coin-info {
+    font-size: 0.9rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .coin-info span {
+    color: #f4a300;
+    font-weight: 600;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+  }
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #666;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .bottom-nav a.active {
+    color: #ff5b9e;
+    font-weight: 600;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Leave a Message</h1>
+  <p>Check others' messages</p>
+</header>
+
+<div class="messages" id="messageList"></div>
+
+<div class="note-box">
+  <h2>🤫 Tell me a little secret</h2>
+  <p class="coin-info">💰 <span>10 coins</span> / message</p>
+  <div class="input-box">
+    <textarea id="messageInput" placeholder="Write your joys, annoyances, or secrets..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="home.html">🏠<br>Home</a>
+  <a href="moment.html">🪩<br>Moment</a>
+  <a href="voice.html">🎤<br>Voice</a>
+  <a href="profile.html">😊<br>Me</a>
+</nav>
+
+<script>
+  let messages = JSON.parse(localStorage.getItem('notes')) || [
+    "Hello babe ^_^",
+    "Hi honey I'm alone, so maybe we can do sth nice together???",
+    "Hello! I'd love to see you! 🥰",
+    "Hi baby wanna play naughty ?",
+    "Are you a real person?"
+  ];
+
+  let totalCoins = parseInt(localStorage.getItem("totalCoins")) || 100;
+
+  const messageList = document.getElementById("messageList");
+  const messageInput = document.getElementById("messageInput");
+
+  function renderMessages() {
+    messageList.innerHTML = "";
+    messages.forEach((msg, i) => {
+      const div = document.createElement("div");
+      div.classList.add("message");
+      if (i % 2 === 0) div.classList.add("user");
+      div.textContent = msg;
+      messageList.appendChild(div);
+    });
+  }
+
+  function sendMessage() {
+    const text = messageInput.value.trim();
+    if (!text) return alert("Write something first!");
+    if (totalCoins < 10) return alert("Not enough coins!");
+    totalCoins -= 10;
+    messages.push(text);
+    localStorage.setItem('notes', JSON.stringify(messages));
+    localStorage.setItem('totalCoins', totalCoins);
+    messageInput.value = "";
+    renderMessages();
+  }
+
+  renderMessages();
+</script>
+</body>
+</html>
