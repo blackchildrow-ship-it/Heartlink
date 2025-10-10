@@ -5,71 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeartLink — Sign Up</title>
   <style>
-    :root{
+    :root {
       --bg:#fff7fb;
       --accent:#ff4d88;
       --muted:#6b6b6b;
       --card:#ffffff;
       --shadow:0 8px 24px rgba(0,0,0,0.08);
     }
-    body{
-      font-family:Inter, sans-serif;
-      background:linear-gradient(180deg,#fff,#fff7fb);
-      color:#1b1330;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:100vh;
-      margin:0;
+    body {
+      font-family: Inter, sans-serif;
+      background: linear-gradient(180deg,#fff,#fff7fb);
+      color: #1b1330;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
     }
-    .container{
-      background:var(--card);
-      padding:32px;
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      width:100%;
-      max-width:420px;
+    .container {
+      background: var(--card);
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 420px;
     }
-    h1{
-      text-align:center;
-      color:var(--accent);
-      margin-bottom:20px;
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 20px;
     }
-    form{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
-    input,select{
-      padding:12px;
-      border:1px solid #ddd;
-      border-radius:10px;
-      font-size:15px;
-      outline:none;
-      transition:0.2s;
+    input, select {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
     }
-    input:focus,select:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 2px rgba(255,77,136,0.2);
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255,77,136,0.2);
     }
-    button{
-      background:linear-gradient(90deg,var(--accent),#ff7aa6);
-      color:white;
-      border:none;
-      padding:12px;
-      border-radius:10px;
-      font-weight:700;
-      font-size:16px;
-      cursor:pointer;
-      transition:0.25s;
+    button {
+      background: linear-gradient(90deg, var(--accent), #ff7aa6);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.25s;
     }
-    button:hover{opacity:0.9}
-    .back{
-      text-align:center;
-      margin-top:14px;
-      font-size:14px;
+    button:hover { opacity: 0.9; }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      border: 1px solid #ddd;
+      background: white;
+      color: #333;
     }
-    .back a{color:var(--accent);text-decoration:none;font-weight:600}
+    .social-btn img {
+      width: 20px;
+      height: 20px;
+    }
+    .or-divider {
+      text-align: center;
+      margin: 14px 0;
+      color: var(--muted);
+      position: relative;
+    }
+    .or-divider::before, .or-divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #ddd;
+    }
+    .or-divider::before { left: 0; }
+    .or-divider::after { right: 0; }
+    .back {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .back a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    #loader {
+      display: none;
+      margin: 10px auto;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -87,60 +135,35 @@
 
       <select id="county" required>
         <option value="">Select County</option>
-        <option value="Baringo">Baringo</option>
-        <option value="Bomet">Bomet</option>
-        <option value="Bungoma">Bungoma</option>
-        <option value="Busia">Busia</option>
-        <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
-        <option value="Embu">Embu</option>
-        <option value="Garissa">Garissa</option>
-        <option value="Homa Bay">Homa Bay</option>
-        <option value="Isiolo">Isiolo</option>
-        <option value="Kajiado">Kajiado</option>
-        <option value="Kakamega">Kakamega</option>
-        <option value="Kericho">Kericho</option>
-        <option value="Kiambu">Kiambu</option>
-        <option value="Kilifi">Kilifi</option>
-        <option value="Kirinyaga">Kirinyaga</option>
-        <option value="Kisii">Kisii</option>
-        <option value="Kisumu">Kisumu</option>
-        <option value="Kitui">Kitui</option>
-        <option value="Kwale">Kwale</option>
-        <option value="Laikipia">Laikipia</option>
-        <option value="Lamu">Lamu</option>
-        <option value="Machakos">Machakos</option>
-        <option value="Makueni">Makueni</option>
-        <option value="Mandera">Mandera</option>
-        <option value="Marsabit">Marsabit</option>
-        <option value="Meru">Meru</option>
-        <option value="Migori">Migori</option>
-        <option value="Mombasa">Mombasa</option>
-        <option value="Murang'a">Murang'a</option>
-        <option value="Nairobi">Nairobi</option>
-        <option value="Nakuru">Nakuru</option>
-        <option value="Nandi">Nandi</option>
-        <option value="Narok">Narok</option>
-        <option value="Nyamira">Nyamira</option>
-        <option value="Nyandarua">Nyandarua</option>
-        <option value="Nyeri">Nyeri</option>
-        <option value="Samburu">Samburu</option>
-        <option value="Siaya">Siaya</option>
-        <option value="Taita-Taveta">Taita-Taveta</option>
-        <option value="Tana River">Tana River</option>
-        <option value="Tharaka-Nithi">Tharaka-Nithi</option>
-        <option value="Trans Nzoia">Trans Nzoia</option>
-        <option value="Turkana">Turkana</option>
-        <option value="Uasin Gishu">Uasin Gishu</option>
-        <option value="Vihiga">Vihiga</option>
-        <option value="Wajir">Wajir</option>
-        <option value="West Pokot">West Pokot</option>
+        <option>Baringo</option><option>Bomet</option><option>Bungoma</option><option>Busia</option>
+        <option>Elgeyo-Marakwet</option><option>Embu</option><option>Garissa</option><option>Homa Bay</option>
+        <option>Isiolo</option><option>Kajiado</option><option>Kakamega</option><option>Kericho</option>
+        <option>Kiambu</option><option>Kilifi</option><option>Kirinyaga</option><option>Kisii</option>
+        <option>Kisumu</option><option>Kitui</option><option>Kwale</option><option>Laikipia</option>
+        <option>Lamu</option><option>Machakos</option><option>Makueni</option><option>Mandera</option>
+        <option>Marsabit</option><option>Meru</option><option>Migori</option><option>Mombasa</option>
+        <option>Murang'a</option><option>Nairobi</option><option>Nakuru</option><option>Nandi</option>
+        <option>Narok</option><option>Nyamira</option><option>Nyandarua</option><option>Nyeri</option>
+        <option>Samburu</option><option>Siaya</option><option>Taita-Taveta</option><option>Tana River</option>
+        <option>Tharaka-Nithi</option><option>Trans Nzoia</option><option>Turkana</option><option>Uasin Gishu</option>
+        <option>Vihiga</option><option>Wajir</option><option>West Pokot</option>
       </select>
 
       <input type="email" id="email" placeholder="Email Address" required>
       <input type="password" id="password" placeholder="Password" required minlength="6">
 
-      <button type="submit">Create Account</button>
+      <button type="submit" id="submitBtn">Create Account</button>
+      <div id="loader"></div>
     </form>
+
+    <div class="or-divider">OR</div>
+
+    <button class="social-btn" id="googleBtn">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg" alt=""> Continue with Google
+    </button>
+    <button class="social-btn" id="facebookBtn">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt=""> Continue with Facebook
+    </button>
 
     <div class="back">
       Already have an account? <a href="login.html">Log in</a>
@@ -148,8 +171,16 @@
   </div>
 
   <script>
-    document.getElementById('signupForm').addEventListener('submit', (e)=>{
+    // Signup form
+    const form = document.getElementById('signupForm');
+    const loader = document.getElementById('loader');
+    const btn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', (e)=>{
       e.preventDefault();
+      btn.disabled = true;
+      loader.style.display = 'block';
+
       const user = {
         name: document.getElementById('name').value.trim(),
         gender: document.getElementById('gender').value,
@@ -160,12 +191,36 @@
 
       if(!user.name || !user.gender || !user.county || !user.email || !user.password){
         alert('Please fill all fields correctly.');
+        btn.disabled = false;
+        loader.style.display = 'none';
         return;
       }
 
       localStorage.setItem('heartlinkUser', JSON.stringify(user));
-      alert(`Welcome to HeartLink, ${user.name}! ❤️`);
-      window.location.href = 'home.html';
+
+      setTimeout(()=>{
+        alert(`Welcome to HeartLink, ${user.name}! ❤️`);
+        window.location.href = 'home.html';
+      }, 1500);
+    });
+
+    // Google & Facebook buttons
+    document.getElementById('googleBtn').addEventListener('click', ()=>{
+      const name = prompt('Enter your Google account name:');
+      if(name){
+        localStorage.setItem('heartlinkUser', JSON.stringify({ name, loginProvider: 'Google' }));
+        alert(`Welcome, ${name}! Signed in with Google ❤️`);
+        window.location.href = 'home.html';
+      }
+    });
+
+    document.getElementById('facebookBtn').addEventListener('click', ()=>{
+      const name = prompt('Enter your Facebook account name:');
+      if(name){
+        localStorage.setItem('heartlinkUser', JSON.stringify({ name, loginProvider: 'Facebook' }));
+        alert(`Welcome, ${name}! Signed in with Facebook 💙`);
+        window.location.href = 'home.html';
+      }
     });
   </script>
 
