@@ -3,236 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Profile - HeartLink</title>
+<title>HeartLink — My Profile</title>
 <style>
+  :root {
+    --accent:#ff4d88;
+    --bg:#fff7fb;
+    --card:#fff;
+    --muted:#666;
+    --shadow:0 4px 12px rgba(0,0,0,0.1);
+  }
   body {
     font-family: 'Poppins', sans-serif;
-    background-color: #fff5f7;
+    background: var(--bg);
     margin: 0;
-    color: #333;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
   }
 
   header {
-    background-color: #ffb6c1;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
+    background: linear-gradient(90deg,var(--accent),#ff77aa);
     color: white;
+    text-align: center;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
   }
-  header h1 { margin: 0; font-size: 1.4em; }
-  header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2em;
-    cursor: pointer;
-  }
+
+  header h1 { margin: 0; font-size: 20px; }
 
   .container {
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
+    background: var(--card);
+    margin: 20px;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    max-width: 400px;
+    width: 90%;
   }
 
-  .profile-photo {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .profile-photo img {
-    width: 120px;
-    height: 120px;
+  .profile-pic {
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #ff7fa8;
-  }
-
-  .info-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  .info-card h2 {
-    color: #ff7fa8;
-    font-size: 1.1em;
-    border-bottom: 1px solid #ffe4ec;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-  }
-
-  .info-row {
-    margin: 8px 0;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .btn {
-    background-color: #ff7fa8;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 0.95em;
-    transition: background-color 0.3s;
-  }
-  .btn:hover {
-    background-color: #ff5f93;
-  }
-
-  /* Modal styling */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-  }
-  .modal-content {
-    background: white;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-    margin: 80px auto;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .modal-content h3 {
-    color: #ff7fa8;
-    margin-top: 0;
-  }
-  .modal-content label {
     display: block;
-    margin-top: 10px;
-    font-size: 0.9em;
+    margin: 0 auto 10px;
+    border: 3px solid var(--accent);
   }
-  .modal-content input, .modal-content select {
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  input, select, textarea {
     width: 100%;
     padding: 8px;
+    border-radius: 10px;
     border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-top: 5px;
+    margin-top: 4px;
+    font-family: inherit;
   }
 
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0;
+  button {
     width: 100%;
-    background: white;
-    border-top: 1px solid #ddd;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-  }
-  .bottom-nav button {
-    background: none;
+    margin-top: 14px;
+    padding: 10px;
     border: none;
-    color: #555;
-    font-size: 0.9em;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .2s;
+  }
+
+  button:hover { opacity: .85; }
+
+  .back {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    background: rgba(255,255,255,0.3);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 6px 10px;
     cursor: pointer;
   }
-  .bottom-nav button.active {
-    color: #ff7fa8;
-    font-weight: bold;
+
+  footer {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 12px;
+    text-align: center;
   }
 </style>
 </head>
 <body>
+  <header>
+    <button class="back" onclick="window.location.href='home.html'">←</button>
+    <h1>My Profile</h1>
+  </header>
 
-<header>
-  <button onclick="window.location.href='home.html'">←</button>
-  <h1>My Profile</h1>
-  <button onclick="openEditModal()">✏️</button>
-</header>
+  <div class="container">
+    <img id="profilePic" class="profile-pic" src="https://i.pravatar.cc/150?u=default" alt="Profile Picture">
+    <input type="file" id="photoUpload" accept="image/*">
 
-<div class="container">
-  <div class="profile-photo">
-    <img id="profilePic" src="https://source.unsplash.com/collection/888146/200x200?sig=1" alt="Profile Photo">
-  </div>
-
-  <div class="info-card">
-    <h2>Basic Info</h2>
-    <div class="info-row"><strong>Name:</strong> <span id="nameDisplay">Ava Johnson</span></div>
-    <div class="info-row"><strong>Age:</strong> <span id="ageDisplay">25</span></div>
-    <div class="info-row"><strong>Location:</strong> <span id="countyDisplay">Nairobi</span></div>
-  </div>
-
-  <div class="info-card">
-    <h2>Preferences</h2>
-    <div class="info-row"><strong>Interested In:</strong> <span id="interestDisplay">Men</span></div>
-    <div class="info-row"><strong>Age Range:</strong> <span id="rangeDisplay">24 - 32</span></div>
-    <div class="info-row"><strong>Max Distance:</strong> <span id="distanceDisplay">25 km</span></div>
-  </div>
-
-  <button class="btn" onclick="openEditModal()">Edit Profile</button>
-</div>
-
-<!-- Edit Modal -->
-<div id="editModal" class="modal">
-  <div class="modal-content">
-    <h3>Edit Profile</h3>
     <label>Name</label>
-    <input type="text" id="nameInput" placeholder="Your name">
+    <input id="name" type="text" placeholder="Your name">
+
     <label>Age</label>
-    <input type="number" id="ageInput" min="18" max="99">
+    <input id="age" type="number" placeholder="Your age">
+
     <label>County</label>
-    <select id="countyInput">
-      <option value="">Select County</option>
-      <option>Nairobi</option><option>Mombasa</option><option>Kisumu</option>
-      <option>Nakuru</option><option>Eldoret</option><option>Kiambu</option>
-      <!-- Add all other counties as needed -->
-    </select>
-    <label>Interested In</label>
-    <select id="interestInput">
-      <option>Men</option><option>Women</option><option>Both</option>
-    </select>
-    <label>Age Range</label>
-    <input type="text" id="rangeInput" placeholder="e.g. 22 - 30">
-    <label>Max Distance (km)</label>
-    <input type="number" id="distanceInput" placeholder="e.g. 25">
+    <select id="county"></select>
 
-    <div style="text-align:right; margin-top:15px;">
-      <button class="btn" onclick="saveProfile()">Save</button>
-      <button class="btn" style="background:#ccc; color:#333;" onclick="closeEditModal()">Cancel</button>
-    </div>
+    <label>Bio</label>
+    <textarea id="bio" rows="3" placeholder="Say something about yourself..."></textarea>
+
+    <button id="saveBtn">Save Changes</button>
   </div>
-</div>
 
-<div class="bottom-nav">
-  <button onclick="window.location.href='home.html'">🏠<br>Home</button>
-  <button onclick="window.location.href='chat.html'">💬<br>Chat</button>
-  <button class="active">👤<br>Me</button>
-</div>
+  <footer>© 2025 HeartLink — Real People. Real Connections.</footer>
 
 <script>
-function openEditModal() {
-  document.getElementById('editModal').style.display = 'block';
-  document.getElementById('nameInput').value = document.getElementById('nameDisplay').textContent;
-  document.getElementById('ageInput').value = document.getElementById('ageDisplay').textContent;
-  document.getElementById('countyInput').value = document.getElementById('countyDisplay').textContent;
-  document.getElementById('interestInput').value = document.getElementById('interestDisplay').textContent;
-  document.getElementById('rangeInput').value = document.getElementById('rangeDisplay').textContent;
-  document.getElementById('distanceInput').value = parseInt(document.getElementById('distanceDisplay').textContent);
-}
+  // --- Load counties dynamically (all 47) ---
+  const counties = [
+    "Mombasa","Kwale","Kilifi","Tana River","Lamu","Taita-Taveta","Garissa","Wajir","Mandera",
+    "Marsabit","Isiolo","Meru","Tharaka-Nithi","Embu","Kitui","Machakos","Makueni","Nyandarua",
+    "Nyeri","Kirinyaga","Murang'a","Kiambu","Turkana","West Pokot","Samburu","Trans Nzoia",
+    "Uasin Gishu","Elgeyo-Marakwet","Nandi","Baringo","Laikipia","Nakuru","Narok","Kajiado",
+    "Kericho","Bomet","Kakamega","Vihiga","Bungoma","Busia","Siaya","Kisumu","Homa Bay",
+    "Migori","Kisii","Nyamira","Nairobi"
+  ];
+  const countySelect = document.getElementById('county');
+  counties.forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = c;
+    countySelect.appendChild(opt);
+  });
 
-function closeEditModal() {
-  document.getElementById('editModal').style.display = 'none';
-}
+  // --- Load user data ---
+  const user = JSON.parse(localStorage.getItem('heartlinkUser') || '{}');
+  const nameInput = document.getElementById('name');
+  const ageInput = document.getElementById('age');
+  const bioInput = document.getElementById('bio');
+  const pic = document.getElementById('profilePic');
 
-function saveProfile() {
-  document.getElementById('nameDisplay').textContent = document.getElementById('nameInput').value;
-  document.getElementById('ageDisplay').textContent = document.getElementById('ageInput').value;
-  document.getElementById('countyDisplay').textContent = document.getElementById('countyInput').value;
-  document.getElementById('interestDisplay').textContent = document.getElementById('interestInput').value;
-  document.getElementById('rangeDisplay').textContent = document.getElementById('rangeInput').value;
-  document.getElementById('distanceDisplay').textContent = document.getElementById('distanceInput').value + " km";
-  closeEditModal();
-}
+  if (user.name) nameInput.value = user.name;
+  if (user.age) ageInput.value = user.age;
+  if (user.bio) bioInput.value = user.bio;
+  if (user.county) countySelect.value = user.county;
+  if (user.photo) pic.src = user.photo;
+
+  // --- Save updates ---
+  document.getElementById('saveBtn').onclick = ()=>{
+    const updatedUser = {
+      ...user,
+      name: nameInput.value,
+      age: ageInput.value,
+      county: countySelect.value,
+      bio: bioInput.value,
+      photo: pic.src,
+      completed: true
+    };
+    localStorage.setItem('heartlinkUser', JSON.stringify(updatedUser));
+    alert("Profile saved successfully!");
+    window.location.href = "home.html";
+  };
+
+  // --- Profile picture upload ---
+  document.getElementById('photoUpload').addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if (file){
+      const reader = new FileReader();
+      reader.onload = ()=> {
+        pic.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 </script>
-
 </body>
 </html>
 
