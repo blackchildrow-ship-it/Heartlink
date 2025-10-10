@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeartLink Home</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    margin: 0;
+    color: #333;
+  }
+  header {
+    background-color: #ffb6c1;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  .features {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .feature-card {
+    flex: 1;
+    min-width: 100px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .feature-card:hover { transform: scale(1.05); }
+  .feature-card h3 {
+    margin: 8px 0 3px;
+    color: #ff7fa8;
+  }
+  .feature-card p {
+    font-size: 0.9em;
+    color: #555;
+  }
+
+  .section-title {
+    margin: 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #ff5c8d;
+  }
+
+  .profiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    padding: 0 15px 80px;
+  }
+
+  .profile-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .profile-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .hi-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #ff7fa8;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
+  }
+
+  .profile-info {
+    padding: 8px;
+  }
+
+  .profile-info h4 {
+    margin: 5px 0;
+    color: #333;
+  }
+
+  .profile-meta {
+    font-size: 0.85em;
+    color: #777;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+  }
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bottom-nav a.active {
+    color: #ff7fa8;
+    font-weight: bold;
+  }
+
+  .bottom-nav i {
+    font-size: 1.3em;
+    margin-bottom: 3px;
+  }
+</style>
+</head>
+<body>
+
+<header>HeartLink</header>
+
+<section class="features">
+  <div class="feature-card">
+    <h3>🎙 Voice Chat</h3>
+    <p>Chat instantly</p>
+  </div>
+  <div class="feature-card">
+    <h3>💌 Secret Note</h3>
+    <p>Send a secret</p>
+  </div>
+  <div class="feature-card">
+    <h3>🎯 Tasks Center</h3>
+    <p>Earn rewards</p>
+  </div>
+</section>
+
+<div class="section-title">Recommended</div>
+<div class="profiles" id="profilesContainer"></div>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="active">
+    <i>🏠</i> Home
+  </a>
+  <a href="#">
+    <i>🪐</i> Moment
+  </a>
+  <a href="chat.html">
+    <i>💬</i> Chat
+  </a>
+  <a href="dashboard.html">
+    <i>😊</i> Me
+  </a>
+</nav>
+
+<script>
+const container = document.getElementById('profilesContainer');
+
+const sampleProfiles = [
+  { name: 'Sophia', img: 'https://randomuser.me/api/portraits/women/44.jpg', age: 23, dist: '3km', status: 'Love Nature' },
+  { name: 'Liam', img: 'https://randomuser.me/api/portraits/men/32.jpg', age: 25, dist: '5km', status: 'World Peace' },
+  { name: 'Ava', img: 'https://randomuser.me/api/portraits/women/68.jpg', age: 21, dist: '8km', status: 'Coffee Lover' },
+  { name: 'Noah', img: 'https://randomuser.me/api/portraits/men/76.jpg', age: 26, dist: '2km', status: 'Music Soul' },
+  { name: 'Mia', img: 'https://randomuser.me/api/portraits/women/56.jpg', age: 24, dist: '7km', status: 'Kind Heart' },
+  { name: 'Ethan', img: 'https://randomuser.me/api/portraits/men/22.jpg', age: 27, dist: '6km', status: 'Animal Lover' },
+  { name: 'Ella', img: 'https://randomuser.me/api/portraits/women/71.jpg', age: 22, dist: '1km', status: 'Adventurer' },
+];
+
+function populateProfiles() {
+  container.innerHTML = '';
+  const daily = sampleProfiles.sort(() => 0.5 - Math.random()).slice(0, 6);
+  daily.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'profile-card';
+    card.innerHTML = `
+      <div class="hi-badge">Hi</div>
+      <img src="${p.img}" alt="${p.name}">
+      <div class="profile-info">
+        <h4>${p.name} ❤️</h4>
+        <div class="profile-meta">${p.age} yrs • ${p.dist}</div>
+        <div class="profile-meta">${p.status}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// populate once per load
+populateProfiles();
+</script>
+
+</body>
+</html>
