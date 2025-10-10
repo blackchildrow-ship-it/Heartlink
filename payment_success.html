@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payment Success – HeartLink</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff5f7;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease-in-out;
+  }
+  .checkmark {
+    font-size: 60px;
+    color: #ff7fa8;
+    animation: pop 0.5s ease;
+  }
+  @keyframes pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h2 {
+    color: #ff5c8d;
+    margin-top: 10px;
+  }
+  p {
+    font-size: 1.1em;
+    margin: 15px 0;
+  }
+  .btn {
+    background-color: #ff7fa8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+  }
+  .btn:hover {
+    background-color: #ff5c8d;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="checkmark">✅</div>
+    <h2>Payment Verified!</h2>
+    <p>Your membership payment has been successfully verified.</p>
+    <p>Welcome to <strong>HeartLink Premium</strong> ❤️</p>
+    <button class="btn" onclick="goDashboard()">Return to Dashboard</button>
+  </div>
+
+<script>
+function goDashboard(){
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>
